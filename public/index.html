@@ -41,13 +41,13 @@
 
     .container {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1320px;
       padding: 32px 16px 48px;
     }
 
     @media (min-width: 900px) {
       .container {
-        padding: 40px 8px 56px;
+        padding: 40px 16px 56px;
       }
     }
 
@@ -265,7 +265,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr);
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr);
       gap: 24px;
       margin-top: 12px;
     }
@@ -362,46 +362,6 @@
       margin-bottom: 8px;
     }
 
-    .stars-summary {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .stars-list {
-      max-height: 260px;
-      overflow-y: auto;
-      border-radius: 14px;
-      border: 1px solid #e2e8f0;
-      padding: 10px;
-      background: #f9fafb;
-    }
-
-    .star-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      padding: 8px 8px;
-      border-radius: 10px;
-      margin-bottom: 6px;
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-    }
-
-    .star-item-info {
-      font-size: 13px;
-    }
-
-    .star-item-info strong {
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    .star-item.disabled {
-      opacity: 0.55;
-    }
-
     .tabs {
       display: inline-flex;
       border-radius: 999px;
@@ -460,7 +420,7 @@
 
     .list-simple {
       font-size: 13px;
-      margin-top: 8px;
+      margin-top: 6px;
       list-style: none;
     }
 
@@ -468,7 +428,7 @@
       display: flex;
       align-items: flex-start;
       gap: 8px;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .list-bullet {
@@ -476,7 +436,7 @@
       height: 8px;
       border-radius: 999px;
       background: #16a34a;
-      margin-top: 4px;
+      margin-top: 5px;
       flex-shrink: 0;
       box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
     }
@@ -487,7 +447,7 @@
     }
 
     .ranking-list {
-      max-height: 260px;
+      max-height: 220px;
       overflow-y: auto;
       margin-top: 8px;
       border-radius: 14px;
@@ -530,6 +490,63 @@
       font-size: 13px;
       font-weight: 600;
       margin-bottom: 2px;
+    }
+
+    .votes-detail-list {
+      max-height: 220px;
+      overflow-y: auto;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      background: #f9fafb;
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .vote-detail-item {
+      padding: 6px 7px;
+      border-radius: 9px;
+      margin-bottom: 5px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+    }
+
+    .vote-detail-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .vote-detail-meta {
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .topic-admin-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .topic-admin-row input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .btn-icon {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .btn-danger:hover {
+      background: #fecaca;
     }
   </style>
 </head>
@@ -576,9 +593,8 @@
         </div>
       </div>
 
-      <!-- Layout com 2 colunas -->
       <div class="layout">
-        <!-- Coluna esquerda: Participante OU Admin (aba de config) -->
+        <!-- Coluna esquerda -->
         <div>
           <!-- PARTICIPANTE -->
           <div id="participant-area" style="display:none;">
@@ -604,17 +620,15 @@
               </div>
               <div id="perguntas-container" style="margin-top:4px;"></div>
 
-              <!-- Bloco de estrelas -->
               <div style="margin-top:18px;">
                 <div class="section-title">Votação de estrelas da turma</div>
-                <div class="stars-summary" id="stars-summary">
-                  Você pode distribuir até 5 estrelas entre os tópicos desta turma. Não é permitido votar nos seus próprios tópicos.
+                <div class="muted" id="stars-summary" style="margin-bottom:8px;">
+                  Você terá 5 estrelas por período para votar nos tópicos mais importantes.
                 </div>
                 <button class="btn btn-secondary btn-small" id="btn-load-stars">
-                  Ver / usar minhas estrelas
+                  Ver / Usar minhas estrelas
                 </button>
                 <div id="stars-status" class="status"></div>
-                <div id="stars-list" class="stars-list" style="display:none; margin-top:10px;"></div>
               </div>
             </div>
           </div>
@@ -623,20 +637,17 @@
           <div id="admin-config-area" style="display:none;">
             <div class="card">
               <div class="card-header">
-                <div class="card-title">
-                  Painel do Admin
-                </div>
+                <div class="card-title">Painel do Admin</div>
                 <div class="tabs">
-                  <button class="tab active" id="tab-config">Configurar perguntas & tópicos</button>
-                  <button class="tab" id="tab-reports">Relatórios & exportação</button>
+                  <button class="tab active" id="tab-config">Conteúdo</button>
+                  <button class="tab" id="tab-reports">Relatórios</button>
                 </div>
               </div>
               <div class="card-subtitle">
-                Você é o único que pode gerir perguntas, tópicos e ver os rankings consolidados.
+                Gerencie perguntas, tópicos e acompanhe o desempenho dos pitches.
               </div>
             </div>
 
-            <!-- Conteúdo da aba Config -->
             <div id="admin-config-content">
               <div class="card">
                 <div class="card-header">
@@ -670,11 +681,11 @@
                   <div class="card-title">Editar perguntas (opcional)</div>
                 </div>
                 <div class="card-subtitle">
-                  1 pergunta por linha (máx. 3). Ao salvar, as perguntas antigas serão apagadas e novos tópicos fictícios serão criados.
+                  1 pergunta por linha (máx. 3). Substitui as perguntas atuais e recria os tópicos fictícios.
                 </div>
                 <textarea id="admin-perguntas-textarea" placeholder="Pergunta 1&#10;Pergunta 2&#10;Pergunta 3"></textarea>
                 <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-                  <div class="muted">Exemplo: “Clareza do problema”, “Inovação da solução”, “Potencial de mercado”.</div>
+                  <div class="muted">Ex.: Clareza do problema, Inovação da solução, Potencial de mercado.</div>
                   <button class="btn btn-primary btn-small" id="btn-admin-salvar-perguntas">
                     Salvar perguntas
                   </button>
@@ -686,6 +697,9 @@
                 <div class="card-header">
                   <div class="card-title">Tópicos deste apresentador</div>
                 </div>
+                <div class="card-subtitle">
+                  Edite ou remova tópicos existentes e acrescente novos, por pergunta.
+                </div>
                 <div id="admin-topicos-container"></div>
                 <div id="admin-topicos-status" class="status"></div>
               </div>
@@ -693,7 +707,7 @@
           </div>
         </div>
 
-        <!-- Coluna direita: Admin aba Relatórios + Como funciona -->
+        <!-- Coluna direita -->
         <div>
           <!-- Admin relatórios -->
           <div id="admin-reports-area" style="display:none;">
@@ -702,7 +716,7 @@
                 <div class="card-title">Relatórios por turma</div>
               </div>
               <div class="card-subtitle">
-                Gere os rankings por média de notas (1–5) e por estrelas.
+                Veja rankings por notas e estrelas, e os votos detalhados por participante.
               </div>
 
               <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
@@ -715,6 +729,9 @@
                 </button>
                 <button class="btn btn-primary btn-small" id="btn-export-json">
                   Exportar JSON completo
+                </button>
+                <button class="btn btn-secondary btn-small" id="btn-export-excel">
+                  Exportar Excel completo
                 </button>
               </div>
               <div id="admin-relatorio-status" class="status"></div>
@@ -733,9 +750,16 @@
               </div>
               <div class="ranking-list" id="ranking-estrelas"></div>
             </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Votos detalhados da turma</div>
+              </div>
+              <div class="votes-detail-list" id="votos-detalhados"></div>
+            </div>
           </div>
 
-          <!-- Ajuda / instruções rápidas (apenas o que você pediu) -->
+          <!-- Como funciona (compacto) -->
           <div class="card">
             <div class="card-header">
               <div class="card-title">Como funciona</div>
@@ -743,15 +767,19 @@
             <ul class="list-simple">
               <li>
                 <span class="list-bullet"></span>
-                <span>Notas 1–5: 1 voto por tópico por pessoa (pode atualizar).</span>
+                <span>Cada participante terá direito a 1 voto por tópico presente em cada pergunta.</span>
               </li>
               <li>
                 <span class="list-bullet"></span>
-                <span>Estrelas: até 5 por turma, 1 por tópico.</span>
+                <span>As notas serão de 1 a 5.</span>
               </li>
               <li>
                 <span class="list-bullet"></span>
-                <span>Ninguém pode votar nos próprios tópicos.</span>
+                <span>Cada participante receberá 5 estrelas ao final de cada período para votar nos 5 tópicos mais importantes e relevantes.</span>
+              </li>
+              <li>
+                <span class="list-bullet"></span>
+                <span><strong>IMPORTANTE:</strong> Não votar no seu próprio tópico.</span>
               </li>
             </ul>
           </div>
@@ -760,25 +788,12 @@
     </div>
   </div>
 
-  <!-- JS (igual à versão anterior, só reaproveitado) -->
   <script>
-      // Roda o setup-default sempre que o site abrir.
-  // Se já estiver inicializado, o backend apenas responde "Já estava inicializado".
-  fetch('/setup-default', { method: 'POST' })
-    .then(r => r.json().catch(() => ({})))
-    .then(d => {
-      console.log('setup-default:', d);
-    })
-    .catch(err => {
-      console.log('erro ao chamar /setup-default', err);
-    });
-
     let currentUser = null;
     let turmasCache = [];
     let apresentadoresCache = [];
     let turmaSelecionada = null;
     let apresentadorSelecionado = null;
-    let ultimaTurmaEstrelas = null;
 
     function setText(id, text) {
       const el = document.getElementById(id);
@@ -802,9 +817,7 @@
 
     async function api(path, options = {}) {
       const resp = await fetch(path, {
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         ...options
       });
       const data = await resp.json().catch(() => ({}));
@@ -837,6 +850,7 @@
         currentUser = dataResp.user;
 
         setText("welcome-title", `Bem-vindo, ${currentUser.name}!`);
+
         if (currentUser.role === "admin") {
           setText("welcome-subtitle", "Você está no Painel do Admin da votação de pitches.");
           const badge = document.getElementById("role-badge");
@@ -850,7 +864,7 @@
 
           carregarAdminSelects();
         } else {
-          setText("welcome-subtitle", "Escolha a turma e em seguida o apresentador que está no palco para registrar suas notas.");
+          setText("welcome-subtitle", "Escolha a turma e o apresentador em apresentação para registrar suas notas.");
           const badge = document.getElementById("role-badge");
           badge.textContent = "Participante";
           badge.className = "badge badge-participant";
@@ -893,11 +907,9 @@
             listarApresentadores(t);
             setText("selected-presenter-title", "Selecione um apresentador para ver as perguntas.");
             document.getElementById("perguntas-container").innerHTML = "";
-            ultimaTurmaEstrelas = null;
-            document.getElementById("stars-list").style.display = "none";
             document.getElementById("stars-status").textContent = "";
             document.getElementById("stars-summary").textContent =
-              "Você pode distribuir até 5 estrelas entre os tópicos desta turma. Não é permitido votar nos seus próprios tópicos.";
+              "Você terá 5 estrelas por período para votar nos tópicos mais importantes.";
           });
           btn.dataset.turmaId = t.id;
           turmasButtonsEl.appendChild(btn);
@@ -938,7 +950,7 @@
       turma.apresentadores.forEach(ap => {
         const btn = document.createElement("button");
         btn.className = "btn btn-secondary btn-small btn-pill";
-        btn.textContent = `${ap.name}`;
+        btn.textContent = ap.name;
         btn.dataset.code = ap.code;
         btn.addEventListener("click", () => {
           apresentadorSelecionado = ap.code;
@@ -1062,101 +1074,16 @@
       }
     }
 
-    // Estrelas
-    document.getElementById("btn-load-stars").addEventListener("click", async () => {
+    // Estrelas – agora leva para outra página
+    document.getElementById("btn-load-stars").addEventListener("click", () => {
       if (!turmaSelecionada) {
         alert("Selecione uma turma primeiro.");
         return;
       }
-      await carregarEstrelasDaTurma(turmaSelecionada);
-    });
-
-    async function carregarEstrelasDaTurma(turmaId) {
       if (!currentUser) return;
-
-      const statusEl = document.getElementById("stars-status");
-      const listEl = document.getElementById("stars-list");
-      const summaryEl = document.getElementById("stars-summary");
-      statusEl.textContent = "";
-      statusEl.className = "status";
-
-      try {
-        const dados = await api(`/api/turma/${turmaId}/topicos-estrelas?userCode=${encodeURIComponent(currentUser.code)}`);
-        ultimaTurmaEstrelas = turmaId;
-
-        summaryEl.textContent = `Você já usou ${dados.estrelas.usadas} de ${dados.estrelas.maximo} estrelas nesta turma.`;
-        listEl.style.display = "";
-        listEl.innerHTML = "";
-
-        if (!dados.topicos || dados.topicos.length === 0) {
-          listEl.innerHTML = '<div class="muted">Não há tópicos cadastrados nesta turma.</div>';
-          return;
-        }
-
-        dados.topicos.forEach(t => {
-          const item = document.createElement("div");
-          item.className = "star-item";
-          if (t.jaVotou || t.proprioTopico) {
-            item.classList.add("disabled");
-          }
-
-          const info = document.createElement("div");
-          info.className = "star-item-info";
-          info.innerHTML = `<strong>${t.texto}</strong><span>Apresentador: ${t.apresentadorNome}</span>`;
-
-          const actions = document.createElement("div");
-
-          if (t.proprioTopico) {
-            const span = document.createElement("span");
-            span.className = "muted";
-            span.textContent = "Seu tópico";
-            actions.appendChild(span);
-          } else if (t.jaVotou) {
-            const span = document.createElement("span");
-            span.className = "muted";
-            span.textContent = "Você já deu estrela";
-            actions.appendChild(span);
-          } else if (!t.podeVotar) {
-            const span = document.createElement("span");
-            span.className = "muted";
-            span.textContent = "Limite de estrelas atingido";
-            actions.appendChild(span);
-          } else {
-            const btn = document.createElement("button");
-            btn.className = "btn btn-primary btn-small";
-            btn.textContent = "Dar estrela";
-            btn.addEventListener("click", async () => {
-              try {
-                await api("/api/estrelas", {
-                  method: "POST",
-                  body: JSON.stringify({
-                    userCode: currentUser.code,
-                    turmaId,
-                    topicoId: t.id
-                  })
-                });
-                statusEl.textContent = "Estrela registrada com sucesso.";
-                statusEl.classList.add("status-success");
-                await carregarEstrelasDaTurma(turmaId);
-              } catch (err) {
-                statusEl.textContent = err.message;
-                statusEl.classList.add("status-error");
-              }
-            });
-            actions.appendChild(btn);
-          }
-
-          item.appendChild(info);
-          item.appendChild(actions);
-          listEl.appendChild(item);
-        });
-
-      } catch (err) {
-        listEl.style.display = "none";
-        statusEl.textContent = err.message;
-        statusEl.classList.add("status-error");
-      }
-    }
+      const url = `/estrelas.html?userCode=${encodeURIComponent(currentUser.code)}&turmaId=${encodeURIComponent(turmaSelecionada)}`;
+      window.location.href = url;
+    });
 
     // ADMIN – TABS
     const tabConfig = document.getElementById("tab-config");
@@ -1168,13 +1095,13 @@
       tabConfig.classList.add("active");
       tabReports.classList.remove("active");
       adminConfigContent.style.display = "";
-      adminReportsArea.style.display = "";
+      adminReportsArea.style.display = "none";
     });
 
     tabReports.addEventListener("click", () => {
       tabReports.classList.add("active");
       tabConfig.classList.remove("active");
-      adminConfigContent.style.display = "";
+      adminConfigContent.style.display = "none";
       adminReportsArea.style.display = "";
     });
 
@@ -1191,6 +1118,7 @@
 
         selectTurma.innerHTML = "";
         relTurma.innerHTML = "";
+
         turmasCache.forEach(t => {
           const opt = document.createElement("option");
           opt.value = t.id;
@@ -1276,7 +1204,7 @@
 
       perguntas.forEach(p => {
         const wrap = document.createElement("div");
-        wrap.style.marginBottom = "14px";
+        wrap.style.marginBottom = "16px";
 
         const title = document.createElement("div");
         title.className = "question-title";
@@ -1290,32 +1218,81 @@
           wrap.appendChild(mt);
         } else {
           p.topicos.forEach(top => {
-            const tdiv = document.createElement("div");
-            tdiv.className = "topic-block";
-            tdiv.style.marginBottom = "6px";
-            tdiv.style.background = "#ffffff";
-            const tt = document.createElement("div");
-            tt.className = "topic-text";
-            tt.textContent = top.texto;
-            tdiv.appendChild(tt);
-            wrap.appendChild(tdiv);
+            const row = document.createElement("div");
+            row.className = "topic-admin-row";
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.className = "input";
+            input.value = top.texto;
+
+            const btnSave = document.createElement("button");
+            btnSave.className = "btn btn-secondary btn-small btn-icon";
+            btnSave.textContent = "Salvar";
+
+            const btnDel = document.createElement("button");
+            btnDel.className = "btn btn-danger btn-small btn-icon";
+            btnDel.textContent = "Apagar";
+
+            btnSave.addEventListener("click", async () => {
+              const texto = input.value.trim();
+              if (!texto) {
+                alert("Texto do tópico não pode ser vazio.");
+                return;
+              }
+              try {
+                const resp = await api(`/api/admin/topicos/${top.id}`, {
+                  method: "PUT",
+                  body: JSON.stringify({ texto })
+                });
+                document.getElementById("admin-topicos-status").textContent = resp.message;
+                document.getElementById("admin-topicos-status").className = "status status-success";
+              } catch (err) {
+                document.getElementById("admin-topicos-status").textContent = err.message;
+                document.getElementById("admin-topicos-status").className = "status status-error";
+              }
+            });
+
+            btnDel.addEventListener("click", async () => {
+              if (!confirm("Tem certeza que deseja apagar este tópico?")) return;
+              try {
+                const resp = await api(`/api/admin/topicos/${top.id}`, {
+                  method: "DELETE"
+                });
+                document.getElementById("admin-topicos-status").textContent = resp.message;
+                document.getElementById("admin-topicos-status").className = "status status-success";
+
+                const selectAp = document.getElementById("admin-select-apresentador");
+                const code = selectAp.value;
+                const dadosNovos = await api(`/api/admin/conteudo?code=${encodeURIComponent(code)}`);
+                preencherAdminConteudo(dadosNovos);
+              } catch (err) {
+                document.getElementById("admin-topicos-status").textContent = err.message;
+                document.getElementById("admin-topicos-status").className = "status status-error";
+              }
+            });
+
+            row.appendChild(input);
+            row.appendChild(btnSave);
+            row.appendChild(btnDel);
+            wrap.appendChild(row);
           });
         }
 
         const novoWrap = document.createElement("div");
         novoWrap.style.marginTop = "8px";
-        const input = document.createElement("input");
-        input.type = "text";
-        input.className = "input";
-        input.placeholder = "Novo tópico desta pergunta…";
+        const inputNovo = document.createElement("input");
+        inputNovo.type = "text";
+        inputNovo.className = "input";
+        inputNovo.placeholder = "Novo tópico desta pergunta…";
 
-        const btn = document.createElement("button");
-        btn.className = "btn btn-secondary btn-small";
-        btn.textContent = "Adicionar tópico";
-        btn.style.marginTop = "6px";
+        const btnAdd = document.createElement("button");
+        btnAdd.className = "btn btn-secondary btn-small";
+        btnAdd.textContent = "Adicionar tópico";
+        btnAdd.style.marginTop = "6px";
 
-        btn.addEventListener("click", async () => {
-          const texto = input.value.trim();
+        btnAdd.addEventListener("click", async () => {
+          const texto = inputNovo.value.trim();
           if (!texto) {
             alert("Digite o texto do novo tópico.");
             return;
@@ -1323,12 +1300,9 @@
           try {
             const resp = await api("/api/admin/topicos", {
               method: "POST",
-              body: JSON.stringify({
-                perguntaId: p.id,
-                texto
-              })
+              body: JSON.stringify({ perguntaId: p.id, texto })
             });
-            input.value = "";
+            inputNovo.value = "";
             document.getElementById("admin-topicos-status").textContent = resp.message;
             document.getElementById("admin-topicos-status").className = "status status-success";
             const selectAp = document.getElementById("admin-select-apresentador");
@@ -1341,8 +1315,8 @@
           }
         });
 
-        novoWrap.appendChild(input);
-        novoWrap.appendChild(btn);
+        novoWrap.appendChild(inputNovo);
+        novoWrap.appendChild(btnAdd);
         wrap.appendChild(novoWrap);
 
         topicosCont.appendChild(wrap);
@@ -1403,6 +1377,7 @@
         statusEl.textContent = `Relatório gerado para ${dados.turma.name}.`;
         statusEl.classList.add("status-success");
         preencherRanking(dados);
+        preencherVotosDetalhados(dados);
       } catch (err) {
         statusEl.textContent = err.message;
         statusEl.classList.add("status-error");
@@ -1456,6 +1431,36 @@
       }
     }
 
+    function preencherVotosDetalhados(dados) {
+      const container = document.getElementById("votos-detalhados");
+      container.innerHTML = "";
+      const rn = dados.rankingNotas || [];
+      if (rn.length === 0) {
+        container.innerHTML = '<div class="muted">Ainda não há votos registrados.</div>';
+        return;
+      }
+
+      rn.forEach(item => {
+        if (!item.votosDetalhados || item.votosDetalhados.length === 0) return;
+        const div = document.createElement("div");
+        div.className = "vote-detail-item";
+        const lista = item.votosDetalhados.map(v => {
+          return `${v.userName} (${v.userCode}) → nota ${v.nota}`;
+        }).join(" · ");
+
+        div.innerHTML = `
+          <div class="vote-detail-title">${item.texto}</div>
+          <div class="vote-detail-meta">${lista}</div>
+        `;
+        container.appendChild(div);
+      });
+
+      if (!container.innerHTML) {
+        container.innerHTML = '<div class="muted">Ainda não há votos registrados.</div>';
+      }
+    }
+
+    // Export JSON
     document.getElementById("btn-export-json").addEventListener("click", async () => {
       try {
         const resp = await fetch("/api/admin/export-json");
@@ -1465,6 +1470,27 @@
         const a = document.createElement("a");
         a.href = url;
         a.download = "dados-votacao.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        const statusEl = document.getElementById("admin-relatorio-status");
+        statusEl.textContent = err.message;
+        statusEl.className = "status status-error";
+      }
+    });
+
+    // Export Excel completo
+    document.getElementById("btn-export-excel").addEventListener("click", async () => {
+      try {
+        const resp = await fetch("/api/admin/export-excel-completo");
+        if (!resp.ok) throw new Error("Erro ao exportar Excel.");
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "relatorio-votacao-completo.xlsx";
         document.body.appendChild(a);
         a.click();
         a.remove();
