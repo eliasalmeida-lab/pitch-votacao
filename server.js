@@ -16,6 +16,7 @@ let initialized = false;
 
 const data = {
   users: [], // {code, name, role, turmaId, isPresenter}
+  // Agora só 2 turmas visíveis: Manhã (períodos 1+2) e Tarde (3+4)
   turmas: [
     { id: "M", name: "Manhã" },
     { id: "T", name: "Tarde" },
@@ -88,7 +89,7 @@ function getPerguntasETopicos(apresentadorCode) {
 }
 
 // ==========================
-// Ler PITCH.xlsx
+// Ler PITCH.xlsx (grupos/apresentadores)
 // ==========================
 
 function loadPresentersFromExcel() {
@@ -113,7 +114,7 @@ function loadPresentersFromExcel() {
 
       const col0Str = String(col0).trim();
 
-      // "PERIODO 1", "PERIODO 2" etc
+      // Linhas tipo "PERIODO 1", "PERIODO 2"...
       if (col0Str.toUpperCase().startsWith("PERIODO")) {
         const parts = col0Str.split(/\s+/);
         const num = parseInt(parts[1], 10);
@@ -121,7 +122,7 @@ function loadPresentersFromExcel() {
         return;
       }
 
-      // cabeçalho
+      // Cabeçalho da tabela
       if (col0Str.toLowerCase() === "apresentador") {
         return;
       }
@@ -132,9 +133,9 @@ function loadPresentersFromExcel() {
         .slice(0, 3);
 
       presenters.push({
-        nome: col0Str,
+        nome: col0Str,                                      // pode ser "Thiago e Mario", etc.
         tema: col1 ? String(col1).trim() : "",
-        periodo: currentPeriodo || 1,
+        periodo: currentPeriodo || 1,                       // 1,2,3,4
         perguntas
       });
     });
@@ -153,7 +154,7 @@ function loadPresentersFromExcel() {
 
 function initializeData() {
   if (initialized) return;
-  console.log("Inicializando dados a partir do PITCH.xlsx...");
+  console.log("Inicializando dados...");
 
   // Admin
   data.users.push({
@@ -164,47 +165,40 @@ function initializeData() {
     isPresenter: false
   });
 
+  // 1) Carregar apresentadores (grupos) da PITCH.xlsx
   const presentersFromExcel = loadPresentersFromExcel();
 
-  if (!presentersFromExcel.length) {
-    console.error("Nenhum apresentador carregado do PITCH.xlsx!");
-    initialized = true;
-    return;
-  }
+  let presenterCodeCounter = 1000; // códigos internos só para apresentadores
 
-  let codeCounter = 11;
-
-  presentersFromExcel.forEach((p) => {
-    const code = String(codeCounter++);
-    const periodo = p.periodo || 1;
-
-    // Agrupar períodos em apenas 2 turmas:
-    // Períodos 1 e 2 => Manhã (M)
-    // Períodos 3 e 4 => Tarde (T)
-    let turmaId;
-    if (periodo === 1 || periodo === 2) {
-      turmaId = "M";
-    } else {
-      turmaId = "T";
-    }
-
-    const name = p.nome;
+  presentersFromExcel.forEach(p => {
+    const nome = p.nome || "";
     const tema = p.tema || "";
+    const periodo = Number(p.periodo) || 1;
+
+    // Mapear período 1/2 → Manhã (M), 3/4 → Tarde (T)
+    const turmaId =
+      periodo === 1 || periodo === 2
+        ? "M"
+        : "T";
+
+    // criar usuário interno para o apresentador (grupo)
+    const code = String(presenterCodeCounter++);
 
     data.users.push({
       code,
-      name,
-      role: "participant",
+      name: nome,          // ex.: "Thiago e Mario", "Equipe Tal", etc.
+      role: "participant", // continua participant
       turmaId,
       isPresenter: true
     });
 
+    // Perguntas (da planilha ou genéricas)
     const perguntas = (p.perguntas && p.perguntas.length
       ? p.perguntas
       : [
-          `Pergunta 1 de ${name}`,
-          `Pergunta 2 de ${name}`,
-          `Pergunta 3 de ${name}`
+          `Pergunta 1 de ${nome}`,
+          `Pergunta 2 de ${nome}`,
+          `Pergunta 3 de ${nome}`
         ]
     ).slice(0, 3);
 
@@ -212,30 +206,66 @@ function initializeData() {
       const ordem = idx + 1;
       const pergunta = createPergunta(turmaId, code, textoPergunta, ordem);
 
+      // Tópicos fictícios iniciais
       for (let i = 1; i <= 3; i++) {
         const baseLabel = `Tópico ${ordem}.${i}`;
-        const detalhe = tema ? ` – ${tema}` : ` – ${name}`;
+        const detalhe = tema ? ` – ${tema}` : ` – ${nome}`;
         createTopico(pergunta, baseLabel + detalhe);
       }
     });
   });
 
-  // Participantes extras 42–46 (alternando entre Manhã e Tarde)
-  const turmasIds = data.turmas.map(t => t.id); // ["M","T"]
-  let turmaIndex = 0;
-  for (let codeNum = 42; codeNum <= 46; codeNum++) {
-    const code = String(codeNum);
-    const turmaId = turmasIds[turmaIndex];
-    turmaIndex = (turmaIndex + 1) % turmasIds.length;
+  // 2) Códigos fixos de quem vota (1–38) – os que você mandou
+  const voters = [
+    { code: "1",  name: "Alexandre" },
+    { code: "2",  name: "Gabi" },
+    { code: "3",  name: "Cadelca" },
+    { code: "4",  name: "Léo" },
+    { code: "5",  name: "Pedro" },
+    { code: "6",  name: "Fred" },
+    { code: "7",  name: "Adrielle" },
+    { code: "8",  name: "Thaynara" },
+    { code: "9",  name: "Ursula" },
+    { code: "10", name: "Bataiel" },
+    { code: "11", name: "Bordin" },
+    { code: "12", name: "Helen" },
+    { code: "13", name: "Renan" },
+    { code: "14", name: "Mari" },
+    { code: "15", name: "Thiago" },
+    { code: "16", name: "Mario" },
+    { code: "17", name: "Humberto" },
+    { code: "18", name: "Danyllo" },
+    { code: "19", name: "Boffe" },
+    { code: "20", name: "Bruninha" },
+    { code: "21", name: "Juliene" },
+    { code: "22", name: "Ana Luiza" },
+    { code: "23", name: "Albert (Léo)" },
+    { code: "24", name: "Kaneko" },
+    { code: "25", name: "Cici" },
+    { code: "26", name: "Joyce" },
+    { code: "27", name: "Lacerda" },
+    { code: "28", name: "Murilo" },
+    { code: "29", name: "Thiago Meller" },
+    { code: "30", name: "Aline" },
+    { code: "31", name: "Markim" },
+    { code: "32", name: "Nabuco" },
+    { code: "33", name: "Vinícius Emmanuel" },
+    { code: "34", name: "Mazetto" },
+    { code: "35", name: "Matheus Reis" },
+    { code: "36", name: "Sebá" },
+    { code: "37", name: "Gabriel" },
+    { code: "38", name: "Naves" },
+  ];
 
+  voters.forEach(v => {
     data.users.push({
-      code,
-      name: `Participante ${code}`,
+      code: v.code,
+      name: v.name,
       role: "participant",
-      turmaId,
-      isPresenter: false
+      turmaId: null,     // não precisa amarrar turma, ele pode votar em Manhã ou Tarde
+      isPresenter: false // esses são apenas votantes (mesmo que apresentem na vida real)
     });
-  }
+  });
 
   initialized = true;
   console.log("Inicialização concluída. Usuários totais:", data.users.length);
@@ -274,7 +304,7 @@ app.post("/login", (req, res) => {
 // Rotas PARTICIPANTE
 // ==========================
 
-// Turmas + apresentadores
+// Turmas + apresentadores (Manhã/Tarde)
 app.get("/api/turmas-com-apresentadores", (req, res) => {
   const turmas = data.turmas.map(t => {
     const apresentadores = data.users
@@ -307,7 +337,7 @@ app.get("/api/apresentador/:code/perguntas", (req, res) => {
   });
 });
 
-// Voto 1–5 em um tópico
+// Voto em um tópico (1–5 ou 1–10 para líderes)
 app.post("/api/votos", (req, res) => {
   const { userCode, topicoId, nota } = req.body;
 
@@ -326,11 +356,18 @@ app.post("/api/votos", (req, res) => {
   }
 
   const notaNum = Number(nota);
-  if (notaNum < 1 || notaNum > 5) {
-    return res.status(400).json({ ok: false, message: "Nota deve ser entre 1 e 5." });
+  const leadersCodes = ["1", "2", "3", "4", "5", "6"];
+  const isLeader = leadersCodes.includes(user.code);
+  const maxNota = isLeader ? 10 : 5;
+
+  if (notaNum < 1 || notaNum > maxNota) {
+    return res.status(400).json({
+      ok: false,
+      message: `Nota deve ser entre 1 e ${maxNota}.`
+    });
   }
 
-  // Não pode votar no próprio tópico
+  // Regra antiga de não votar no próprio tópico (aqui só funciona se o código do votante = código interno do apresentador)
   if (topico.apresentadorCode === user.code) {
     return res.status(403).json({ ok: false, message: "Você não pode votar nos seus próprios tópicos." });
   }
@@ -349,19 +386,11 @@ app.post("/api/votos", (req, res) => {
   res.json({ ok: true, message: "Voto registrado com sucesso." });
 });
 
-// Tópicos da turma para estrelas
+// Tópicos da turma para estrelas (Manhã/Tarde já vem de topico.turmaId)
 app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
-  const { turmaId } = req.params;
-  const { userCode } = req.query;
-
   try {
-    console.log("[topicos-estrelas] turmaId =", turmaId, "userCode =", userCode);
-
-    if (!userCode) {
-      return res
-        .status(400)
-        .json({ ok: false, message: "Parâmetro userCode é obrigatório." });
-    }
+    const { turmaId } = req.params;
+    const { userCode } = req.query;
 
     const user = findUserByCode(userCode);
     if (!user) {
@@ -373,23 +402,15 @@ app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
       return res.status(404).json({ ok: false, message: "Turma não encontrada." });
     }
 
-    if (!Array.isArray(data.topicos)) data.topicos = [];
-    if (!Array.isArray(data.estrelas)) data.estrelas = [];
-
-    const topicosTurma = data.topicos.filter(
-      (t) => String(t.turmaId) === String(turmaId)
-    );
-
-    const estrelasUserTurma = data.estrelas.filter(
-      (e) => e.userCode === user.code && String(e.turmaId) === String(turmaId)
-    );
+    const topicosTurma = data.topicos.filter(t => t.turmaId === String(turmaId));
+    const estrelasUserTurma = data.estrelas.filter(e => e.userCode === user.code && e.turmaId === String(turmaId));
 
     const usadas = estrelasUserTurma.length;
     const maximo = 5;
 
-    const topicosDetalhe = topicosTurma.map((t) => {
+    const topicosDetalhe = topicosTurma.map(t => {
       const apresentador = findUserByCode(t.apresentadorCode);
-      const jaVotou = estrelasUserTurma.some((e) => e.topicoId === t.id);
+      const jaVotou = estrelasUserTurma.some(e => e.topicoId === t.id);
       const proprioTopico = t.apresentadorCode === user.code;
       const podeVotar = !jaVotou && !proprioTopico && usadas < maximo;
 
@@ -399,22 +420,19 @@ app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
         apresentadorNome: apresentador ? apresentador.name : "Desconhecido",
         jaVotou,
         proprioTopico,
-        podeVotar,
+        podeVotar
       };
     });
 
-    return res.json({
+    res.json({
       ok: true,
       turma: { id: turma.id, name: turma.name },
       estrelas: { usadas, maximo },
-      topicos: topicosDetalhe,
+      topicos: topicosDetalhe
     });
   } catch (err) {
     console.error("Erro em /api/turma/:turmaId/topicos-estrelas:", err);
-    return res.status(500).json({
-      ok: false,
-      message: "Erro interno ao carregar tópicos para estrelas: " + err.message,
-    });
+    res.status(500).json({ ok: false, message: "Erro ao carregar tópicos para estrelas." });
   }
 });
 
@@ -473,10 +491,10 @@ app.post("/api/estrelas", (req, res) => {
 // Rotas ADMIN
 // ==========================
 
-// Lista apresentadores
+// Lista apresentadores (só quem é presenter de verdade)
 app.get("/api/admin/apresentadores", (req, res) => {
   const lista = data.users
-    .filter(u => u.code !== "100")
+    .filter(u => u.code !== "100" && u.isPresenter)
     .map(u => ({
       code: u.code,
       name: u.name,
@@ -495,7 +513,7 @@ app.get("/api/admin/conteudo", (req, res) => {
   }
 
   const user = findUserByCode(code);
-  if (!user) {
+  if (!user || !user.isPresenter) {
     return res.status(404).json({ ok: false, message: "Apresentador não encontrado." });
   }
 
@@ -512,7 +530,7 @@ app.post("/api/admin/perguntas", (req, res) => {
   const { apresentadorCode, perguntasText } = req.body;
 
   const user = findUserByCode(apresentadorCode);
-  if (!user) {
+  if (!user || !user.isPresenter) {
     return res.status(404).json({ ok: false, message: "Apresentador não encontrado." });
   }
   if (!user.turmaId) {
@@ -588,7 +606,7 @@ app.delete("/api/admin/topicos/:id", (req, res) => {
   res.json({ ok: true, message: "Tópico apagado com sucesso." });
 });
 
-// Relatório por turma (com votos detalhados)
+// Relatório por turma (Manhã/Tarde) com votos detalhados
 app.get("/api/admin/relatorio", (req, res) => {
   const { turmaId } = req.query;
 
@@ -751,7 +769,7 @@ app.get("/api/admin/export-excel-completo", (req, res) => {
 // Rotas de páginas
 // ==========================
 
-// Força o envio direto da página de estrelas
+// Página de estrelas
 app.get("/estrelas.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "estrelas.html"));
 });
