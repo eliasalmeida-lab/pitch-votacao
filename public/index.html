@@ -3,14 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <title>Grão Direto – Votação em Tempo Real</title>
-
-  <!-- Mobile-friendly -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Fonte redondinha do Google -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --primary: #16a34a;
@@ -62,6 +58,7 @@
     }
 
     .logo {
+      font-family: "Montserrat", system-ui;
       font-weight: 700;
       font-size: 26px;
       letter-spacing: 0.12em;
@@ -120,8 +117,9 @@
     }
 
     .card-title {
+      font-family: "Montserrat", system-ui;
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 600;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -196,7 +194,7 @@
       border: none;
       cursor: pointer;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 600;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -250,7 +248,7 @@
       background: var(--primary-soft);
       border-color: var(--primary);
       color: #065f46;
-      font-weight: 700;
+      font-weight: 600;
       box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
     }
 
@@ -267,14 +265,13 @@
       color: #166534;
     }
 
-    /* AQUI É O PONTO PRINCIPAL:
-       layout em UMA COLUNA, CENTRALIZADO, com largura máxima menor */
+    /* layout em uma coluna, centralizado */
     .layout {
       width: 100%;
       max-width: 1100px;
-      margin: 16px auto 0;      /* centraliza horizontalmente */
+      margin: 16px auto 0;
       display: flex;
-      flex-direction: column;   /* tudo em coluna */
+      flex-direction: column;
       gap: 20px;
     }
 
@@ -294,7 +291,7 @@
 
     .question-title {
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--accent);
       margin-bottom: 8px;
     }
@@ -324,6 +321,7 @@
       display: flex;
       gap: 8px;
       margin-top: 2px;
+      flex-wrap: wrap;
     }
 
     .vote-pill {
@@ -353,7 +351,7 @@
       background: #bbf7d0;
       border-color: #16a34a;
       color: #14532d;
-      font-weight: 700;
+      font-weight: 600;
       box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.55);
     }
 
@@ -365,8 +363,9 @@
     }
 
     .section-title {
+      font-family: "Montserrat", system-ui;
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 600;
       margin-bottom: 8px;
     }
 
@@ -384,7 +383,7 @@
       cursor: pointer;
       border: none;
       background: transparent;
-      font-weight: 600;
+      font-weight: 500;
       color: #4b5563;
     }
 
@@ -451,7 +450,7 @@
     }
 
     .ranking-title {
-      font-weight: 700;
+      font-weight: 600;
       margin-bottom: 2px;
     }
 
@@ -473,7 +472,7 @@
 
     .small-title {
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
       margin-bottom: 2px;
     }
 
@@ -496,7 +495,7 @@
     }
 
     .vote-detail-title {
-      font-weight: 700;
+      font-weight: 600;
       margin-bottom: 2px;
     }
 
@@ -549,15 +548,15 @@
     <div class="card" id="card-login">
       <div class="card-header">
         <div class="card-title">
-          Entrar na votação
+          Acessar votação
         </div>
       </div>
       <div class="card-subtitle">
-        Use o código recebido para acessar como participante ou administrador.
+        Use o código recebido para acessar como participante ou admin.
       </div>
       <div class="input-group">
         <label class="input-label" for="input-code">Código</label>
-        <input id="input-code" class="input" placeholder="Digite seu código de acesso" />
+        <input id="input-code" class="input" placeholder="Digite seu código" />
         <button class="btn btn-primary" id="btn-login">Entrar</button>
       </div>
       <div id="login-status" class="status"></div>
@@ -579,7 +578,7 @@
       </div>
 
       <div class="layout">
-        <!-- Coluna esquerda -->
+        <!-- Bloco principal: participante + admin config -->
         <div>
           <!-- PARTICIPANTE -->
           <div id="participant-area" style="display:none;">
@@ -588,7 +587,7 @@
                 <div class="card-title">Turmas e apresentadores</div>
               </div>
               <div class="card-subtitle">
-                Escolha a turma e clique no nome da pessoa que está apresentando para registrar suas notas.
+                Escolha a turma e depois clique no nome da pessoa que está apresentando para registrar suas notas.
               </div>
 
               <div id="turmas-buttons" class="pill-list"></div>
@@ -607,16 +606,16 @@
 
               <!-- linha com botão Próximo -->
               <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
-                <span class="muted">Depois de registrar as notas deste apresentador, avance para o próximo da turma.</span>
+                <span class="muted">Quando finalizar as notas deste apresentador, avance para o próximo da turma.</span>
                 <button class="btn btn-secondary btn-small" id="btn-next-presenter">
                   Próximo apresentador &rarr;
                 </button>
               </div>
 
               <div style="margin-top:18px;">
-                <div class="section-title">Votação de estrelas</div>
+                <div class="section-title">Votação de estrelas da turma</div>
                 <div class="muted" id="stars-summary" style="margin-bottom:8px;">
-                  Você terá 5 estrelas por período (manhã ou tarde) para destacar os tópicos mais importantes.
+                  Você terá 5 estrelas por período para votar nos tópicos mais importantes.
                 </div>
                 <button class="btn btn-secondary btn-small" id="btn-load-stars">
                   Ver / usar minhas estrelas
@@ -637,14 +636,14 @@
                 </div>
               </div>
               <div class="card-subtitle">
-                Gerencie perguntas, tópicos e acompanhe o desempenho dos pitches por período.
+                Gerencie perguntas, tópicos e acompanhe o desempenho dos pitches.
               </div>
             </div>
 
             <div id="admin-config-content">
               <div class="card">
                 <div class="card-header">
-                  <div class="card-title">Seleção de turma e apresentador</div>
+                  <div class="card-title">Seleção de Turma e Apresentador</div>
                 </div>
                 <div class="card-subtitle">
                   Escolha um apresentador para editar suas perguntas e tópicos.
@@ -661,7 +660,7 @@
                   </div>
                   <div style="margin-top:16px;">
                     <button class="btn btn-secondary btn-small" id="btn-admin-load-conteudo">
-                      Carregar perguntas e tópicos
+                      Carregar perguntas & tópicos
                     </button>
                   </div>
                 </div>
@@ -674,11 +673,11 @@
                   <div class="card-title">Editar perguntas (opcional)</div>
                 </div>
                 <div class="card-subtitle">
-                  Uma pergunta por linha (máx. 3). As perguntas atuais serão substituídas e os tópicos serão recriados.
+                  1 pergunta por linha (máx. 3). Substitui as perguntas atuais e recria os tópicos fictícios.
                 </div>
                 <textarea id="admin-perguntas-textarea" placeholder="Pergunta 1&#10;Pergunta 2&#10;Pergunta 3"></textarea>
                 <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-                  <div class="muted">Ex.: clareza do problema, inovação da solução, potencial de mercado.</div>
+                  <div class="muted">Ex.: Clareza do problema, Inovação da solução, Potencial de mercado.</div>
                   <button class="btn btn-primary btn-small" id="btn-admin-salvar-perguntas">
                     Salvar perguntas
                   </button>
@@ -691,7 +690,7 @@
                   <div class="card-title">Tópicos deste apresentador</div>
                 </div>
                 <div class="card-subtitle">
-                  Edite, remova ou acrescente tópicos em cada pergunta.
+                  Edite ou remova tópicos existentes e acrescente novos, por pergunta.
                 </div>
                 <div id="admin-topicos-container"></div>
                 <div id="admin-topicos-status" class="status"></div>
@@ -700,56 +699,53 @@
           </div>
         </div>
 
-        <!-- Coluna direita (relatórios admin) -->
-        <div>
-          <!-- Admin relatórios -->
-          <div id="admin-reports-area" style="display:none;">
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">Relatórios por turma</div>
-              </div>
-              <div class="card-subtitle">
-                Veja rankings por notas e estrelas, além dos votos detalhados por participante.
-              </div>
-
-              <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
-                <div>
-                  <div class="small-title">Turma</div>
-                  <select class="select" id="admin-relatorio-turma"></select>
-                </div>
-                <button class="btn btn-secondary btn-small" id="btn-gerar-relatorio">
-                  Gerar relatório da turma
-                </button>
-                <button class="btn btn-primary btn-small" id="btn-export-json">
-                  Exportar JSON completo
-                </button>
-                <button class="btn btn-secondary btn-small" id="btn-export-excel">
-                  Exportar Excel completo
-                </button>
-              </div>
-              <div id="admin-relatorio-status" class="status"></div>
+        <!-- Bloco de relatórios admin (fica abaixo, mesma coluna) -->
+        <div id="admin-reports-area" style="display:none;">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Relatórios por turma</div>
+            </div>
+            <div class="card-subtitle">
+              Veja rankings por notas e estrelas, e os votos detalhados por participante.
             </div>
 
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">Ranking por média de notas</div>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
+              <div>
+                <div class="small-title">Turma</div>
+                <select class="select" id="admin-relatorio-turma"></select>
               </div>
-              <div class="ranking-list" id="ranking-notas"></div>
+              <button class="btn btn-secondary btn-small" id="btn-gerar-relatorio">
+                Gerar relatório da turma
+              </button>
+              <button class="btn btn-primary btn-small" id="btn-export-json">
+                Exportar JSON completo
+              </button>
+              <button class="btn btn-secondary btn-small" id="btn-export-excel">
+                Exportar Excel completo
+              </button>
             </div>
+            <div id="admin-relatorio-status" class="status"></div>
+          </div>
 
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">Ranking por estrelas</div>
-              </div>
-              <div class="ranking-list" id="ranking-estrelas"></div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Ranking por média de notas</div>
             </div>
+            <div class="ranking-list" id="ranking-notas"></div>
+          </div>
 
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">Votos detalhados da turma</div>
-              </div>
-              <div class="votes-detail-list" id="votos-detalhados"></div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Ranking por estrelas</div>
             </div>
+            <div class="ranking-list" id="ranking-estrelas"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Votos detalhados da turma</div>
+            </div>
+            <div class="votes-detail-list" id="votos-detalhados"></div>
           </div>
         </div>
       </div>
@@ -766,6 +762,11 @@
     function setText(id, text) {
       const el = document.getElementById(id);
       if (el) el.textContent = text;
+    }
+
+    function setHtml(id, html) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = html;
     }
 
     function show(id) {
@@ -815,7 +816,7 @@
         setText("welcome-title", `Bem-vindo, ${currentUser.name}!`);
 
         if (currentUser.role === "admin") {
-          setText("welcome-subtitle", "Você está no painel de administração da votação de pitches.");
+          setText("welcome-subtitle", "Você está no Painel do Admin da votação de pitches.");
           const badge = document.getElementById("role-badge");
           badge.textContent = "Admin";
           badge.className = "badge badge-admin";
@@ -827,7 +828,7 @@
 
           carregarAdminSelects();
         } else {
-          setText("welcome-subtitle", "Selecione o período e o apresentador para registrar suas notas.");
+          setText("welcome-subtitle", "Escolha a turma e o apresentador em apresentação para registrar suas notas.");
           const badge = document.getElementById("role-badge");
           badge.textContent = "Participante";
           badge.className = "badge badge-participant";
@@ -866,14 +867,13 @@
           btn.textContent = t.name;
           btn.addEventListener("click", () => {
             turmaSelecionada = t.id;
-            apresentadorSelecionado = null;
             atualizarBotaoTurmaSelecionada();
             listarApresentadores(t);
             setText("selected-presenter-title", "Selecione um apresentador para ver as perguntas.");
             document.getElementById("perguntas-container").innerHTML = "";
             document.getElementById("stars-status").textContent = "";
             document.getElementById("stars-summary").textContent =
-              "Você terá 5 estrelas por período (manhã ou tarde) para destacar os tópicos mais importantes.";
+              "Você terá 5 estrelas por período para votar nos tópicos mais importantes.";
           });
           btn.dataset.turmaId = t.id;
           turmasButtonsEl.appendChild(btn);
@@ -905,7 +905,6 @@
     function listarApresentadores(turma) {
       const pillsEl = document.getElementById("apresentadores-pills");
       pillsEl.innerHTML = "";
-      apresentadorSelecionado = null;
 
       if (!turma.apresentadores || turma.apresentadores.length === 0) {
         pillsEl.innerHTML = '<span class="muted">Não há apresentadores nesta turma.</span>';
@@ -960,7 +959,7 @@
 
         dados.perguntas.forEach(perg => {
           const perguntaDiv = document.createElement("div");
-          perguntaDiv.style.marginBottom = "12px";
+          perguntaDiv.style.marginBottom = "14px";
 
           const pTitle = document.createElement("div");
           pTitle.className = "question-title";
@@ -978,13 +977,21 @@
 
             const instr = document.createElement("div");
             instr.className = "topic-instruction";
-            instr.textContent = "Dê uma nota de 1 a 5 para este tópico:";
+
+            // líderes (1–6) votam de 1 a 10, demais de 1 a 5
+            const leadersCodes = ["1", "2", "3", "4", "5", "6"];
+            const isLeaderUser = currentUser && leadersCodes.includes(String(currentUser.code));
+            const maxNota = isLeaderUser ? 10 : 5;
+
+            instr.textContent = isLeaderUser
+              ? "Dê uma nota de 1 a 10 para este tópico:"
+              : "Dê uma nota de 1 a 5 para este tópico:";
             topicDiv.appendChild(instr);
 
             const votesRow = document.createElement("div");
             votesRow.className = "votes-row";
 
-            for (let note = 1; note <= 5; note++) {
+            for (let note = 1; note <= maxNota; note++) {
               const voteBtn = document.createElement("button");
               voteBtn.className = "vote-pill";
               voteBtn.textContent = note;
@@ -1041,27 +1048,22 @@
 
     // Botão "Próximo apresentador"
     document.getElementById("btn-next-presenter").addEventListener("click", () => {
-      if (!turmaSelecionada) {
-        alert("Selecione uma turma primeiro.");
-        return;
-      }
-      const turma = turmasCache.find(t => String(t.id) === String(turmaSelecionada));
-      if (!turma || !turma.apresentadores || turma.apresentadores.length === 0) {
-        alert("Não há apresentadores nesta turma.");
+      if (!turmaSelecionada || !turmasCache.length) return;
+      const turma = turmasCache.find(t => t.id === String(turmaSelecionada));
+      if (!turma || !turma.apresentadores || turma.apresentadores.length === 0) return;
+
+      if (!apresentadorSelecionado) {
+        apresentadorSelecionado = turma.apresentadores[0].code;
+        marcarApresentadorSelecionado();
+        carregarPerguntas(apresentadorSelecionado);
         return;
       }
 
-      let idxAtual = turma.apresentadores.findIndex(ap => ap.code === String(apresentadorSelecionado));
-      if (idxAtual === -1) {
-        idxAtual = 0;
-      } else {
-        idxAtual = (idxAtual + 1) % turma.apresentadores.length;
-      }
-
-      const proximo = turma.apresentadores[idxAtual];
-      apresentadorSelecionado = proximo.code;
+      const idx = turma.apresentadores.findIndex(ap => ap.code === String(apresentadorSelecionado));
+      const proxIdx = (idx + 1) % turma.apresentadores.length;
+      apresentadorSelecionado = turma.apresentadores[proxIdx].code;
       marcarApresentadorSelecionado();
-      carregarPerguntas(proximo.code);
+      carregarPerguntas(apresentadorSelecionado);
     });
 
     // Estrelas – leva para outra página
@@ -1194,7 +1196,7 @@
 
       perguntas.forEach(p => {
         const wrap = document.createElement("div");
-        wrap.style.marginBottom = "12px";
+        wrap.style.marginBottom = "16px";
 
         const title = document.createElement("div");
         title.className = "question-title";
@@ -1227,7 +1229,7 @@
             btnSave.addEventListener("click", async () => {
               const texto = input.value.trim();
               if (!texto) {
-                alert("O texto do tópico não pode ser vazio.");
+                alert("Texto do tópico não pode ser vazio.");
                 return;
               }
               try {
@@ -1244,7 +1246,7 @@
             });
 
             btnDel.addEventListener("click", async () => {
-              if (!confirm("Tem certeza de que deseja apagar este tópico?")) return;
+              if (!confirm("Tem certeza que deseja apagar este tópico?")) return;
               try {
                 const resp = await api(`/api/admin/topicos/${top.id}`, {
                   method: "DELETE"
@@ -1471,7 +1473,7 @@
       }
     });
 
-    // Export Excel completo (todas as turmas)
+    // Export Excel completo
     document.getElementById("btn-export-excel").addEventListener("click", async () => {
       try {
         const resp = await fetch("/api/admin/export-excel-completo");
