@@ -154,7 +154,11 @@ function loadPresentersFromExcel() {
 // Rota de setup-default
 // ==========================
 
-app.post("/setup-default", (req, res) => {
+// ==========================
+// Rota de setup-default (GET e POST)
+// ==========================
+
+function runSetupDefault(req, res) {
   if (initialized) {
     return res.json({ ok: true, message: "Já estava inicializado. Nada foi alterado." });
   }
@@ -167,6 +171,86 @@ app.post("/setup-default", (req, res) => {
     turmaId: null,
     isPresenter: false
   });
+
+  // Lê apresentadores + perguntas do Excel
+  const presentersFromExcel = loadPresentersFromExcel();
+
+  if (!presentersFromExcel.length) {
+    return res.status(500).json({
+      ok: false,
+      message: "Não foi possível carregar os apresentadores a partir de PITCH.xlsx. Verifique se o arquivo está na mesma pasta do server.js."
+    });
+  }
+
+  // Cria apresentadores com códigos 11, 12, 13, ...
+  let codeCounter = 11;
+
+  presentersFromExcel.forEach((p) => {
+    const code = String(codeCounter++);
+    const turmaId = String(p.periodo || 1);
+    const name = p.nome;
+    const tema = p.tema || "";
+
+    data.users.push({
+      code,
+      name,
+      role: "participant",
+      turmaId,
+      isPresenter: true
+    });
+
+    const perguntas = (p.perguntas && p.perguntas.length
+      ? p.perguntas
+      : [
+          `Pergunta 1 de ${name}`,
+          `Pergunta 2 de ${name}`,
+          `Pergunta 3 de ${name}`
+        ]
+    ).slice(0, 3);
+
+    perguntas.forEach((textoPergunta, idx) => {
+      const ordem = idx + 1;
+      const pergunta = createPergunta(turmaId, code, textoPergunta, ordem);
+
+      // 3 tópicos fictícios por pergunta
+      for (let i = 1; i <= 3; i++) {
+        const baseLabel = `Tópico ${ordem}.${i}`;
+        const detalhe = tema ? ` – ${tema}` : ` – ${name}`;
+        createTopico(pergunta, baseLabel + detalhe);
+      }
+    });
+  });
+
+  // Participantes extras 42–46 (se você tiver esse bloco no seu código, mantenha)
+  const turmasIds = data.turmas.map(t => t.id);
+  let turmaIndex = 0;
+  for (let codeNum = 42; codeNum <= 46; codeNum++) {
+    const code = String(codeNum);
+    const turmaId = turmasIds[turmaIndex];
+    turmaIndex = (turmaIndex + 1) % turmasIds.length;
+
+    data.users.push({
+      code,
+      name: `Participante ${code}`,
+      role: "participant",
+      turmaId,
+      isPresenter: false
+    });
+  }
+
+  initialized = true;
+
+  res.json({
+    ok: true,
+    message: "Setup inicial criado a partir do arquivo PITCH.xlsx.",
+    totalUsers: data.users.length
+  });
+}
+
+// aceita POST e GET
+app.post("/setup-default", runSetupDefault);
+app.get("/setup-default", runSetupDefault);
+
 
   // Lê apresentadores + perguntas do Excel
   const presentersFromExcel = loadPresentersFromExcel();
