@@ -17,10 +17,8 @@ let initialized = false;
 const data = {
   users: [], // {code, name, role, turmaId, isPresenter}
   turmas: [
-    { id: "1", name: "Turma 1" },
-    { id: "2", name: "Turma 2" },
-    { id: "3", name: "Turma 3" },
-    { id: "4", name: "Turma 4" },
+    { id: "M", name: "Manhã" },
+    { id: "T", name: "Tarde" },
   ],
   perguntas: [], // {id, turmaId, apresentadorCode, texto, ordem}
   topicos: [],   // {id, perguntaId, turmaId, apresentadorCode, texto}
@@ -115,6 +113,7 @@ function loadPresentersFromExcel() {
 
       const col0Str = String(col0).trim();
 
+      // "PERIODO 1", "PERIODO 2" etc
       if (col0Str.toUpperCase().startsWith("PERIODO")) {
         const parts = col0Str.split(/\s+/);
         const num = parseInt(parts[1], 10);
@@ -122,6 +121,7 @@ function loadPresentersFromExcel() {
         return;
       }
 
+      // cabeçalho
       if (col0Str.toLowerCase() === "apresentador") {
         return;
       }
@@ -176,7 +176,18 @@ function initializeData() {
 
   presentersFromExcel.forEach((p) => {
     const code = String(codeCounter++);
-    const turmaId = String(p.periodo || 1);
+    const periodo = p.periodo || 1;
+
+    // Agrupar períodos em apenas 2 turmas:
+    // Períodos 1 e 2 => Manhã (M)
+    // Períodos 3 e 4 => Tarde (T)
+    let turmaId;
+    if (periodo === 1 || periodo === 2) {
+      turmaId = "M";
+    } else {
+      turmaId = "T";
+    }
+
     const name = p.nome;
     const tema = p.tema || "";
 
@@ -209,7 +220,8 @@ function initializeData() {
     });
   });
 
-  const turmasIds = data.turmas.map(t => t.id);
+  // Participantes extras 42–46 (alternando entre Manhã e Tarde)
+  const turmasIds = data.turmas.map(t => t.id); // ["M","T"]
   let turmaIndex = 0;
   for (let codeNum = 42; codeNum <= 46; codeNum++) {
     const code = String(codeNum);
@@ -339,9 +351,17 @@ app.post("/api/votos", (req, res) => {
 
 // Tópicos da turma para estrelas
 app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
+  const { turmaId } = req.params;
+  const { userCode } = req.query;
+
   try {
-    const { turmaId } = req.params;
-    const { userCode } = req.query;
+    console.log("[topicos-estrelas] turmaId =", turmaId, "userCode =", userCode);
+
+    if (!userCode) {
+      return res
+        .status(400)
+        .json({ ok: false, message: "Parâmetro userCode é obrigatório." });
+    }
 
     const user = findUserByCode(userCode);
     if (!user) {
@@ -353,16 +373,25 @@ app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
       return res.status(404).json({ ok: false, message: "Turma não encontrada." });
     }
 
-    const topicosTurma = data.topicos.filter(t => t.turmaId === String(turmaId));
-    const estrelasUserTurma = data.estrelas.filter(e => e.userCode === user.code && e.turmaId === String(turmaId));
-    const usados = estrelasUserTurma.length;
+    if (!Array.isArray(data.topicos)) data.topicos = [];
+    if (!Array.isArray(data.estrelas)) data.estrelas = [];
+
+    const topicosTurma = data.topicos.filter(
+      (t) => String(t.turmaId) === String(turmaId)
+    );
+
+    const estrelasUserTurma = data.estrelas.filter(
+      (e) => e.userCode === user.code && String(e.turmaId) === String(turmaId)
+    );
+
+    const usadas = estrelasUserTurma.length;
     const maximo = 5;
 
-    const topicosDetalhe = topicosTurma.map(t => {
+    const topicosDetalhe = topicosTurma.map((t) => {
       const apresentador = findUserByCode(t.apresentadorCode);
-      const jaVotou = estrelasUserTurma.some(e => e.topicoId === t.id);
+      const jaVotou = estrelasUserTurma.some((e) => e.topicoId === t.id);
       const proprioTopico = t.apresentadorCode === user.code;
-      const podeVotar = !jaVotou && !proprioTopico && usados < maximo;
+      const podeVotar = !jaVotou && !proprioTopico && usadas < maximo;
 
       return {
         id: t.id,
@@ -370,19 +399,22 @@ app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
         apresentadorNome: apresentador ? apresentador.name : "Desconhecido",
         jaVotou,
         proprioTopico,
-        podeVotar
+        podeVotar,
       };
     });
 
-    res.json({
+    return res.json({
       ok: true,
       turma: { id: turma.id, name: turma.name },
       estrelas: { usadas, maximo },
-      topicos: topicosDetalhe
+      topicos: topicosDetalhe,
     });
   } catch (err) {
     console.error("Erro em /api/turma/:turmaId/topicos-estrelas:", err);
-    res.status(500).json({ ok: false, message: "Erro ao carregar tópicos para estrelas." });
+    return res.status(500).json({
+      ok: false,
+      message: "Erro interno ao carregar tópicos para estrelas: " + err.message,
+    });
   }
 });
 
@@ -475,7 +507,7 @@ app.get("/api/admin/conteudo", (req, res) => {
   });
 });
 
-// Salvar perguntas (recria tópicos fictícios)
+// Salvar perguntas
 app.post("/api/admin/perguntas", (req, res) => {
   const { apresentadorCode, perguntasText } = req.body;
 
@@ -716,9 +748,15 @@ app.get("/api/admin/export-excel-completo", (req, res) => {
 });
 
 // ==========================
-// Rota principal
+// Rotas de páginas
 // ==========================
 
+// Força o envio direto da página de estrelas
+app.get("/estrelas.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "estrelas.html"));
+});
+
+// Página principal
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
