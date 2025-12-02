@@ -229,7 +229,6 @@ function initializeData() {
   console.log("Inicialização concluída. Usuários totais:", data.users.length);
 }
 
-// chama na subida
 initializeData();
 
 // ==========================
@@ -263,6 +262,7 @@ app.post("/login", (req, res) => {
 // Rotas PARTICIPANTE
 // ==========================
 
+// Turmas + apresentadores
 app.get("/api/turmas-com-apresentadores", (req, res) => {
   const turmas = data.turmas.map(t => {
     const apresentadores = data.users
@@ -279,6 +279,7 @@ app.get("/api/turmas-com-apresentadores", (req, res) => {
   res.json({ ok: true, turmas });
 });
 
+// Perguntas + tópicos de um apresentador
 app.get("/api/apresentador/:code/perguntas", (req, res) => {
   const { code } = req.params;
   const user = findUserByCode(code);
@@ -294,6 +295,7 @@ app.get("/api/apresentador/:code/perguntas", (req, res) => {
   });
 });
 
+// Voto 1–5 em um tópico
 app.post("/api/votos", (req, res) => {
   const { userCode, topicoId, nota } = req.body;
 
@@ -316,6 +318,7 @@ app.post("/api/votos", (req, res) => {
     return res.status(400).json({ ok: false, message: "Nota deve ser entre 1 e 5." });
   }
 
+  // Não pode votar no próprio tópico
   if (topico.apresentadorCode === user.code) {
     return res.status(403).json({ ok: false, message: "Você não pode votar nos seus próprios tópicos." });
   }
@@ -334,102 +337,111 @@ app.post("/api/votos", (req, res) => {
   res.json({ ok: true, message: "Voto registrado com sucesso." });
 });
 
+// Tópicos da turma para estrelas
 app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
-  const { turmaId } = req.params;
-  const { userCode } = req.query;
+  try {
+    const { turmaId } = req.params;
+    const { userCode } = req.query;
 
-  const user = findUserByCode(userCode);
-  if (!user) {
-    return res.status(400).json({ ok: false, message: "Usuário inválido." });
+    const user = findUserByCode(userCode);
+    if (!user) {
+      return res.status(400).json({ ok: false, message: "Usuário inválido." });
+    }
+
+    const turma = getTurmaById(turmaId);
+    if (!turma) {
+      return res.status(404).json({ ok: false, message: "Turma não encontrada." });
+    }
+
+    const topicosTurma = data.topicos.filter(t => t.turmaId === String(turmaId));
+    const estrelasUserTurma = data.estrelas.filter(e => e.userCode === user.code && e.turmaId === String(turmaId));
+    const usados = estrelasUserTurma.length;
+    const maximo = 5;
+
+    const topicosDetalhe = topicosTurma.map(t => {
+      const apresentador = findUserByCode(t.apresentadorCode);
+      const jaVotou = estrelasUserTurma.some(e => e.topicoId === t.id);
+      const proprioTopico = t.apresentadorCode === user.code;
+      const podeVotar = !jaVotou && !proprioTopico && usados < maximo;
+
+      return {
+        id: t.id,
+        texto: t.texto,
+        apresentadorNome: apresentador ? apresentador.name : "Desconhecido",
+        jaVotou,
+        proprioTopico,
+        podeVotar
+      };
+    });
+
+    res.json({
+      ok: true,
+      turma: { id: turma.id, name: turma.name },
+      estrelas: { usadas, maximo },
+      topicos: topicosDetalhe
+    });
+  } catch (err) {
+    console.error("Erro em /api/turma/:turmaId/topicos-estrelas:", err);
+    res.status(500).json({ ok: false, message: "Erro ao carregar tópicos para estrelas." });
   }
-
-  const turma = getTurmaById(turmaId);
-  if (!turma) {
-    return res.status(404).json({ ok: false, message: "Turma não encontrada." });
-  }
-
-  const topicosTurma = data.topicos.filter(t => t.turmaId === turmaId);
-
-  const estrelasUserTurma = data.estrelas.filter(e => e.userCode === user.code && e.turmaId === turmaId);
-  const usados = estrelasUserTurma.length;
-  const maximo = 5;
-
-  const topicosDetalhe = topicosTurma.map(t => {
-    const apresentador = findUserByCode(t.apresentadorCode);
-    const jaVotou = estrelasUserTurma.some(e => e.topicoId === t.id);
-    const proprioTopico = t.apresentadorCode === user.code;
-    const podeVotar = !jaVotou && !proprioTopico && usados < maximo;
-
-    return {
-      id: t.id,
-      texto: t.texto,
-      apresentadorNome: apresentador ? apresentador.name : "Desconhecido",
-      jaVotou,
-      proprioTopico,
-      podeVotar
-    };
-  });
-
-  res.json({
-    ok: true,
-    turma: { id: turma.id, name: turma.name },
-    estrelas: {
-      usadas,
-      maximo
-    },
-    topicos: topicosDetalhe
-  });
 });
 
+// Dar estrela
 app.post("/api/estrelas", (req, res) => {
-  const { userCode, turmaId, topicoId } = req.body;
+  try {
+    const { userCode, turmaId, topicoId } = req.body;
 
-  if (!userCode || !turmaId || !topicoId) {
-    return res.status(400).json({ ok: false, message: "Campos obrigatórios: userCode, turmaId, topicoId." });
+    if (!userCode || !turmaId || !topicoId) {
+      return res.status(400).json({ ok: false, message: "Campos obrigatórios: userCode, turmaId, topicoId." });
+    }
+
+    const user = findUserByCode(userCode);
+    if (!user) {
+      return res.status(400).json({ ok: false, message: "Usuário inválido." });
+    }
+
+    const turma = getTurmaById(turmaId);
+    if (!turma) {
+      return res.status(404).json({ ok: false, message: "Turma não encontrada." });
+    }
+
+    const topico = data.topicos.find(t => t.id === String(topicoId));
+    if (!topico || topico.turmaId !== String(turmaId)) {
+      return res.status(404).json({ ok: false, message: "Tópico não encontrado nesta turma." });
+    }
+
+    if (topico.apresentadorCode === user.code) {
+      return res.status(403).json({ ok: false, message: "Você não pode dar estrela nos seus próprios tópicos." });
+    }
+
+    const estrelasUserTurma = data.estrelas.filter(e => e.userCode === user.code && e.turmaId === String(turmaId));
+    if (estrelasUserTurma.length >= 5) {
+      return res.status(403).json({ ok: false, message: "Você já usou todas as 5 estrelas nesta turma." });
+    }
+
+    const jaDeuEstrela = data.estrelas.some(e => e.userCode === user.code && e.topicoId === topico.id);
+    if (jaDeuEstrela) {
+      return res.status(403).json({ ok: false, message: "Você já deu estrela neste tópico." });
+    }
+
+    data.estrelas.push({
+      userCode: user.code,
+      turmaId: String(turmaId),
+      topicoId: topico.id
+    });
+
+    res.json({ ok: true, message: "Estrela registrada com sucesso." });
+  } catch (err) {
+    console.error("Erro em /api/estrelas:", err);
+    res.status(500).json({ ok: false, message: "Erro ao registrar estrela." });
   }
-
-  const user = findUserByCode(userCode);
-  if (!user) {
-    return res.status(400).json({ ok: false, message: "Usuário inválido." });
-  }
-
-  const turma = getTurmaById(turmaId);
-  if (!turma) {
-    return res.status(404).json({ ok: false, message: "Turma não encontrada." });
-  }
-
-  const topico = data.topicos.find(t => t.id === String(topicoId));
-  if (!topico || topico.turmaId !== String(turmaId)) {
-    return res.status(404).json({ ok: false, message: "Tópico não encontrado nesta turma." });
-  }
-
-  if (topico.apresentadorCode === user.code) {
-    return res.status(403).json({ ok: false, message: "Você não pode dar estrela nos seus próprios tópicos." });
-  }
-
-  const estrelasUserTurma = data.estrelas.filter(e => e.userCode === user.code && e.turmaId === String(turmaId));
-  if (estrelasUserTurma.length >= 5) {
-    return res.status(403).json({ ok: false, message: "Você já usou todas as 5 estrelas nesta turma." });
-  }
-
-  const jaDeuEstrela = data.estrelas.some(e => e.userCode === user.code && e.topicoId === topico.id);
-  if (jaDeuEstrela) {
-    return res.status(403).json({ ok: false, message: "Você já deu estrela neste tópico." });
-  }
-
-  data.estrelas.push({
-    userCode: user.code,
-    turmaId: String(turmaId),
-    topicoId: topico.id
-  });
-
-  res.json({ ok: true, message: "Estrela registrada com sucesso." });
 });
 
 // ==========================
 // Rotas ADMIN
 // ==========================
 
+// Lista apresentadores
 app.get("/api/admin/apresentadores", (req, res) => {
   const lista = data.users
     .filter(u => u.code !== "100")
@@ -443,6 +455,7 @@ app.get("/api/admin/apresentadores", (req, res) => {
   res.json({ ok: true, apresentadores: lista, turmas: data.turmas });
 });
 
+// Conteúdo de um apresentador
 app.get("/api/admin/conteudo", (req, res) => {
   const { code } = req.query;
   if (!code) {
@@ -462,6 +475,7 @@ app.get("/api/admin/conteudo", (req, res) => {
   });
 });
 
+// Salvar perguntas (recria tópicos fictícios)
 app.post("/api/admin/perguntas", (req, res) => {
   const { apresentadorCode, perguntasText } = req.body;
 
@@ -496,6 +510,7 @@ app.post("/api/admin/perguntas", (req, res) => {
   res.json({ ok: true, message: "Perguntas e tópicos fictícios atualizados com sucesso." });
 });
 
+// Adicionar tópico
 app.post("/api/admin/topicos", (req, res) => {
   const { perguntaId, texto } = req.body;
 
@@ -512,6 +527,36 @@ app.post("/api/admin/topicos", (req, res) => {
   res.json({ ok: true, message: "Tópico criado com sucesso.", topico });
 });
 
+// Editar tópico existente
+app.put("/api/admin/topicos/:id", (req, res) => {
+  const { id } = req.params;
+  const { texto } = req.body;
+
+  if (!texto) {
+    return res.status(400).json({ ok: false, message: "Texto é obrigatório." });
+  }
+
+  const topico = data.topicos.find(t => t.id === String(id));
+  if (!topico) {
+    return res.status(404).json({ ok: false, message: "Tópico não encontrado." });
+  }
+
+  topico.texto = texto.trim();
+  res.json({ ok: true, message: "Tópico atualizado com sucesso.", topico });
+});
+
+// Apagar tópico
+app.delete("/api/admin/topicos/:id", (req, res) => {
+  const { id } = req.params;
+  const indice = data.topicos.findIndex(t => t.id === String(id));
+  if (indice === -1) {
+    return res.status(404).json({ ok: false, message: "Tópico não encontrado." });
+  }
+  data.topicos.splice(indice, 1);
+  res.json({ ok: true, message: "Tópico apagado com sucesso." });
+});
+
+// Relatório por turma (com votos detalhados)
 app.get("/api/admin/relatorio", (req, res) => {
   const { turmaId } = req.query;
 
@@ -536,13 +581,23 @@ app.get("/api/admin/relatorio", (req, res) => {
 
     const apresentador = findUserByCode(t.apresentadorCode);
 
+    const votosDetalhados = votosTopico.map(v => {
+      const u = findUserByCode(v.userCode);
+      return {
+        userCode: v.userCode,
+        userName: u ? u.name : "Desconhecido",
+        nota: v.nota
+      };
+    });
+
     return {
       topicoId: t.id,
       texto: t.texto,
       apresentadorNome: apresentador ? apresentador.name : "Desconhecido",
       media,
       qtdVotos,
-      totalEstrelas: estrelasTopico.length
+      totalEstrelas: estrelasTopico.length,
+      votosDetalhados
     };
   });
 
@@ -557,6 +612,7 @@ app.get("/api/admin/relatorio", (req, res) => {
   });
 });
 
+// Exportar JSON completo
 app.get("/api/admin/export-json", (req, res) => {
   const exportObj = {
     users: data.users,
@@ -569,6 +625,94 @@ app.get("/api/admin/export-json", (req, res) => {
 
   res.setHeader("Content-Disposition", 'attachment; filename="dados-votacao.json"');
   res.json(exportObj);
+});
+
+// Exportar Excel com todas as turmas
+app.get("/api/admin/export-excel-completo", (req, res) => {
+  try {
+    const wb = xlsx.utils.book_new();
+
+    // Sheet 1: Resumo por tópico
+    const resumoRows = [];
+    data.topicos.forEach(t => {
+      const turma = getTurmaById(t.turmaId);
+      const apresentador = findUserByCode(t.apresentadorCode);
+      const votosTopico = data.votos.filter(v => v.topicoId === t.id);
+      const estrelasTopico = data.estrelas.filter(e => e.topicoId === t.id);
+
+      const somaNotas = votosTopico.reduce((acc, v) => acc + v.nota, 0);
+      const qtdVotos = votosTopico.length;
+      const media = qtdVotos > 0 ? somaNotas / qtdVotos : 0;
+
+      resumoRows.push({
+        Turma: turma ? turma.name : "",
+        TopicoId: t.id,
+        Topico: t.texto,
+        Apresentador: apresentador ? apresentador.name : "",
+        MediaNotas: media,
+        QtdeVotos: qtdVotos,
+        TotalEstrelas: estrelasTopico.length
+      });
+    });
+    const wsResumo = xlsx.utils.json_to_sheet(resumoRows);
+    xlsx.utils.book_append_sheet(wb, wsResumo, "ResumoTopicos");
+
+    // Sheet 2: Votos detalhados
+    const votosRows = [];
+    data.votos.forEach(v => {
+      const topico = data.topicos.find(t => t.id === v.topicoId);
+      if (!topico) return;
+      const turma = getTurmaById(topico.turmaId);
+      const apresentador = findUserByCode(topico.apresentadorCode);
+      const votante = findUserByCode(v.userCode);
+      votosRows.push({
+        Turma: turma ? turma.name : "",
+        TopicoId: topico.id,
+        Topico: topico.texto,
+        Apresentador: apresentador ? apresentador.name : "",
+        VotanteCodigo: v.userCode,
+        VotanteNome: votante ? votante.name : "",
+        Nota: v.nota
+      });
+    });
+    const wsVotos = xlsx.utils.json_to_sheet(votosRows);
+    xlsx.utils.book_append_sheet(wb, wsVotos, "VotosDetalhados");
+
+    // Sheet 3: Estrelas detalhadas
+    const estrelasRows = [];
+    data.estrelas.forEach(e => {
+      const topico = data.topicos.find(t => t.id === e.topicoId);
+      if (!topico) return;
+      const turma = getTurmaById(topico.turmaId);
+      const apresentador = findUserByCode(topico.apresentadorCode);
+      const votante = findUserByCode(e.userCode);
+      estrelasRows.push({
+        Turma: turma ? turma.name : "",
+        TopicoId: topico.id,
+        Topico: topico.texto,
+        Apresentador: apresentador ? apresentador.name : "",
+        VotanteCodigo: e.userCode,
+        VotanteNome: votante ? votante.name : ""
+      });
+    });
+    const wsEstrelas = xlsx.utils.json_to_sheet(estrelasRows);
+    xlsx.utils.book_append_sheet(wb, wsEstrelas, "EstrelasDetalhadas");
+
+    const buffer = xlsx.write(wb, { bookType: "xlsx", type: "buffer" });
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="relatorio-votacao-completo.xlsx"'
+    );
+    res.send(buffer);
+  } catch (err) {
+    console.error("Erro em /api/admin/export-excel-completo:", err);
+    res.status(500).json({ ok: false, message: "Erro ao exportar Excel." });
+  }
 });
 
 // ==========================
