@@ -3,7 +3,7 @@ const path = require("path");
 const xlsx = require("xlsx");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -90,7 +90,7 @@ function getPerguntasETopicos(apresentadorCode) {
 }
 
 // ==========================
-// Ler PITCH.xlsx e montar apresentadores + perguntas
+// Ler PITCH.xlsx
 // ==========================
 
 function loadPresentersFromExcel() {
@@ -99,23 +99,22 @@ function loadPresentersFromExcel() {
     const workbook = xlsx.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
-    const rows = xlsx.utils.sheet_to_json(sheet, { header: 1 }); // matriz [linha][coluna]
+    const rows = xlsx.utils.sheet_to_json(sheet, { header: 1 });
 
     const presenters = [];
     let currentPeriodo = 1;
 
     rows.forEach((row) => {
-      const col0 = row[0]; // Apresentador / PERIODO / header
-      const col1 = row[1]; // Tema
-      const col2 = row[2]; // Pergunta 1
-      const col3 = row[3]; // Pergunta 2
-      const col4 = row[4]; // Pergunta 3
+      const col0 = row[0];
+      const col1 = row[1];
+      const col2 = row[2];
+      const col3 = row[3];
+      const col4 = row[4];
 
       if (!col0 || String(col0).trim() === "") return;
 
       const col0Str = String(col0).trim();
 
-      // Linhas "PERIODO X"
       if (col0Str.toUpperCase().startsWith("PERIODO")) {
         const parts = col0Str.split(/\s+/);
         const num = parseInt(parts[1], 10);
@@ -123,12 +122,10 @@ function loadPresentersFromExcel() {
         return;
       }
 
-      // Linha de header "Apresentador"
       if (col0Str.toLowerCase() === "apresentador") {
         return;
       }
 
-      // Linha de apresentador
       const perguntas = [col2, col3, col4]
         .map(q => (q ? String(q).trim() : ""))
         .filter(q => q.length > 0)
@@ -151,17 +148,12 @@ function loadPresentersFromExcel() {
 }
 
 // ==========================
-// Rota de setup-default
+// Inicializar dados na subida do servidor
 // ==========================
 
-// ==========================
-// Rota de setup-default (GET e POST)
-// ==========================
-
-function runSetupDefault(req, res) {
-  if (initialized) {
-    return res.json({ ok: true, message: "Já estava inicializado. Nada foi alterado." });
-  }
+function initializeData() {
+  if (initialized) return;
+  console.log("Inicializando dados a partir do PITCH.xlsx...");
 
   // Admin
   data.users.push({
@@ -172,17 +164,14 @@ function runSetupDefault(req, res) {
     isPresenter: false
   });
 
-  // Lê apresentadores + perguntas do Excel
   const presentersFromExcel = loadPresentersFromExcel();
 
   if (!presentersFromExcel.length) {
-    return res.status(500).json({
-      ok: false,
-      message: "Não foi possível carregar os apresentadores a partir de PITCH.xlsx. Verifique se o arquivo está na mesma pasta do server.js."
-    });
+    console.error("Nenhum apresentador carregado do PITCH.xlsx!");
+    initialized = true;
+    return;
   }
 
-  // Cria apresentadores com códigos 11, 12, 13, ...
   let codeCounter = 11;
 
   presentersFromExcel.forEach((p) => {
@@ -212,7 +201,6 @@ function runSetupDefault(req, res) {
       const ordem = idx + 1;
       const pergunta = createPergunta(turmaId, code, textoPergunta, ordem);
 
-      // 3 tópicos fictícios por pergunta
       for (let i = 1; i <= 3; i++) {
         const baseLabel = `Tópico ${ordem}.${i}`;
         const detalhe = tema ? ` – ${tema}` : ` – ${name}`;
@@ -221,7 +209,6 @@ function runSetupDefault(req, res) {
     });
   });
 
-  // Participantes extras 42–46 (se você tiver esse bloco no seu código, mantenha)
   const turmasIds = data.turmas.map(t => t.id);
   let turmaIndex = 0;
   for (let codeNum = 42; codeNum <= 46; codeNum++) {
@@ -239,96 +226,11 @@ function runSetupDefault(req, res) {
   }
 
   initialized = true;
-
-  res.json({
-    ok: true,
-    message: "Setup inicial criado a partir do arquivo PITCH.xlsx.",
-    totalUsers: data.users.length
-  });
+  console.log("Inicialização concluída. Usuários totais:", data.users.length);
 }
 
-// aceita POST e GET
-app.post("/setup-default", runSetupDefault);
-app.get("/setup-default", runSetupDefault);
-
-
-  // Lê apresentadores + perguntas do Excel
-  const presentersFromExcel = loadPresentersFromExcel();
-
-  if (!presentersFromExcel.length) {
-    return res.status(500).json({
-      ok: false,
-      message: "Não foi possível carregar os apresentadores a partir de PITCH.xlsx. Verifique se o arquivo está na mesma pasta do server.js."
-    });
-  }
-
-  // Cria apresentadores com códigos 11, 12, 13, ...
-  let codeCounter = 11;
-
-  presentersFromExcel.forEach((p) => {
-    const code = String(codeCounter++);
-    const turmaId = String(p.periodo || 1);
-    const name = p.nome;
-    const tema = p.tema || "";
-
-    data.users.push({
-      code,
-      name,
-      role: "participant",
-      turmaId,
-      isPresenter: true
-    });
-
-    // Perguntas: usa as do Excel, se não tiver, cria genéricas
-    const perguntas = (p.perguntas && p.perguntas.length
-      ? p.perguntas
-      : [
-          `Pergunta 1 de ${name}`,
-          `Pergunta 2 de ${name}`,
-          `Pergunta 3 de ${name}`
-        ]
-    ).slice(0, 3);
-
-    perguntas.forEach((textoPergunta, idx) => {
-      const ordem = idx + 1;
-      const pergunta = createPergunta(turmaId, code, textoPergunta, ordem);
-
-      // 3 tópicos fictícios por pergunta
-      for (let i = 1; i <= 3; i++) {
-        const baseLabel = `Tópico ${ordem}.${i}`;
-        const detalhe = tema ? ` – ${tema}` : ` – ${name}`;
-        createTopico(pergunta, baseLabel + detalhe);
-      }
-    });
-  });
-
-  // Participantes extras (não apresentadores): 42–46
-  const turmasIds = data.turmas.map(t => t.id);
-  let turmaIndex = 0;
-  for (let codeNum = 42; codeNum <= 46; codeNum++) {
-    const code = String(codeNum);
-    const turmaId = turmasIds[turmaIndex];
-    turmaIndex = (turmaIndex + 1) % turmasIds.length;
-
-    data.users.push({
-      code,
-      name: `Participante ${code}`,
-      role: "participant",
-      turmaId,
-      isPresenter: false
-    });
-  }
-
-  initialized = true;
-
-  res.json({
-    ok: true,
-    message: "Setup inicial criado a partir do arquivo PITCH.xlsx.",
-    totalUsers: data.users.length,
-    apresentadores: presentersFromExcel.length,
-    participantesApenas: 5
-  });
-});
+// chama na subida
+initializeData();
 
 // ==========================
 // Login
@@ -361,7 +263,6 @@ app.post("/login", (req, res) => {
 // Rotas PARTICIPANTE
 // ==========================
 
-// Turmas + apresentadores
 app.get("/api/turmas-com-apresentadores", (req, res) => {
   const turmas = data.turmas.map(t => {
     const apresentadores = data.users
@@ -378,7 +279,6 @@ app.get("/api/turmas-com-apresentadores", (req, res) => {
   res.json({ ok: true, turmas });
 });
 
-// Perguntas + tópicos de um apresentador
 app.get("/api/apresentador/:code/perguntas", (req, res) => {
   const { code } = req.params;
   const user = findUserByCode(code);
@@ -394,7 +294,6 @@ app.get("/api/apresentador/:code/perguntas", (req, res) => {
   });
 });
 
-// Voto 1–5 em um tópico
 app.post("/api/votos", (req, res) => {
   const { userCode, topicoId, nota } = req.body;
 
@@ -417,12 +316,10 @@ app.post("/api/votos", (req, res) => {
     return res.status(400).json({ ok: false, message: "Nota deve ser entre 1 e 5." });
   }
 
-  // Não pode votar no próprio tópico
   if (topico.apresentadorCode === user.code) {
     return res.status(403).json({ ok: false, message: "Você não pode votar nos seus próprios tópicos." });
   }
 
-  // 1 voto por tópico por pessoa (mas pode atualizar)
   const votoExistente = data.votos.find(v => v.userCode === user.code && v.topicoId === topico.id);
   if (votoExistente) {
     votoExistente.nota = notaNum;
@@ -437,7 +334,6 @@ app.post("/api/votos", (req, res) => {
   res.json({ ok: true, message: "Voto registrado com sucesso." });
 });
 
-// Tópicos de uma turma para votação de estrelas + status do usuário
 app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
   const { turmaId } = req.params;
   const { userCode } = req.query;
@@ -485,7 +381,6 @@ app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
   });
 });
 
-// Dar estrela
 app.post("/api/estrelas", (req, res) => {
   const { userCode, turmaId, topicoId } = req.body;
 
@@ -508,18 +403,15 @@ app.post("/api/estrelas", (req, res) => {
     return res.status(404).json({ ok: false, message: "Tópico não encontrado nesta turma." });
   }
 
-  // Não pode votar no próprio tópico
   if (topico.apresentadorCode === user.code) {
     return res.status(403).json({ ok: false, message: "Você não pode dar estrela nos seus próprios tópicos." });
   }
 
-  // Máximo 5 estrelas por turma por pessoa
   const estrelasUserTurma = data.estrelas.filter(e => e.userCode === user.code && e.turmaId === String(turmaId));
   if (estrelasUserTurma.length >= 5) {
     return res.status(403).json({ ok: false, message: "Você já usou todas as 5 estrelas nesta turma." });
   }
 
-  // Apenas 1 estrela por tópico por pessoa
   const jaDeuEstrela = data.estrelas.some(e => e.userCode === user.code && e.topicoId === topico.id);
   if (jaDeuEstrela) {
     return res.status(403).json({ ok: false, message: "Você já deu estrela neste tópico." });
@@ -538,7 +430,6 @@ app.post("/api/estrelas", (req, res) => {
 // Rotas ADMIN
 // ==========================
 
-// Lista apresentadores (para selects do painel)
 app.get("/api/admin/apresentadores", (req, res) => {
   const lista = data.users
     .filter(u => u.code !== "100")
@@ -552,7 +443,6 @@ app.get("/api/admin/apresentadores", (req, res) => {
   res.json({ ok: true, apresentadores: lista, turmas: data.turmas });
 });
 
-// Carregar perguntas & tópicos de um apresentador
 app.get("/api/admin/conteudo", (req, res) => {
   const { code } = req.query;
   if (!code) {
@@ -572,7 +462,6 @@ app.get("/api/admin/conteudo", (req, res) => {
   });
 });
 
-// Salvar perguntas (substitui as antigas e recria tópicos fictícios)
 app.post("/api/admin/perguntas", (req, res) => {
   const { apresentadorCode, perguntasText } = req.body;
 
@@ -590,14 +479,12 @@ app.post("/api/admin/perguntas", (req, res) => {
     .filter(l => l.length > 0)
     .slice(0, 3);
 
-  // Apaga perguntas antigas + tópicos delas
   const perguntasAntigas = data.perguntas.filter(p => p.apresentadorCode === user.code);
   const idsPerguntasAntigas = perguntasAntigas.map(p => p.id);
 
   data.perguntas = data.perguntas.filter(p => p.apresentadorCode !== user.code);
   data.topicos = data.topicos.filter(t => !idsPerguntasAntigas.includes(t.perguntaId));
 
-  // Cria novas perguntas e 3 tópicos fictícios para cada
   let ordem = 1;
   for (const texto of linhas) {
     const pergunta = createPergunta(user.turmaId, user.code, texto, ordem++);
@@ -609,7 +496,6 @@ app.post("/api/admin/perguntas", (req, res) => {
   res.json({ ok: true, message: "Perguntas e tópicos fictícios atualizados com sucesso." });
 });
 
-// Adicionar novo tópico manual em uma pergunta
 app.post("/api/admin/topicos", (req, res) => {
   const { perguntaId, texto } = req.body;
 
@@ -626,7 +512,6 @@ app.post("/api/admin/topicos", (req, res) => {
   res.json({ ok: true, message: "Tópico criado com sucesso.", topico });
 });
 
-// Relatório por turma (ranking)
 app.get("/api/admin/relatorio", (req, res) => {
   const { turmaId } = req.query;
 
@@ -672,7 +557,6 @@ app.get("/api/admin/relatorio", (req, res) => {
   });
 });
 
-// Exportar JSON completo
 app.get("/api/admin/export-json", (req, res) => {
   const exportObj = {
     users: data.users,
@@ -688,7 +572,7 @@ app.get("/api/admin/export-json", (req, res) => {
 });
 
 // ==========================
-// Inicialização
+// Rota principal
 // ==========================
 
 app.get("/", (req, res) => {
@@ -697,5 +581,4 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
-  console.log("Lembre-se de chamar POST /setup-default uma vez para preencher os dados iniciais.");
 });

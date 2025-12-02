@@ -1,7 +1,6 @@
 {
   "name": "pitches-votacao",
   "version": "1.0.0",
-  "description": "Sistema de votacao em tempo real para pitches",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
