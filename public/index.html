@@ -2,10 +2,1479 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Votação de Pitches</title>
+  <title>Grão Direto – Votação em Tempo Real</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #16a34a;
+      --primary-soft: #e0fce5;
+      --accent: #8d6e63;
+      --bg: #f3f4f6;
+      --card-bg: #ffffff;
+      --border: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      background:
+        radial-gradient(circle at top left, #dcfce7 0, transparent 45%),
+        radial-gradient(circle at top right, #e0f2fe 0, transparent 45%),
+        linear-gradient(to bottom, #f9fafb, #e5e7eb);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      padding: 32px 16px 48px;
+    }
+
+    @media (min-width: 900px) {
+      .container {
+        padding: 40px 8px 56px;
+      }
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    .logo {
+      font-family: "Montserrat", system-ui;
+      font-weight: 700;
+      font-size: 26px;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    .tagline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.06);
+      color: #166534;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid rgba(22, 163, 74, 0.2);
+      gap: 6px;
+      backdrop-filter: blur(6px);
+    }
+
+    .tag-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.4);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 22px 24px;
+      box-shadow:
+        0 18px 45px rgba(15, 23, 42, 0.10),
+        0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+      margin-bottom: 22px;
+    }
+
+    @media (min-width: 900px) {
+      .card {
+        padding: 24px 26px;
+        margin-bottom: 24px;
+      }
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+    .card-title {
+      font-family: "Montserrat", system-ui;
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      max-width: 640px;
+    }
+
+    .badge {
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: #f1f5f9;
+      color: #111827;
+      white-space: nowrap;
+    }
+
+    .badge-participant {
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .badge-admin {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .input-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .input {
+      flex: 1;
+      min-width: 120px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      outline: none;
+      font-size: 14px;
+      background: #f9fafb;
+    }
+
+    .input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.35);
+      background: #ffffff;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition:
+        transform 0.07s ease,
+        box-shadow 0.12s ease,
+        background 0.12s ease,
+        border-color 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 10px 24px rgba(22, 163, 74, 0.45);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 32px rgba(22, 163, 74, 0.55);
+    }
+
+    .btn-secondary {
+      background: #f9fafb;
+      color: #111827;
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #f3f4f6;
+    }
+
+    .btn-small {
+      padding: 5px 11px;
+      font-size: 12px;
+    }
+
+    .btn-pill {
+      border-radius: 999px;
+      padding: 7px 13px;
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #d1d5db;
+      color: #374151;
+    }
+
+    .btn-outline.active {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: #065f46;
+      font-weight: 600;
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
+    }
+
+    .status {
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .status-error {
+      color: #b91c1c;
+    }
+
+    .status-success {
+      color: #166534;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr);
+      gap: 24px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .question-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .topic-block {
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #f9fafb, #ffffff);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+    }
+
+    .topic-text {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .topic-instruction {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .votes-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .vote-pill {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      cursor: pointer;
+      background: #ffffff;
+      transition:
+        background 0.1s ease,
+        border-color 0.1s ease,
+        transform 0.06s ease,
+        box-shadow 0.08s ease;
+    }
+
+    .vote-pill:hover:not(.disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.16);
+    }
+
+    .vote-pill.selected {
+      background: #bbf7d0;
+      border-color: #16a34a;
+      color: #14532d;
+      font-weight: 600;
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.55);
+    }
+
+    .vote-pill.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .section-title {
+      font-family: "Montserrat", system-ui;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .stars-summary {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .stars-list {
+      max-height: 260px;
+      overflow-y: auto;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      padding: 10px;
+      background: #f9fafb;
+    }
+
+    .star-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 8px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+    }
+
+    .star-item-info {
+      font-size: 13px;
+    }
+
+    .star-item-info strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .star-item.disabled {
+      opacity: 0.55;
+    }
+
+    .tabs {
+      display: inline-flex;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+      background: #f9fafb;
+    }
+
+    .tab {
+      padding: 7px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-weight: 500;
+      color: #4b5563;
+    }
+
+    .tab.active {
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    .select {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      outline: none;
+      background: #f9fafb;
+    }
+
+    .select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.35);
+      background: #ffffff;
+    }
+
+    textarea {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      font-size: 13px;
+      min-height: 90px;
+      resize: vertical;
+      background: #f9fafb;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.35);
+      background: #ffffff;
+    }
+
+    .list-simple {
+      font-size: 13px;
+      margin-top: 8px;
+      list-style: none;
+    }
+
+    .list-simple li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .list-bullet {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #16a34a;
+      margin-top: 4px;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .ranking-list {
+      max-height: 260px;
+      overflow-y: auto;
+      margin-top: 8px;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      background: #f9fafb;
+      padding: 8px;
+      font-size: 13px;
+    }
+
+    .ranking-item {
+      padding: 7px 8px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+    }
+
+    .ranking-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .ranking-meta {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+
+    .small-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Sistema de votação no ar!</h1>
-  <p>Se você está vendo isso, o Render está servindo o index.html corretamente.</p>
+  <div class="container">
+    <div class="logo-area">
+      <div class="logo">GRÃO DIRETO</div>
+      <div class="tagline">
+        <span class="tag-dot"></span>
+        votação em tempo real
+      </div>
+    </div>
+
+    <!-- Card de Login -->
+    <div class="card" id="card-login">
+      <div class="card-header">
+        <div class="card-title" style="font-family: 'Montserrat', system-ui;">
+          Acessar votação
+        </div>
+      </div>
+      <div class="card-subtitle">
+        Use o código recebido para acessar como participante ou admin.
+      </div>
+      <div class="input-group">
+        <label class="input-label" for="input-code">Código</label>
+        <input id="input-code" class="input" placeholder="Ex.: 11, 27, 100 (admin)" />
+        <button class="btn btn-primary" id="btn-login">Entrar</button>
+      </div>
+      <div id="login-status" class="status"></div>
+    </div>
+
+    <!-- Layout principal (aparece depois do login) -->
+    <div id="main-layout" style="display:none;">
+      <!-- Cabeçalho geral -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title" id="welcome-title"></div>
+            <div class="card-subtitle" id="welcome-subtitle"></div>
+          </div>
+          <div>
+            <span id="role-badge" class="badge"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout com 2 colunas -->
+      <div class="layout">
+        <!-- Coluna esquerda: Participante OU Admin (aba de config) -->
+        <div>
+          <!-- PARTICIPANTE -->
+          <div id="participant-area" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Turmas e apresentadores</div>
+              </div>
+              <div class="card-subtitle">
+                Escolha a turma e depois clique no nome da pessoa que está apresentando para registrar suas notas.
+              </div>
+
+              <div id="turmas-buttons" class="pill-list"></div>
+              <div style="margin-top:12px;">
+                <div class="small-title">Apresentadores da turma selecionada</div>
+                <div id="apresentadores-pills" class="pill-list" style="margin-top:6px;"></div>
+                <div id="turmas-status" class="status"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title" id="selected-presenter-title">Selecione um apresentador</div>
+              </div>
+              <div id="perguntas-container" style="margin-top:4px;"></div>
+
+              <!-- Bloco de estrelas -->
+              <div style="margin-top:18px;">
+                <div class="section-title">Votação de estrelas da turma</div>
+                <div class="stars-summary" id="stars-summary">
+                  Você pode distribuir até 5 estrelas entre os tópicos desta turma. Não é permitido votar nos seus próprios tópicos.
+                </div>
+                <button class="btn btn-secondary btn-small" id="btn-load-stars">
+                  Ver / usar minhas estrelas
+                </button>
+                <div id="stars-status" class="status"></div>
+                <div id="stars-list" class="stars-list" style="display:none; margin-top:10px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ADMIN: Aba Config -->
+          <div id="admin-config-area" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  Painel do Admin
+                </div>
+                <div class="tabs">
+                  <button class="tab active" id="tab-config">Configurar perguntas & tópicos</button>
+                  <button class="tab" id="tab-reports">Relatórios & exportação</button>
+                </div>
+              </div>
+              <div class="card-subtitle">
+                Você é o único que pode gerir perguntas, tópicos e ver os rankings consolidados.
+              </div>
+            </div>
+
+            <!-- Conteúdo da aba Config -->
+            <div id="admin-config-content">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Seleção de Turma e Apresentador</div>
+                </div>
+                <div class="card-subtitle">
+                  Escolha um apresentador para editar suas perguntas e tópicos.
+                </div>
+
+                <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+                  <div>
+                    <div class="small-title">Turma</div>
+                    <select class="select" id="admin-select-turma"></select>
+                  </div>
+                  <div>
+                    <div class="small-title">Apresentador</div>
+                    <select class="select" id="admin-select-apresentador"></select>
+                  </div>
+                  <div style="margin-top:16px;">
+                    <button class="btn btn-secondary btn-small" id="btn-admin-load-conteudo">
+                      Carregar perguntas & tópicos
+                    </button>
+                  </div>
+                </div>
+
+                <div id="admin-select-status" class="status"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Editar perguntas (opcional)</div>
+                </div>
+                <div class="card-subtitle">
+                  1 pergunta por linha (máx. 3). Ao salvar, as perguntas antigas serão apagadas e novos tópicos fictícios serão criados.
+                </div>
+                <textarea id="admin-perguntas-textarea" placeholder="Pergunta 1&#10;Pergunta 2&#10;Pergunta 3"></textarea>
+                <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+                  <div class="muted">Exemplo: “Clareza do problema”, “Inovação da solução”, “Potencial de mercado”.</div>
+                  <button class="btn btn-primary btn-small" id="btn-admin-salvar-perguntas">
+                    Salvar perguntas
+                  </button>
+                </div>
+                <div id="admin-perguntas-status" class="status"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Tópicos deste apresentador</div>
+                </div>
+                <div id="admin-topicos-container"></div>
+                <div id="admin-topicos-status" class="status"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna direita: Admin aba Relatórios + Como funciona -->
+        <div>
+          <!-- Admin relatórios -->
+          <div id="admin-reports-area" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Relatórios por turma</div>
+              </div>
+              <div class="card-subtitle">
+                Gere os rankings por média de notas (1–5) e por estrelas.
+              </div>
+
+              <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
+                <div>
+                  <div class="small-title">Turma</div>
+                  <select class="select" id="admin-relatorio-turma"></select>
+                </div>
+                <button class="btn btn-secondary btn-small" id="btn-gerar-relatorio">
+                  Gerar relatório da turma
+                </button>
+                <button class="btn btn-primary btn-small" id="btn-export-json">
+                  Exportar JSON completo
+                </button>
+              </div>
+              <div id="admin-relatorio-status" class="status"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Ranking por média de notas</div>
+              </div>
+              <div class="ranking-list" id="ranking-notas"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Ranking por estrelas</div>
+              </div>
+              <div class="ranking-list" id="ranking-estrelas"></div>
+            </div>
+          </div>
+
+          <!-- Ajuda / instruções rápidas (apenas o que você pediu) -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Como funciona</div>
+            </div>
+            <ul class="list-simple">
+              <li>
+                <span class="list-bullet"></span>
+                <span>Notas 1–5: 1 voto por tópico por pessoa (pode atualizar).</span>
+              </li>
+              <li>
+                <span class="list-bullet"></span>
+                <span>Estrelas: até 5 por turma, 1 por tópico.</span>
+              </li>
+              <li>
+                <span class="list-bullet"></span>
+                <span>Ninguém pode votar nos próprios tópicos.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS (igual à versão anterior, só reaproveitado) -->
+  <script>
+      // Roda o setup-default sempre que o site abrir.
+  // Se já estiver inicializado, o backend apenas responde "Já estava inicializado".
+  fetch('/setup-default', { method: 'POST' })
+    .then(r => r.json().catch(() => ({})))
+    .then(d => {
+      console.log('setup-default:', d);
+    })
+    .catch(err => {
+      console.log('erro ao chamar /setup-default', err);
+    });
+
+    let currentUser = null;
+    let turmasCache = [];
+    let apresentadoresCache = [];
+    let turmaSelecionada = null;
+    let apresentadorSelecionado = null;
+    let ultimaTurmaEstrelas = null;
+
+    function setText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    function setHtml(id, html) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = html;
+    }
+
+    function show(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = "";
+    }
+
+    function hide(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = "none";
+    }
+
+    async function api(path, options = {}) {
+      const resp = await fetch(path, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        ...options
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || data.ok === false) {
+        const message = (data && data.message) || `Erro HTTP ${resp.status}`;
+        throw new Error(message);
+      }
+      return data;
+    }
+
+    // LOGIN
+    document.getElementById("btn-login").addEventListener("click", async () => {
+      const code = document.getElementById("input-code").value.trim();
+      const statusEl = document.getElementById("login-status");
+      statusEl.textContent = "";
+      statusEl.className = "status";
+
+      if (!code) {
+        statusEl.textContent = "Informe o código.";
+        statusEl.classList.add("status-error");
+        return;
+      }
+
+      try {
+        const dataResp = await api("/login", {
+          method: "POST",
+          body: JSON.stringify({ code })
+        });
+
+        currentUser = dataResp.user;
+
+        setText("welcome-title", `Bem-vindo, ${currentUser.name}!`);
+        if (currentUser.role === "admin") {
+          setText("welcome-subtitle", "Você está no Painel do Admin da votação de pitches.");
+          const badge = document.getElementById("role-badge");
+          badge.textContent = "Admin";
+          badge.className = "badge badge-admin";
+
+          hide("participant-area");
+          show("admin-config-area");
+          show("admin-reports-area");
+          show("main-layout");
+
+          carregarAdminSelects();
+        } else {
+          setText("welcome-subtitle", "Escolha a turma e em seguida o apresentador que está no palco para registrar suas notas.");
+          const badge = document.getElementById("role-badge");
+          badge.textContent = "Participante";
+          badge.className = "badge badge-participant";
+
+          show("participant-area");
+          hide("admin-config-area");
+          hide("admin-reports-area");
+          show("main-layout");
+
+          carregarTurmas();
+        }
+
+        hide("card-login");
+      } catch (err) {
+        statusEl.textContent = err.message;
+        statusEl.classList.add("status-error");
+      }
+    });
+
+    // PARTICIPANTE – Turmas / Apresentadores
+    async function carregarTurmas() {
+      const statusEl = document.getElementById("turmas-status");
+      statusEl.textContent = "";
+      statusEl.className = "status";
+
+      try {
+        const dados = await api("/api/turmas-com-apresentadores");
+        turmasCache = dados.turmas;
+
+        const turmasButtonsEl = document.getElementById("turmas-buttons");
+        turmasButtonsEl.innerHTML = "";
+
+        turmasCache.forEach(t => {
+          const btn = document.createElement("button");
+          btn.className = "btn btn-outline btn-pill";
+          btn.textContent = t.name;
+          btn.addEventListener("click", () => {
+            turmaSelecionada = t.id;
+            atualizarBotaoTurmaSelecionada();
+            listarApresentadores(t);
+            setText("selected-presenter-title", "Selecione um apresentador para ver as perguntas.");
+            document.getElementById("perguntas-container").innerHTML = "";
+            ultimaTurmaEstrelas = null;
+            document.getElementById("stars-list").style.display = "none";
+            document.getElementById("stars-status").textContent = "";
+            document.getElementById("stars-summary").textContent =
+              "Você pode distribuir até 5 estrelas entre os tópicos desta turma. Não é permitido votar nos seus próprios tópicos.";
+          });
+          btn.dataset.turmaId = t.id;
+          turmasButtonsEl.appendChild(btn);
+        });
+
+        if (turmasCache.length > 0) {
+          turmaSelecionada = turmasCache[0].id;
+          atualizarBotaoTurmaSelecionada();
+          listarApresentadores(turmasCache[0]);
+        }
+
+      } catch (err) {
+        statusEl.textContent = err.message;
+        statusEl.classList.add("status-error");
+      }
+    }
+
+    function atualizarBotaoTurmaSelecionada() {
+      const buttons = document.querySelectorAll("#turmas-buttons .btn-outline");
+      buttons.forEach(btn => {
+        if (btn.dataset.turmaId === String(turmaSelecionada)) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+    }
+
+    function listarApresentadores(turma) {
+      const pillsEl = document.getElementById("apresentadores-pills");
+      pillsEl.innerHTML = "";
+
+      if (!turma.apresentadores || turma.apresentadores.length === 0) {
+        pillsEl.innerHTML = '<span class="muted">Não há apresentadores nesta turma.</span>';
+        return;
+      }
+
+      turma.apresentadores.forEach(ap => {
+        const btn = document.createElement("button");
+        btn.className = "btn btn-secondary btn-small btn-pill";
+        btn.textContent = `${ap.name}`;
+        btn.dataset.code = ap.code;
+        btn.addEventListener("click", () => {
+          apresentadorSelecionado = ap.code;
+          marcarApresentadorSelecionado();
+          carregarPerguntas(ap.code);
+        });
+        pillsEl.appendChild(btn);
+      });
+    }
+
+    function marcarApresentadorSelecionado() {
+      const pills = document.querySelectorAll("#apresentadores-pills .btn-pill");
+      pills.forEach(p => {
+        if (p.dataset.code === String(apresentadorSelecionado)) {
+          p.classList.add("active");
+          p.style.background = "#111827";
+          p.style.color = "#f9fafb";
+        } else {
+          p.classList.remove("active");
+          p.style.background = "#f9fafb";
+          p.style.color = "#111827";
+        }
+      });
+    }
+
+    async function carregarPerguntas(apresentadorCode) {
+      const container = document.getElementById("perguntas-container");
+      container.innerHTML = "";
+      const titleEl = document.getElementById("selected-presenter-title");
+      titleEl.textContent = "Carregando perguntas...";
+
+      try {
+        const dados = await api(`/api/apresentador/${apresentadorCode}/perguntas`);
+        titleEl.textContent = `${dados.apresentador.name}`;
+
+        if (!dados.perguntas || dados.perguntas.length === 0) {
+          container.innerHTML = '<div class="muted">Nenhuma pergunta cadastrada para este apresentador.</div>';
+          return;
+        }
+
+        const fragment = document.createDocumentFragment();
+
+        dados.perguntas.forEach(perg => {
+          const perguntaDiv = document.createElement("div");
+          perguntaDiv.style.marginBottom = "14px";
+
+          const pTitle = document.createElement("div");
+          pTitle.className = "question-title";
+          pTitle.textContent = perg.texto;
+          perguntaDiv.appendChild(pTitle);
+
+          perg.topicos.forEach(top => {
+            const topicDiv = document.createElement("div");
+            topicDiv.className = "topic-block";
+
+            const topicText = document.createElement("div");
+            topicText.className = "topic-text";
+            topicText.textContent = top.texto;
+            topicDiv.appendChild(topicText);
+
+            const instr = document.createElement("div");
+            instr.className = "topic-instruction";
+            instr.textContent = "Dê uma nota de 1 a 5 para este tópico:";
+            topicDiv.appendChild(instr);
+
+            const votesRow = document.createElement("div");
+            votesRow.className = "votes-row";
+
+            for (let note = 1; note <= 5; note++) {
+              const voteBtn = document.createElement("button");
+              voteBtn.className = "vote-pill";
+              voteBtn.textContent = note;
+              voteBtn.dataset.topicoId = top.id;
+              voteBtn.dataset.note = note;
+              voteBtn.addEventListener("click", () => votarTopico(top.id, note, votesRow));
+              votesRow.appendChild(voteBtn);
+            }
+
+            topicDiv.appendChild(votesRow);
+            perguntaDiv.appendChild(topicDiv);
+          });
+
+          fragment.appendChild(perguntaDiv);
+        });
+
+        container.appendChild(fragment);
+
+      } catch (err) {
+        titleEl.textContent = "Erro ao carregar perguntas";
+        container.innerHTML = `<div class="status status-error">${err.message}</div>`;
+      }
+    }
+
+    async function votarTopico(topicoId, nota, votesRow) {
+      if (!currentUser) return;
+
+      const buttons = votesRow.querySelectorAll(".vote-pill");
+      buttons.forEach(b => b.classList.add("disabled"));
+
+      try {
+        await api("/api/votos", {
+          method: "POST",
+          body: JSON.stringify({
+            userCode: currentUser.code,
+            topicoId,
+            nota
+          })
+        });
+
+        buttons.forEach(b => {
+          b.classList.remove("disabled");
+          if (Number(b.dataset.note) === Number(nota)) {
+            b.classList.add("selected");
+          } else {
+            b.classList.remove("selected");
+          }
+        });
+      } catch (err) {
+        buttons.forEach(b => b.classList.remove("disabled"));
+        alert("Erro ao registrar voto: " + err.message);
+      }
+    }
+
+    // Estrelas
+    document.getElementById("btn-load-stars").addEventListener("click", async () => {
+      if (!turmaSelecionada) {
+        alert("Selecione uma turma primeiro.");
+        return;
+      }
+      await carregarEstrelasDaTurma(turmaSelecionada);
+    });
+
+    async function carregarEstrelasDaTurma(turmaId) {
+      if (!currentUser) return;
+
+      const statusEl = document.getElementById("stars-status");
+      const listEl = document.getElementById("stars-list");
+      const summaryEl = document.getElementById("stars-summary");
+      statusEl.textContent = "";
+      statusEl.className = "status";
+
+      try {
+        const dados = await api(`/api/turma/${turmaId}/topicos-estrelas?userCode=${encodeURIComponent(currentUser.code)}`);
+        ultimaTurmaEstrelas = turmaId;
+
+        summaryEl.textContent = `Você já usou ${dados.estrelas.usadas} de ${dados.estrelas.maximo} estrelas nesta turma.`;
+        listEl.style.display = "";
+        listEl.innerHTML = "";
+
+        if (!dados.topicos || dados.topicos.length === 0) {
+          listEl.innerHTML = '<div class="muted">Não há tópicos cadastrados nesta turma.</div>';
+          return;
+        }
+
+        dados.topicos.forEach(t => {
+          const item = document.createElement("div");
+          item.className = "star-item";
+          if (t.jaVotou || t.proprioTopico) {
+            item.classList.add("disabled");
+          }
+
+          const info = document.createElement("div");
+          info.className = "star-item-info";
+          info.innerHTML = `<strong>${t.texto}</strong><span>Apresentador: ${t.apresentadorNome}</span>`;
+
+          const actions = document.createElement("div");
+
+          if (t.proprioTopico) {
+            const span = document.createElement("span");
+            span.className = "muted";
+            span.textContent = "Seu tópico";
+            actions.appendChild(span);
+          } else if (t.jaVotou) {
+            const span = document.createElement("span");
+            span.className = "muted";
+            span.textContent = "Você já deu estrela";
+            actions.appendChild(span);
+          } else if (!t.podeVotar) {
+            const span = document.createElement("span");
+            span.className = "muted";
+            span.textContent = "Limite de estrelas atingido";
+            actions.appendChild(span);
+          } else {
+            const btn = document.createElement("button");
+            btn.className = "btn btn-primary btn-small";
+            btn.textContent = "Dar estrela";
+            btn.addEventListener("click", async () => {
+              try {
+                await api("/api/estrelas", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    userCode: currentUser.code,
+                    turmaId,
+                    topicoId: t.id
+                  })
+                });
+                statusEl.textContent = "Estrela registrada com sucesso.";
+                statusEl.classList.add("status-success");
+                await carregarEstrelasDaTurma(turmaId);
+              } catch (err) {
+                statusEl.textContent = err.message;
+                statusEl.classList.add("status-error");
+              }
+            });
+            actions.appendChild(btn);
+          }
+
+          item.appendChild(info);
+          item.appendChild(actions);
+          listEl.appendChild(item);
+        });
+
+      } catch (err) {
+        listEl.style.display = "none";
+        statusEl.textContent = err.message;
+        statusEl.classList.add("status-error");
+      }
+    }
+
+    // ADMIN – TABS
+    const tabConfig = document.getElementById("tab-config");
+    const tabReports = document.getElementById("tab-reports");
+    const adminConfigContent = document.getElementById("admin-config-content");
+    const adminReportsArea = document.getElementById("admin-reports-area");
+
+    tabConfig.addEventListener("click", () => {
+      tabConfig.classList.add("active");
+      tabReports.classList.remove("active");
+      adminConfigContent.style.display = "";
+      adminReportsArea.style.display = "";
+    });
+
+    tabReports.addEventListener("click", () => {
+      tabReports.classList.add("active");
+      tabConfig.classList.remove("active");
+      adminConfigContent.style.display = "";
+      adminReportsArea.style.display = "";
+    });
+
+    // ADMIN – Carregar selects
+    async function carregarAdminSelects() {
+      try {
+        const dados = await api("/api/admin/apresentadores");
+        apresentadoresCache = dados.apresentadores;
+        turmasCache = dados.turmas;
+
+        const selectTurma = document.getElementById("admin-select-turma");
+        const selectAp = document.getElementById("admin-select-apresentador");
+        const relTurma = document.getElementById("admin-relatorio-turma");
+
+        selectTurma.innerHTML = "";
+        relTurma.innerHTML = "";
+        turmasCache.forEach(t => {
+          const opt = document.createElement("option");
+          opt.value = t.id;
+          opt.textContent = t.name;
+          selectTurma.appendChild(opt);
+
+          const opt2 = document.createElement("option");
+          opt2.value = t.id;
+          opt2.textContent = t.name;
+          relTurma.appendChild(opt2);
+        });
+
+        atualizarSelectApresentadores();
+
+      } catch (err) {
+        const statusEl = document.getElementById("admin-select-status");
+        statusEl.textContent = "Erro ao carregar listas: " + err.message;
+        statusEl.classList.add("status-error");
+      }
+    }
+
+    function atualizarSelectApresentadores() {
+      const selectTurma = document.getElementById("admin-select-turma");
+      const selectAp = document.getElementById("admin-select-apresentador");
+      const turmaId = selectTurma.value;
+
+      selectAp.innerHTML = "";
+      const filtrados = apresentadoresCache.filter(ap => ap.turmaId === turmaId && ap.isPresenter);
+      filtrados.forEach(ap => {
+        const opt = document.createElement("option");
+        opt.value = ap.code;
+        opt.textContent = `${ap.name} (${ap.code})`;
+        selectAp.appendChild(opt);
+      });
+
+      if (filtrados.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "Sem apresentadores nesta turma";
+        selectAp.appendChild(opt);
+      }
+    }
+
+    document.getElementById("admin-select-turma").addEventListener("change", atualizarSelectApresentadores);
+
+    document.getElementById("btn-admin-load-conteudo").addEventListener("click", async () => {
+      const selectAp = document.getElementById("admin-select-apresentador");
+      const code = selectAp.value;
+      const statusEl = document.getElementById("admin-select-status");
+      statusEl.textContent = "";
+      statusEl.className = "status";
+
+      if (!code) {
+        statusEl.textContent = "Selecione um apresentador válido.";
+        statusEl.classList.add("status-error");
+        return;
+      }
+
+      try {
+        const dados = await api(`/api/admin/conteudo?code=${encodeURIComponent(code)}`);
+        preencherAdminConteudo(dados);
+        statusEl.textContent = "Conteúdo carregado.";
+        statusEl.classList.add("status-success");
+      } catch (err) {
+        statusEl.textContent = err.message;
+        statusEl.classList.add("status-error");
+      }
+    });
+
+    function preencherAdminConteudo(dados) {
+      const textarea = document.getElementById("admin-perguntas-textarea");
+      const topicosCont = document.getElementById("admin-topicos-container");
+
+      const perguntas = dados.perguntas || [];
+      textarea.value = perguntas.map(p => p.texto).join("\n");
+
+      topicosCont.innerHTML = "";
+
+      if (perguntas.length === 0) {
+        topicosCont.innerHTML = '<div class="muted">Nenhuma pergunta cadastrada para este apresentador.</div>';
+        return;
+      }
+
+      perguntas.forEach(p => {
+        const wrap = document.createElement("div");
+        wrap.style.marginBottom = "14px";
+
+        const title = document.createElement("div");
+        title.className = "question-title";
+        title.textContent = p.texto;
+        wrap.appendChild(title);
+
+        if (!p.topicos || p.topicos.length === 0) {
+          const mt = document.createElement("div");
+          mt.className = "muted";
+          mt.textContent = "Sem tópicos cadastrados.";
+          wrap.appendChild(mt);
+        } else {
+          p.topicos.forEach(top => {
+            const tdiv = document.createElement("div");
+            tdiv.className = "topic-block";
+            tdiv.style.marginBottom = "6px";
+            tdiv.style.background = "#ffffff";
+            const tt = document.createElement("div");
+            tt.className = "topic-text";
+            tt.textContent = top.texto;
+            tdiv.appendChild(tt);
+            wrap.appendChild(tdiv);
+          });
+        }
+
+        const novoWrap = document.createElement("div");
+        novoWrap.style.marginTop = "8px";
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "input";
+        input.placeholder = "Novo tópico desta pergunta…";
+
+        const btn = document.createElement("button");
+        btn.className = "btn btn-secondary btn-small";
+        btn.textContent = "Adicionar tópico";
+        btn.style.marginTop = "6px";
+
+        btn.addEventListener("click", async () => {
+          const texto = input.value.trim();
+          if (!texto) {
+            alert("Digite o texto do novo tópico.");
+            return;
+          }
+          try {
+            const resp = await api("/api/admin/topicos", {
+              method: "POST",
+              body: JSON.stringify({
+                perguntaId: p.id,
+                texto
+              })
+            });
+            input.value = "";
+            document.getElementById("admin-topicos-status").textContent = resp.message;
+            document.getElementById("admin-topicos-status").className = "status status-success";
+            const selectAp = document.getElementById("admin-select-apresentador");
+            const code = selectAp.value;
+            const dadosNovos = await api(`/api/admin/conteudo?code=${encodeURIComponent(code)}`);
+            preencherAdminConteudo(dadosNovos);
+          } catch (err) {
+            document.getElementById("admin-topicos-status").textContent = err.message;
+            document.getElementById("admin-topicos-status").className = "status status-error";
+          }
+        });
+
+        novoWrap.appendChild(input);
+        novoWrap.appendChild(btn);
+        wrap.appendChild(novoWrap);
+
+        topicosCont.appendChild(wrap);
+      });
+    }
+
+    document.getElementById("btn-admin-salvar-perguntas").addEventListener("click", async () => {
+      const selectAp = document.getElementById("admin-select-apresentador");
+      const code = selectAp.value;
+      const textarea = document.getElementById("admin-perguntas-textarea");
+      const statusEl = document.getElementById("admin-perguntas-status");
+
+      statusEl.textContent = "";
+      statusEl.className = "status";
+
+      if (!code) {
+        statusEl.textContent = "Selecione um apresentador.";
+        statusEl.classList.add("status-error");
+        return;
+      }
+
+      try {
+        const resp = await api("/api/admin/perguntas", {
+          method: "POST",
+          body: JSON.stringify({
+            apresentadorCode: code,
+            perguntasText: textarea.value
+          })
+        });
+        statusEl.textContent = resp.message;
+        statusEl.classList.add("status-success");
+
+        const dadosNovos = await api(`/api/admin/conteudo?code=${encodeURIComponent(code)}`);
+        preencherAdminConteudo(dadosNovos);
+
+      } catch (err) {
+        statusEl.textContent = err.message;
+        statusEl.classList.add("status-error");
+      }
+    });
+
+    // Relatórios
+    document.getElementById("btn-gerar-relatorio").addEventListener("click", async () => {
+      const sel = document.getElementById("admin-relatorio-turma");
+      const turmaId = sel.value;
+      const statusEl = document.getElementById("admin-relatorio-status");
+      statusEl.textContent = "";
+      statusEl.className = "status";
+
+      if (!turmaId) {
+        statusEl.textContent = "Selecione uma turma.";
+        statusEl.classList.add("status-error");
+        return;
+      }
+
+      try {
+        const dados = await api(`/api/admin/relatorio?turmaId=${encodeURIComponent(turmaId)}`);
+        statusEl.textContent = `Relatório gerado para ${dados.turma.name}.`;
+        statusEl.classList.add("status-success");
+        preencherRanking(dados);
+      } catch (err) {
+        statusEl.textContent = err.message;
+        statusEl.classList.add("status-error");
+      }
+    });
+
+    function preencherRanking(dados) {
+      const rankingNotasEl = document.getElementById("ranking-notas");
+      const rankingEstrelasEl = document.getElementById("ranking-estrelas");
+
+      const rn = dados.rankingNotas || [];
+      const re = dados.rankingEstrelas || [];
+
+      rankingNotasEl.innerHTML = "";
+      rankingEstrelasEl.innerHTML = "";
+
+      if (rn.length === 0) {
+        rankingNotasEl.innerHTML = '<div class="muted">Ainda não há votos registrados.</div>';
+      } else {
+        rn.forEach((item, idx) => {
+          const div = document.createElement("div");
+          div.className = "ranking-item";
+          div.innerHTML = `
+            <div class="ranking-title">${idx + 1}. ${item.texto}</div>
+            <div class="ranking-meta">
+              <span>Apresentador: ${item.apresentadorNome}</span>
+              <span class="chip">Média: ${item.media.toFixed(2)}</span>
+              <span class="chip">Votos: ${item.qtdVotos}</span>
+            </div>
+          `;
+          rankingNotasEl.appendChild(div);
+        });
+      }
+
+      if (re.length === 0) {
+        rankingEstrelasEl.innerHTML = '<div class="muted">Ainda não há estrelas registradas.</div>';
+      } else {
+        re.forEach((item, idx) => {
+          const div = document.createElement("div");
+          div.className = "ranking-item";
+          div.innerHTML = `
+            <div class="ranking-title">${idx + 1}. ${item.texto}</div>
+            <div class="ranking-meta">
+              <span>Apresentador: ${item.apresentadorNome}</span>
+              <span class="chip">Estrelas: ${item.totalEstrelas}</span>
+              <span class="chip">Média: ${item.media.toFixed(2)}</span>
+            </div>
+          `;
+          rankingEstrelasEl.appendChild(div);
+        });
+      }
+    }
+
+    document.getElementById("btn-export-json").addEventListener("click", async () => {
+      try {
+        const resp = await fetch("/api/admin/export-json");
+        if (!resp.ok) throw new Error("Erro ao exportar JSON.");
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "dados-votacao.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        const statusEl = document.getElementById("admin-relatorio-status");
+        statusEl.textContent = err.message;
+        statusEl.className = "status status-error";
+      }
+    });
+  </script>
 </body>
 </html>
