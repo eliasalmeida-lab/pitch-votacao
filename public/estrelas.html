@@ -3,9 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <title>Votação de Estrelas – Grão Direto</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --primary: #16a34a;
@@ -19,33 +23,38 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     body {
       min-height: 100vh;
       display: flex;
       justify-content: center;
+      align-items: center;
       background:
         radial-gradient(circle at top left, #dcfce7 0, transparent 45%),
         radial-gradient(circle at top right, #e0f2fe 0, transparent 45%),
         linear-gradient(to bottom, #f9fafb, #e5e7eb);
       color: var(--text);
       line-height: 1.5;
+      padding: 20px;
     }
     .container {
       width: 100%;
       max-width: 960px;
-      padding: 32px 16px 40px;
     }
     .card {
       background: var(--card-bg);
       border-radius: 18px;
       border: 1px solid rgba(148, 163, 184, 0.25);
-      padding: 22px 24px;
+      padding: 20px 20px;
       box-shadow:
         0 18px 45px rgba(15, 23, 42, 0.10),
         0 0 0 1px rgba(255, 255, 255, 0.9) inset;
-      margin-bottom: 20px;
+    }
+    @media (min-width: 768px) {
+      .card {
+        padding: 22px 24px;
+      }
     }
     .header {
       display:flex;
@@ -53,22 +62,32 @@
       align-items:flex-start;
       gap:12px;
       margin-bottom:12px;
+      flex-wrap: wrap;
     }
     .title {
-      font-family:"Montserrat",system-ui;
-      font-size:20px;
-      font-weight:600;
+      font-size:18px;
+      font-weight:700;
+    }
+    @media (min-width: 768px) {
+      .title {
+        font-size:20px;
+      }
     }
     .subtitle {
-      font-size:13px;
+      font-size:12px;
       color:var(--muted);
       margin-top:4px;
+    }
+    @media (min-width: 768px) {
+      .subtitle {
+        font-size:13px;
+      }
     }
     .badge {
       padding:5px 12px;
       border-radius:999px;
-      font-size:11px;
-      font-weight:600;
+      font-size:10px;
+      font-weight:700;
       text-transform:uppercase;
       letter-spacing:0.08em;
       background:#ecfdf5;
@@ -76,50 +95,57 @@
       border:1px solid #bbf7d0;
       white-space:nowrap;
     }
-    .list {
-      max-height: 480px;
-      overflow-y: auto;
-      margin-top: 8px;
+    @media (min-width: 768px) {
+      .badge {
+        font-size:11px;
+      }
     }
-    .item {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid #e5e7eb;
-      background:#ffffff;
-      margin-bottom:8px;
-    }
-    .item-info {
-      font-size:13px;
-    }
-    .item-info strong {
-      display:block;
-      margin-bottom:2px;
-    }
-    .muted {
+    .top-info {
       font-size:12px;
-      color:var(--muted);
+      margin-bottom:10px;
+      line-height: 1.6;
+    }
+    @media (min-width: 768px) {
+      .top-info {
+        font-size:13px;
+        margin-bottom:6px;
+      }
+    }
+    .top-info span {
+      display:block;
+      margin-bottom:4px;
+    }
+    @media (min-width: 768px) {
+      .top-info span {
+        display:inline-block;
+        margin-right:8px;
+        margin-bottom:0;
+      }
     }
     .btn {
-      padding:7px 14px;
+      padding:8px 16px;
       border-radius:999px;
       border:none;
       cursor:pointer;
       font-size:13px;
-      font-weight:600;
+      font-weight:700;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:6px;
       white-space:nowrap;
+      margin-bottom: 12px;
+    }
+    @media (min-width: 768px) {
+      .btn {
+        padding:7px 14px;
+      }
     }
     .btn-primary {
       background:var(--primary);
       color:#ffffff;
       box-shadow:0 10px 24px rgba(22,163,74,0.45);
+      transition: all 0.2s;
     }
     .btn-primary:hover {
       transform: translateY(-1px);
@@ -129,24 +155,68 @@
       background:#f9fafb;
       color:#111827;
       border:1px solid #e5e7eb;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background:#f3f4f6;
+    }
+    .list {
+      max-height: 480px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+    .item {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:12px 10px;
+      border-radius:12px;
+      border:1px solid #e5e7eb;
+      background:#ffffff;
+      margin-bottom:8px;
+      flex-wrap: wrap;
+    }
+    @media (min-width: 768px) {
+      .item {
+        padding:10px 12px;
+        flex-wrap: nowrap;
+      }
+    }
+    .item-info {
+      font-size:13px;
+      flex: 1;
+      min-width: 0;
+    }
+    .item-info strong {
+      display:block;
+      margin-bottom:2px;
+      word-wrap: break-word;
+    }
+    .muted {
+      font-size:12px;
+      color:var(--muted);
     }
     .status {
-      font-size:13px;
+      font-size:12px;
       margin-top:8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    @media (min-width: 768px) {
+      .status {
+        font-size:13px;
+      }
     }
     .status-error {
       color:#b91c1c;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
     }
     .status-success {
       color:#166534;
-    }
-    .top-info {
-      font-size:13px;
-      margin-bottom:6px;
-    }
-    .top-info span {
-      display:inline-block;
-      margin-right:8px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
     }
   </style>
 </head>
@@ -155,7 +225,7 @@
     <div class="card">
       <div class="header">
         <div>
-          <div class="title">Votação de estrelas</div>
+          <div class="title">Votação de Estrelas</div>
           <div class="subtitle" id="subtitle">
             Carregando informações...
           </div>
@@ -163,9 +233,9 @@
         <div class="badge">Estrelas</div>
       </div>
       <div class="top-info" id="top-info"></div>
-      <button class="btn btn-secondary" id="btn-voltar">&larr; Voltar para votação</button>
+      <button class="btn btn-secondary" id="btn-voltar">&larr; Voltar para a Votação</button>
       <div class="list" id="lista-topicos"></div>
-      <div id="status" class="status"></div>
+      <div id="status" class="status" style="display: none;"></div>
     </div>
   </div>
 
@@ -208,6 +278,7 @@
       }
 
       statusEl.textContent = "";
+      statusEl.style.display = "none";
       statusEl.className = "status";
 
       try {
@@ -260,7 +331,7 @@
           } else {
             const btn = document.createElement("button");
             btn.className = "btn btn-primary";
-            btn.textContent = "Dar estrela";
+            btn.textContent = "⭐ Dar Estrela";
             btn.addEventListener("click", async () => {
               try {
                 await api("/api/estrelas", {
@@ -271,12 +342,14 @@
                     topicoId: t.id
                   })
                 });
-                statusEl.textContent = "Estrela registrada com sucesso.";
+                statusEl.textContent = "✓ Estrela registrada com sucesso!";
                 statusEl.className = "status status-success";
+                statusEl.style.display = "block";
                 await carregar();
               } catch (err) {
-                statusEl.textContent = err.message;
+                statusEl.textContent = "✗ " + err.message;
                 statusEl.className = "status status-error";
+                statusEl.style.display = "block";
               }
             });
             actions.appendChild(btn);
@@ -288,8 +361,9 @@
         });
 
       } catch (err) {
-        statusEl.textContent = err.message;
+        statusEl.textContent = "✗ " + err.message;
         statusEl.className = "status status-error";
+        statusEl.style.display = "block";
       }
     }
 

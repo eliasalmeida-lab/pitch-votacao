@@ -3,10 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <title>Grão Direto – Votação em Tempo Real</title>
+
+  <!-- Mobile-friendly -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonte redondinha do Google -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #16a34a;
@@ -24,13 +28,14 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
       min-height: 100vh;
       display: flex;
       justify-content: center;
+      align-items: center;
       background:
         radial-gradient(circle at top left, #dcfce7 0, transparent 45%),
         radial-gradient(circle at top right, #e0f2fe 0, transparent 45%),
@@ -42,7 +47,7 @@
     .container {
       width: 100%;
       max-width: 1320px;
-      padding: 32px 16px 48px;
+      padding: 24px 12px 40px;
     }
 
     @media (min-width: 900px) {
@@ -53,16 +58,16 @@
 
     .logo-area {
       text-align: center;
-      margin-bottom: 26px;
+      margin-bottom: 24px;
     }
 
     .logo {
-      font-family: "Montserrat", system-ui;
       font-weight: 700;
       font-size: 26px;
       letter-spacing: 0.12em;
       margin-bottom: 6px;
       color: #111827;
+      text-transform: uppercase;
     }
 
     .tagline {
@@ -92,17 +97,17 @@
       background: var(--card-bg);
       border-radius: var(--radius);
       border: 1px solid rgba(148, 163, 184, 0.25);
-      padding: 22px 24px;
+      padding: 20px 20px;
       box-shadow:
         0 18px 45px rgba(15, 23, 42, 0.10),
         0 0 0 1px rgba(255, 255, 255, 0.9) inset;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
 
     @media (min-width: 900px) {
       .card {
-        padding: 24px 26px;
-        margin-bottom: 24px;
+        padding: 22px 26px;
+        margin-bottom: 22px;
       }
     }
 
@@ -115,9 +120,8 @@
     }
 
     .card-title {
-      font-family: "Montserrat", system-ui;
       font-size: 18px;
-      font-weight: 600;
+      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -127,7 +131,7 @@
     .card-subtitle {
       font-size: 13px;
       color: var(--muted);
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       max-width: 640px;
     }
 
@@ -165,13 +169,13 @@
 
     .input-label {
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--muted);
     }
 
     .input {
       flex: 1;
-      min-width: 120px;
+      min-width: 130px;
       padding: 8px 12px;
       border-radius: 999px;
       border: 1px solid var(--border);
@@ -192,7 +196,7 @@
       border: none;
       cursor: pointer;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -246,7 +250,7 @@
       background: var(--primary-soft);
       border-color: var(--primary);
       color: #065f46;
-      font-weight: 600;
+      font-weight: 700;
       box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
     }
 
@@ -263,16 +267,21 @@
       color: #166534;
     }
 
+    /* AQUI É O PONTO PRINCIPAL:
+       layout em UMA COLUNA, CENTRALIZADO, com largura máxima menor */
     .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr);
-      gap: 24px;
-      margin-top: 12px;
+      width: 100%;
+      max-width: 1100px;
+      margin: 16px auto 0;      /* centraliza horizontalmente */
+      display: flex;
+      flex-direction: column;   /* tudo em coluna */
+      gap: 20px;
     }
 
     @media (max-width: 900px) {
       .layout {
-        grid-template-columns: minmax(0, 1fr);
+        max-width: 100%;
+        margin-top: 12px;
       }
     }
 
@@ -285,7 +294,7 @@
 
     .question-title {
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--accent);
       margin-bottom: 8px;
     }
@@ -293,22 +302,22 @@
     .topic-block {
       border-radius: 14px;
       border: 1px solid #e2e8f0;
-      padding: 14px 16px;
-      margin-bottom: 12px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
       background: linear-gradient(135deg, #f9fafb, #ffffff);
       box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
     }
 
     .topic-text {
       font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 6px;
+      font-weight: 600;
+      margin-bottom: 4px;
     }
 
     .topic-instruction {
       font-size: 12px;
       color: var(--muted);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .votes-row {
@@ -344,7 +353,7 @@
       background: #bbf7d0;
       border-color: #16a34a;
       color: #14532d;
-      font-weight: 600;
+      font-weight: 700;
       box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.55);
     }
 
@@ -356,9 +365,8 @@
     }
 
     .section-title {
-      font-family: "Montserrat", system-ui;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 8px;
     }
 
@@ -376,7 +384,7 @@
       cursor: pointer;
       border: none;
       background: transparent;
-      font-weight: 500;
+      font-weight: 600;
       color: #4b5563;
     }
 
@@ -418,29 +426,6 @@
       background: #ffffff;
     }
 
-    .list-simple {
-      font-size: 13px;
-      margin-top: 6px;
-      list-style: none;
-    }
-
-    .list-simple li {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .list-bullet {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #16a34a;
-      margin-top: 5px;
-      flex-shrink: 0;
-      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
-    }
-
     .muted {
       color: var(--muted);
       font-size: 12px;
@@ -466,7 +451,7 @@
     }
 
     .ranking-title {
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 2px;
     }
 
@@ -488,7 +473,7 @@
 
     .small-title {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 2px;
     }
 
@@ -511,7 +496,7 @@
     }
 
     .vote-detail-title {
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 2px;
     }
 
@@ -556,23 +541,23 @@
       <div class="logo">GRÃO DIRETO</div>
       <div class="tagline">
         <span class="tag-dot"></span>
-        votação em tempo real
+        Votação em tempo real
       </div>
     </div>
 
     <!-- Card de Login -->
     <div class="card" id="card-login">
       <div class="card-header">
-        <div class="card-title" style="font-family: 'Montserrat', system-ui;">
-          Acessar votação
+        <div class="card-title">
+          Entrar na votação
         </div>
       </div>
       <div class="card-subtitle">
-        Use o código recebido para acessar como participante ou admin.
+        Use o código recebido para acessar como participante ou administrador.
       </div>
       <div class="input-group">
         <label class="input-label" for="input-code">Código</label>
-        <input id="input-code" class="input" placeholder="Ex.: 11, 27, 100 (admin)" />
+        <input id="input-code" class="input" placeholder="Digite seu código de acesso" />
         <button class="btn btn-primary" id="btn-login">Entrar</button>
       </div>
       <div id="login-status" class="status"></div>
@@ -603,7 +588,7 @@
                 <div class="card-title">Turmas e apresentadores</div>
               </div>
               <div class="card-subtitle">
-                Escolha a turma e depois clique no nome da pessoa que está apresentando para registrar suas notas.
+                Escolha a turma e clique no nome da pessoa que está apresentando para registrar suas notas.
               </div>
 
               <div id="turmas-buttons" class="pill-list"></div>
@@ -620,13 +605,21 @@
               </div>
               <div id="perguntas-container" style="margin-top:4px;"></div>
 
+              <!-- linha com botão Próximo -->
+              <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+                <span class="muted">Depois de registrar as notas deste apresentador, avance para o próximo da turma.</span>
+                <button class="btn btn-secondary btn-small" id="btn-next-presenter">
+                  Próximo apresentador &rarr;
+                </button>
+              </div>
+
               <div style="margin-top:18px;">
-                <div class="section-title">Votação de estrelas da turma</div>
+                <div class="section-title">Votação de estrelas</div>
                 <div class="muted" id="stars-summary" style="margin-bottom:8px;">
-                  Você terá 5 estrelas por período para votar nos tópicos mais importantes.
+                  Você terá 5 estrelas por período (manhã ou tarde) para destacar os tópicos mais importantes.
                 </div>
                 <button class="btn btn-secondary btn-small" id="btn-load-stars">
-                  Ver / Usar minhas estrelas
+                  Ver / usar minhas estrelas
                 </button>
                 <div id="stars-status" class="status"></div>
               </div>
@@ -644,14 +637,14 @@
                 </div>
               </div>
               <div class="card-subtitle">
-                Gerencie perguntas, tópicos e acompanhe o desempenho dos pitches.
+                Gerencie perguntas, tópicos e acompanhe o desempenho dos pitches por período.
               </div>
             </div>
 
             <div id="admin-config-content">
               <div class="card">
                 <div class="card-header">
-                  <div class="card-title">Seleção de Turma e Apresentador</div>
+                  <div class="card-title">Seleção de turma e apresentador</div>
                 </div>
                 <div class="card-subtitle">
                   Escolha um apresentador para editar suas perguntas e tópicos.
@@ -668,7 +661,7 @@
                   </div>
                   <div style="margin-top:16px;">
                     <button class="btn btn-secondary btn-small" id="btn-admin-load-conteudo">
-                      Carregar perguntas & tópicos
+                      Carregar perguntas e tópicos
                     </button>
                   </div>
                 </div>
@@ -681,11 +674,11 @@
                   <div class="card-title">Editar perguntas (opcional)</div>
                 </div>
                 <div class="card-subtitle">
-                  1 pergunta por linha (máx. 3). Substitui as perguntas atuais e recria os tópicos fictícios.
+                  Uma pergunta por linha (máx. 3). As perguntas atuais serão substituídas e os tópicos serão recriados.
                 </div>
                 <textarea id="admin-perguntas-textarea" placeholder="Pergunta 1&#10;Pergunta 2&#10;Pergunta 3"></textarea>
                 <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-                  <div class="muted">Ex.: Clareza do problema, Inovação da solução, Potencial de mercado.</div>
+                  <div class="muted">Ex.: clareza do problema, inovação da solução, potencial de mercado.</div>
                   <button class="btn btn-primary btn-small" id="btn-admin-salvar-perguntas">
                     Salvar perguntas
                   </button>
@@ -698,7 +691,7 @@
                   <div class="card-title">Tópicos deste apresentador</div>
                 </div>
                 <div class="card-subtitle">
-                  Edite ou remova tópicos existentes e acrescente novos, por pergunta.
+                  Edite, remova ou acrescente tópicos em cada pergunta.
                 </div>
                 <div id="admin-topicos-container"></div>
                 <div id="admin-topicos-status" class="status"></div>
@@ -707,7 +700,7 @@
           </div>
         </div>
 
-        <!-- Coluna direita -->
+        <!-- Coluna direita (relatórios admin) -->
         <div>
           <!-- Admin relatórios -->
           <div id="admin-reports-area" style="display:none;">
@@ -716,7 +709,7 @@
                 <div class="card-title">Relatórios por turma</div>
               </div>
               <div class="card-subtitle">
-                Veja rankings por notas e estrelas, e os votos detalhados por participante.
+                Veja rankings por notas e estrelas, além dos votos detalhados por participante.
               </div>
 
               <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
@@ -758,31 +751,6 @@
               <div class="votes-detail-list" id="votos-detalhados"></div>
             </div>
           </div>
-
-          <!-- Como funciona (compacto) -->
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">Como funciona</div>
-            </div>
-            <ul class="list-simple">
-              <li>
-                <span class="list-bullet"></span>
-                <span>Cada participante terá direito a 1 voto por tópico presente em cada pergunta.</span>
-              </li>
-              <li>
-                <span class="list-bullet"></span>
-                <span>As notas serão de 1 a 5.</span>
-              </li>
-              <li>
-                <span class="list-bullet"></span>
-                <span>Cada participante receberá 5 estrelas ao final de cada período para votar nos 5 tópicos mais importantes e relevantes.</span>
-              </li>
-              <li>
-                <span class="list-bullet"></span>
-                <span><strong>IMPORTANTE:</strong> Não votar no seu próprio tópico.</span>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
@@ -798,11 +766,6 @@
     function setText(id, text) {
       const el = document.getElementById(id);
       if (el) el.textContent = text;
-    }
-
-    function setHtml(id, html) {
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = html;
     }
 
     function show(id) {
@@ -852,7 +815,7 @@
         setText("welcome-title", `Bem-vindo, ${currentUser.name}!`);
 
         if (currentUser.role === "admin") {
-          setText("welcome-subtitle", "Você está no Painel do Admin da votação de pitches.");
+          setText("welcome-subtitle", "Você está no painel de administração da votação de pitches.");
           const badge = document.getElementById("role-badge");
           badge.textContent = "Admin";
           badge.className = "badge badge-admin";
@@ -864,7 +827,7 @@
 
           carregarAdminSelects();
         } else {
-          setText("welcome-subtitle", "Escolha a turma e o apresentador em apresentação para registrar suas notas.");
+          setText("welcome-subtitle", "Selecione o período e o apresentador para registrar suas notas.");
           const badge = document.getElementById("role-badge");
           badge.textContent = "Participante";
           badge.className = "badge badge-participant";
@@ -903,13 +866,14 @@
           btn.textContent = t.name;
           btn.addEventListener("click", () => {
             turmaSelecionada = t.id;
+            apresentadorSelecionado = null;
             atualizarBotaoTurmaSelecionada();
             listarApresentadores(t);
             setText("selected-presenter-title", "Selecione um apresentador para ver as perguntas.");
             document.getElementById("perguntas-container").innerHTML = "";
             document.getElementById("stars-status").textContent = "";
             document.getElementById("stars-summary").textContent =
-              "Você terá 5 estrelas por período para votar nos tópicos mais importantes.";
+              "Você terá 5 estrelas por período (manhã ou tarde) para destacar os tópicos mais importantes.";
           });
           btn.dataset.turmaId = t.id;
           turmasButtonsEl.appendChild(btn);
@@ -941,6 +905,7 @@
     function listarApresentadores(turma) {
       const pillsEl = document.getElementById("apresentadores-pills");
       pillsEl.innerHTML = "";
+      apresentadorSelecionado = null;
 
       if (!turma.apresentadores || turma.apresentadores.length === 0) {
         pillsEl.innerHTML = '<span class="muted">Não há apresentadores nesta turma.</span>';
@@ -995,7 +960,7 @@
 
         dados.perguntas.forEach(perg => {
           const perguntaDiv = document.createElement("div");
-          perguntaDiv.style.marginBottom = "14px";
+          perguntaDiv.style.marginBottom = "12px";
 
           const pTitle = document.createElement("div");
           pTitle.className = "question-title";
@@ -1074,7 +1039,32 @@
       }
     }
 
-    // Estrelas – agora leva para outra página
+    // Botão "Próximo apresentador"
+    document.getElementById("btn-next-presenter").addEventListener("click", () => {
+      if (!turmaSelecionada) {
+        alert("Selecione uma turma primeiro.");
+        return;
+      }
+      const turma = turmasCache.find(t => String(t.id) === String(turmaSelecionada));
+      if (!turma || !turma.apresentadores || turma.apresentadores.length === 0) {
+        alert("Não há apresentadores nesta turma.");
+        return;
+      }
+
+      let idxAtual = turma.apresentadores.findIndex(ap => ap.code === String(apresentadorSelecionado));
+      if (idxAtual === -1) {
+        idxAtual = 0;
+      } else {
+        idxAtual = (idxAtual + 1) % turma.apresentadores.length;
+      }
+
+      const proximo = turma.apresentadores[idxAtual];
+      apresentadorSelecionado = proximo.code;
+      marcarApresentadorSelecionado();
+      carregarPerguntas(proximo.code);
+    });
+
+    // Estrelas – leva para outra página
     document.getElementById("btn-load-stars").addEventListener("click", () => {
       if (!turmaSelecionada) {
         alert("Selecione uma turma primeiro.");
@@ -1204,7 +1194,7 @@
 
       perguntas.forEach(p => {
         const wrap = document.createElement("div");
-        wrap.style.marginBottom = "16px";
+        wrap.style.marginBottom = "12px";
 
         const title = document.createElement("div");
         title.className = "question-title";
@@ -1237,7 +1227,7 @@
             btnSave.addEventListener("click", async () => {
               const texto = input.value.trim();
               if (!texto) {
-                alert("Texto do tópico não pode ser vazio.");
+                alert("O texto do tópico não pode ser vazio.");
                 return;
               }
               try {
@@ -1254,7 +1244,7 @@
             });
 
             btnDel.addEventListener("click", async () => {
-              if (!confirm("Tem certeza que deseja apagar este tópico?")) return;
+              if (!confirm("Tem certeza de que deseja apagar este tópico?")) return;
               try {
                 const resp = await api(`/api/admin/topicos/${top.id}`, {
                   method: "DELETE"
@@ -1481,7 +1471,7 @@
       }
     });
 
-    // Export Excel completo
+    // Export Excel completo (todas as turmas)
     document.getElementById("btn-export-excel").addEventListener("click", async () => {
       try {
         const resp = await fetch("/api/admin/export-excel-completo");
