@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <title>Grão Direto – Votação em Tempo Real</title>
+
+  <!-- MUITO IMPORTANTE PARA MOBILE -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -174,7 +178,7 @@
     .input {
       flex: 1;
       min-width: 130px;
-      padding: 8px 12px;
+      padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid var(--border);
       outline: none;
@@ -189,7 +193,7 @@
     }
 
     .btn {
-      padding: 8px 16px;
+      padding: 9px 18px;
       border-radius: 999px;
       border: none;
       cursor: pointer;
@@ -229,7 +233,7 @@
     }
 
     .btn-small {
-      padding: 5px 11px;
+      padding: 6px 12px;
       font-size: 12px;
     }
 
@@ -275,13 +279,6 @@
       gap: 20px;
     }
 
-    @media (max-width: 900px) {
-      .layout {
-        max-width: 100%;
-        margin-top: 12px;
-      }
-    }
-
     .pill-list {
       display: flex;
       flex-wrap: wrap;
@@ -325,8 +322,8 @@
     }
 
     .vote-pill {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 999px;
       border: 1px solid #d1d5db;
       display: flex;
@@ -531,6 +528,76 @@
 
     .btn-danger:hover {
       background: #fecaca;
+    }
+
+    /* ========= AJUSTES MOBILE ========= */
+    @media (max-width: 768px) {
+      body {
+        align-items: flex-start;
+      }
+
+      .container {
+        padding: 16px 10px 28px;
+      }
+
+      .logo {
+        font-size: 22px;
+      }
+
+      .tagline {
+        font-size: 11px;
+        padding: 5px 12px;
+      }
+
+      .card {
+        padding: 16px 14px;
+        margin-bottom: 14px;
+      }
+
+      .card-title {
+        font-size: 16px;
+      }
+
+      .card-subtitle {
+        font-size: 12px;
+      }
+
+      .input,
+      .select {
+        font-size: 16px; /* evita zoom chato no mobile */
+      }
+
+      .btn {
+        font-size: 14px;
+        padding: 9px 16px;
+      }
+
+      .btn-small {
+        padding: 6px 10px;
+      }
+
+      .vote-pill {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+      }
+
+      .question-title {
+        font-size: 14px;
+      }
+
+      .topic-text {
+        font-size: 14px;
+      }
+
+      .topic-instruction {
+        font-size: 12px;
+      }
+
+      .layout {
+        margin-top: 10px;
+        max-width: 100%;
+      }
     }
   </style>
 </head>
