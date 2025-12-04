@@ -1,9 +1,12 @@
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const xlsx = require("xlsx");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const DB_FILE = path.join(__dirname, "db.json");
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -15,8 +18,7 @@ app.use(express.static(path.join(__dirname, "public")));
 let initialized = false;
 
 const data = {
-  users: [], // {code, name, role, turmaId, isPresenter}
-  // Agora só 2 turmas visíveis: Manhã (períodos 1+2) e Tarde (3+4)
+  users: [],   // {code, name, role, turmaId, isPresenter}
   turmas: [
     { id: "M", name: "Manhã" },
     { id: "T", name: "Tarde" },
@@ -29,6 +31,715 @@ const data = {
 
 let nextPerguntaId = 1;
 let nextTopicoId = 1;
+
+// ==========================
+// Config fixo dos presenters / perguntas / tópicos
+// ==========================
+
+const presentersConfig = [
+  {
+    nome: "Thaynara",
+    periodo: 1,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados (qualidade) de sua área TRIPLICAREM?",
+        topicos: [
+          "Aquisição no CEU",
+          "Novas jornadas para o público do onboarding",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Comitê entre Backoffice Corporativo e Jurídico",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Plataformas de teste para portais e aplicativo",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Ursula",
+    periodo: 1,
+    perguntas: [
+      {
+        texto: "Como TRIPLICAR nossa densidade de talento e performance dos times?",
+        topicos: [
+          "Inserir I.A no Processo seletivo",
+          "Gestão de desempenho",
+          "Ambiente GD+",
+          "Desenvolvimento contínuo",
+          "Comunicação interna",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Tempo de Recrutamento e seleção",
+          "Retenção de talentos",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Employer branding",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Bataiel",
+    periodo: 1,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
+        topicos: [
+          "Programa de Originação Integrado",
+          "Monitoramento de Mercado",
+          "Derivação para Intermediários",
+          "Expansão: Balcão e Derivativos",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Blindagem e Verificação de User",
+          "Sistematização do Loyalty",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "ID Único de Localidade",
+          "Novos Players Estratégicos",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Bordin",
+    periodo: 1,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
+        topicos: [
+          "Hack comportamental / Notificações Inteligentes",
+          "Ambiente Corporate → Casa do cliente",
+          "Cardápio mais completo possível",
+          "FOMO ao usuário",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Primeira Impressão Fatal",
+          "Loyalty",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Presença de marca mais forte",
+          "+ Tradings Compradoras",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Helen",
+    periodo: 1,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
+        topicos: [
+          "Gameficação de incentivos em níveis",
+          "Programa de indicação da Grão Direto",
+          "Programa Coalizão",
+          "Mais pontos, mais tempo, mais valor agregado",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Risco de Passivo Financeiro",
+          "Risco reputacional e fraudes",
+          "Relacionamento com a trading",
+          "Programas demais, engajamento de menos",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Publicidade e relacionamento com o produtor",
+          "GrainInsights → “Conquer do agro”",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Renan",
+    periodo: 2,
+    perguntas: [
+      {
+        texto: "Quais as prioridades de produto e como faremos para TRIPLICAR os resultados destas prioridades?",
+        topicos: [
+          "Explorar 100% do potencial do comercial biônico",
+          "Ser o vigia de mercado do nosso vendedor",
+          "Produtos da GD como alavanca para SF (e vice-versa)",
+          "Transformar o marketing de produto em motor de crescimento",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Explorar 100% do potencial do comercial biônico",
+          "Ser o vigia de mercado do nosso vendedor",
+          "Produtos da GD como alavanca para SF (e vice-versa)",
+          "Transformar o marketing de produto em motor de crescimento",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Inteligência Comercial Unificada",
+          "Explorar outras fontes de liquidez para os grãos",
+          "Ser verdadeiramente Data Driven",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Mari",
+    periodo: 2,
+    perguntas: [
+      {
+        texto: "Quais os times prioritários ou temas para COMPLIANCE e como faremos para estarmos preparados para triplicar resultados?",
+        topicos: [
+          "Compliance by design",
+          "Projeto “Commit no código (de conduta)”",
+        ]
+      },
+      {
+        texto: "O que não pode faltar em 2026?",
+        topicos: [
+          "Comunicação",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Expansão das parcerias",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Thiago",
+    periodo: 2,
+    perguntas: [
+      {
+        texto: "Quais os times prioritários ou temas para SEGURANÇA e como faremos para estarmos preparados para triplicar resultados?",
+        topicos: [
+          "Cenário atual",
+          "Score de Risco GD",
+          "Por que implementar isso?",
+        ]
+      },
+      {
+        texto: "O que não pode faltar em 2026?",
+        topicos: [
+          "Ações para 2026",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Programa de Incentivo à Redução de Custos com Ferramentas",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Humberto",
+    periodo: 2,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área QUINTUPLICAREM?",
+        topicos: [
+          "Criarmos o GD Global Agro Credit",
+          "Buscar melhores sacados em outros setores",
+          "Captação agressiva de cerealistas e sacados",
+          "Inteligência de abordagem, processo e conversas escaláveis para envolvimento de parceiros",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Fundo forte, originação fraca",
+          "Risco de decisões abruptas",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Liquidez como impulso da experiência digital e do crédito",
+          "Narrativa institucional clara e unificada",
+          "Armazéns estratégicos Grão Direto",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Boffe",
+    periodo: 2,
+    perguntas: [
+      {
+        texto: "Quais os times prioritários ou temas para CONTROLADORIA e FINANCEIRO e como faremos para TRIPLICAR os resultados destes times/temas?",
+        topicos: [
+          "Reforma Tributária",
+          "Tesouraria Estratégica",
+          "AgFintech",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Risco de Concentração da Carteira",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Exposição da Marca GD",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Juliene",
+    periodo: 2,
+    perguntas: [
+      {
+        texto: "Branding: Quais os times prioritários para triplicar os resultados via Branding e o que fazer neles?",
+        topicos: [
+          "Plataforma de Inteligência de Marca (PIM)",
+          "Loyalty atuando com a lógica de \"cupons\" para engajamento",
+          "Embaixador Sou Brasil, Sou Agro",
+          "Co-branding no Agro",
+        ]
+      },
+      {
+        texto: "Eventos: Como fazer os resultados de sua área TRIPLICAREM?",
+        topicos: [
+          "De \"Evento Bonito\" para \"Máquina de Negócios\"",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Implementar Calculadora de Custo de produção",
+          "Implementar Viés de Ancoragem de Preços",
+          "Criar um Programa de Sucessão Familiar",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Albert (Léo)",
+    periodo: 2,
+    perguntas: [
+      {
+        texto: "Quais os times prioritários ou temas para MARKETING e como faremos para TRIPLICAR os resultados destes times/temas?",
+        topicos: [
+          "Integração entre canais de mídia via servidor (S2S)",
+          "Novo modelo de atribuição: Marketing Mix Modeling",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Exige engenharia, governança e ambiente de testes",
+          "Experiência fluida",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "“Barter 24H” com cotação em tempo real",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Kaneko",
+    periodo: 3,
+    perguntas: [
+      {
+        texto: "Quais os times prioritários ou temas para PERFORMANCE e como faremos para TRIPLICAR os resultados destes times/temas?",
+        topicos: [
+          "Conhecer o Value Stream da empresa",
+          "Facilitar uma gestão interna",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Não perdermos o time da coisa",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Especializar pessoas",
+          "Zelarmos pela nossa cultura",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Cici",
+    periodo: 3,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
+        topicos: [
+          "Jornada WPP completa e com uma alta retenção",
+          "Mais dados para personalização",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Funil não orgânico (muita dependência de Twilio)",
+          "Teto CEU/CENG quase sendo atingido",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Elevar o patamar de Loyalty",
+          "Aumentar as “Super Transações”",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Joyce",
+    periodo: 3,
+    perguntas: [
+      {
+        texto: "Como TRIPLICAR nossa densidade de talento e performance dos times?",
+        topicos: [
+          "Fortalecer nossos elos",
+          "Decidir com menos achismo e mais dados",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Tolerância prolongada a baixo desempenho",
+          "Cenário recorrente de metas de Tech não batidas",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Reter talentos",
+          "Acompanhar as lideranças",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Lacerda",
+    periodo: 3,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
+        topicos: [
+          "Execução Forte e Rituais Consistentes",
+          "Inteligência Comercial (evolução do Top Picks + AIrton)",
+          "Transformar Riscos em Oportunidades de Crescimento",
+          "Avançarmos...",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "AMAGGI – Risco de “formalização” e dependência de incentivos",
+          "ADM – Crescimento do pré-hedge e by-pass",
+          "CARGILL – Risco de “volume” apenas para atingir a meta de 1,25 Mt (Warrants)",
+          "LDC – Risco de termos o “carimbo” como canal exclusivamente transacional",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Dados",
+          "Backoffice + Engajamento",
+          "Loyalty/Marketing",
+          "Gestão de pessoas",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Murilo",
+    periodo: 3,
+    perguntas: [
+      {
+        texto: "Como fazer a eficiência e impacto da sua área TRIPLICAREM?",
+        topicos: [
+          "Gastaremos R$ 133.701,60 migrando nossa arquitetura de Cloud para ARM",
+          "Automatização do quarterly report",
+          "Novo ecossistema de Dados",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Vazamento de Dados por AI",
+          "Modelo de negócio dos produtos de AI e custos de token",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Biônico como upselling para o Clicou, Fechou",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Thiago Meller",
+    periodo: 3,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
+        topicos: [
+          "Distribuirmos seguros através da plataforma",
+          "Estabelecermos parceria com consultoria estratégica",
+        ]
+      },
+      {
+        texto: "O que não pode faltar em 2026?",
+        topicos: [
+          "Atrairmos o sistema cooperativo para além da venda",
+          "Criarmos uma solução de hedge",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Turbinar Grainsights + copiloto AIrton",
+          "Academia GD ou Parcerias com Instituições de Ensino",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Aline",
+    periodo: 3,
+    perguntas: [
+      {
+        texto: "Quais os times prioritários ou temas para PROJETOS e como faremos para estarmos preparados para triplicar resultados?",
+        topicos: [
+          "Modelo integrado entre CF + Barter + Backoffice",
+          "Preparar o Backoffice para escalar",
+          "Infraestrutura escalável e time conectado",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Projetos vendidos top-down sem envolver os stakeholders operacionais",
+          "Processos pouco padronizados podem gerar dificuldades de escala",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Fortalecer e acelerar Serviços Financeiros e Inteligência Artificial",
+          "Cross-sell estruturado",
+          "Expandir portfólio de commodities",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Markim",
+    periodo: 3,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área MULTIPLICAR POR 10X?",
+        topicos: [
+          "Dados como estimulo do momento de negociar",
+          "AIrton como canal prioritário e unificado das comunicações",
+          "Impulsionar conexões ambiente GD através do AIrton",
+          "Biônico como maior fonte de dados GD",
+          "Biônico proativo e reativo resolvendo dores reais",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Dependência dos modelos de IA (LLMs)",
+          "Má visão externas de soluções de IA",
+          "Jornadas conversacionais são diferente de tudo e ainda não sabemos fazer",
+          "Escolhas não estratégicas e prioritárias",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Maior interação entre IA e jornadas dos demais times",
+          "Unificação e centralização de dados de usuários de toda GD",
+          "Geração de conteúdo sobre contexto de mercado",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Vinícius Emmanuel",
+    periodo: 4,
+    perguntas: [
+      {
+        texto: "Como fazer a eficiência e impacto da sua área TRIPLICAREM?",
+        topicos: [
+          "Engenharia Orientada a Hipóteses",
+          "Excelência na Execução (Pós-Planning)",
+          "Ecossistema Conectado (API First)",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Pessoa de produto para o time financeiro",
+        ]
+      },
+      {
+        texto: "Pergunta 3 – (sem tópicos definidos)",
+        topicos: [
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Mazetto",
+    periodo: 4,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
+        topicos: [
+          "Projetos de Alto Valor",
+          "Projetos de Alto Valor → Gestão de Contratos",
+          "Escalabilidade → ICP: empresas de porte médio",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Projetos de Alto Valor",
+          "Escalabilidade → ICP: empresas de porte médio",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Barter de tudo e de todas as formas possíveis",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Matheus Reis",
+    periodo: 4,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área QUINTUPLICAREM?",
+        topicos: [
+          "Otimizar créditos não performados",
+          "Aumentar capacidade comercial de produtos performados",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Otimizar créditos não performados",
+          "Aumentar capacidade comercial de produtos performados",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Desenvolvermos uma rede de compra e venda de HF (alho, cenoura, cebola e batata)",
+          "Criarmos CF de Cana de Açúcar e Café",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Sebá",
+    periodo: 4,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área QUINTUPLICAREM?",
+        topicos: [
+          "30 novas empresas (20–50k ton ano cada uma)",
+          "Crescimento nas empresas de grande volume",
+          "Novas empresas de grande volume",
+          "Produto básico com custo de implementação R$0,00",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Necessidade de crédito para negociações se realizarem",
+          "Liquidez não real dos grãos",
+          "Produto não escalável para 50 empresas",
+          "Time de Operações não escalável",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Criarmos um CF de Algodão e café",
+          "Voltar a ser obcecados pela experiência dos usuários ativos",
+          "Expansão territorial",
+          "Somos muito bons dentro de casa, mas externamente não falamos nada",
+        ]
+      },
+    ]
+  },
+  {
+    nome: "Gabriel",
+    periodo: 4,
+    perguntas: [
+      {
+        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
+        topicos: [
+          "Grainsights como referência",
+        ]
+      },
+      {
+        texto: "Quais riscos temos que ficar atentos?",
+        topicos: [
+          "Quantidade x Qualidade",
+        ]
+      },
+      {
+        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        topicos: [
+          "Solução ERP T.E.R.R.A",
+        ]
+      },
+    ]
+  },
+];
 
 // ==========================
 // Funções auxiliares
@@ -89,63 +800,52 @@ function getPerguntasETopicos(apresentadorCode) {
 }
 
 // ==========================
-// Ler PITCH.xlsx (grupos/apresentadores)
+// Helpers para salvamento em arquivo
 // ==========================
 
-function loadPresentersFromExcel() {
+function loadDataFromFile() {
   try {
-    const filePath = path.join(__dirname, "PITCH.xlsx");
-    const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const rows = xlsx.utils.sheet_to_json(sheet, { header: 1 });
-
-    const presenters = [];
-    let currentPeriodo = 1;
-
-    rows.forEach((row) => {
-      const col0 = row[0];
-      const col1 = row[1];
-      const col2 = row[2];
-      const col3 = row[3];
-      const col4 = row[4];
-
-      if (!col0 || String(col0).trim() === "") return;
-
-      const col0Str = String(col0).trim();
-
-      // Linhas tipo "PERIODO 1", "PERIODO 2"...
-      if (col0Str.toUpperCase().startsWith("PERIODO")) {
-        const parts = col0Str.split(/\s+/);
-        const num = parseInt(parts[1], 10);
-        if (!isNaN(num)) currentPeriodo = num;
-        return;
-      }
-
-      // Cabeçalho da tabela
-      if (col0Str.toLowerCase() === "apresentador") {
-        return;
-      }
-
-      const perguntas = [col2, col3, col4]
-        .map(q => (q ? String(q).trim() : ""))
-        .filter(q => q.length > 0)
-        .slice(0, 3);
-
-      presenters.push({
-        nome: col0Str,                                      // pode ser "Thiago e Mario", etc.
-        tema: col1 ? String(col1).trim() : "",
-        periodo: currentPeriodo || 1,                       // 1,2,3,4
-        perguntas
-      });
-    });
-
-    console.log(`Carregados ${presenters.length} apresentadores do PITCH.xlsx.`);
-    return presenters;
+    if (!fs.existsSync(DB_FILE)) return null;
+    const raw = fs.readFileSync(DB_FILE, "utf8");
+    const obj = JSON.parse(raw);
+    if (obj && obj.data) {
+      return obj;
+    }
   } catch (err) {
-    console.error("Erro ao ler PITCH.xlsx:", err.message);
-    return [];
+    console.error("Erro ao carregar db.json:", err.message);
   }
+  return null;
+}
+
+function saveDataToFile() {
+  try {
+    const exportObj = {
+      data,
+      nextPerguntaId,
+      nextTopicoId
+    };
+    fs.writeFileSync(DB_FILE, JSON.stringify(exportObj, null, 2), "utf8");
+  } catch (err) {
+    console.error("Erro ao salvar db.json:", err.message);
+  }
+}
+
+// ==========================
+// Helpers para comparação de pessoa (bloquear auto-voto)
+// ==========================
+
+function normalizeName(str) {
+  if (!str) return "";
+  return String(str)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function isSamePersonByName(userA, userB) {
+  if (!userA || !userB) return false;
+  return normalizeName(userA.name) === normalizeName(userB.name);
 }
 
 // ==========================
@@ -156,6 +856,25 @@ function initializeData() {
   if (initialized) return;
   console.log("Inicializando dados...");
 
+  const loaded = loadDataFromFile();
+  if (loaded) {
+    // Carrega do db.json
+    Object.assign(data, loaded.data);
+    nextPerguntaId = loaded.nextPerguntaId || 1;
+    nextTopicoId = loaded.nextTopicoId || 1;
+    initialized = true;
+    console.log("Dados carregados do db.json.");
+    console.log("Usuários totais:", data.users.length);
+    return;
+  }
+
+  // Sem arquivo: monta tudo do zero
+  data.users = [];
+  data.perguntas = [];
+  data.topicos = [];
+  data.votos = [];
+  data.estrelas = [];
+
   // Admin
   data.users.push({
     code: "100",
@@ -165,57 +884,34 @@ function initializeData() {
     isPresenter: false
   });
 
-  // 1) Carregar apresentadores (grupos) da PITCH.xlsx
-  const presentersFromExcel = loadPresentersFromExcel();
+  // 1) Apresentadores a partir do presentersConfig
+  let presenterCodeCounter = 1000;
 
-  let presenterCodeCounter = 1000; // códigos internos só para apresentadores
-
-  presentersFromExcel.forEach(p => {
-    const nome = p.nome || "";
-    const tema = p.tema || "";
+  presentersConfig.forEach(p => {
     const periodo = Number(p.periodo) || 1;
-
-    // Mapear período 1/2 → Manhã (M), 3/4 → Tarde (T)
-    const turmaId =
-      periodo === 1 || periodo === 2
-        ? "M"
-        : "T";
-
-    // criar usuário interno para o apresentador (grupo)
+    const turmaId = (periodo === 1 || periodo === 2) ? "M" : "T";
     const code = String(presenterCodeCounter++);
 
     data.users.push({
       code,
-      name: nome,          // ex.: "Thiago e Mario", "Equipe Tal", etc.
-      role: "participant", // continua participant
+      name: p.nome,          // IMPORTANTE: nome igual ao votante (pra bater no isSamePersonByName)
+      role: "participant",
       turmaId,
       isPresenter: true
     });
 
-    // Perguntas (da planilha ou genéricas)
-    const perguntas = (p.perguntas && p.perguntas.length
-      ? p.perguntas
-      : [
-          `Pergunta 1 de ${nome}`,
-          `Pergunta 2 de ${nome}`,
-          `Pergunta 3 de ${nome}`
-        ]
-    ).slice(0, 3);
-
-    perguntas.forEach((textoPergunta, idx) => {
+    (p.perguntas || []).forEach((perg, idx) => {
       const ordem = idx + 1;
-      const pergunta = createPergunta(turmaId, code, textoPergunta, ordem);
-
-      // Tópicos fictícios iniciais
-      for (let i = 1; i <= 3; i++) {
-        const baseLabel = `Tópico ${ordem}.${i}`;
-        const detalhe = tema ? ` – ${tema}` : ` – ${nome}`;
-        createTopico(pergunta, baseLabel + detalhe);
-      }
+      const pergunta = createPergunta(turmaId, code, perg.texto, ordem);
+      (perg.topicos || []).forEach(ttexto => {
+        if (ttexto && String(ttexto).trim().length > 0) {
+          createTopico(pergunta, String(ttexto).trim());
+        }
+      });
     });
   });
 
-  // 2) Códigos fixos de quem vota (1–38) – os que você mandou
+  // 2) Códigos fixos de quem vota (1–38)
   const voters = [
     { code: "1",  name: "Alexandre" },
     { code: "2",  name: "Gabi" },
@@ -262,10 +958,12 @@ function initializeData() {
       code: v.code,
       name: v.name,
       role: "participant",
-      turmaId: null,     // não precisa amarrar turma, ele pode votar em Manhã ou Tarde
-      isPresenter: false // esses são apenas votantes (mesmo que apresentem na vida real)
+      turmaId: null,
+      isPresenter: false
     });
   });
+
+  saveDataToFile();
 
   initialized = true;
   console.log("Inicialização concluída. Usuários totais:", data.users.length);
@@ -367,9 +1065,16 @@ app.post("/api/votos", (req, res) => {
     });
   }
 
-  // Regra antiga de não votar no próprio tópico (aqui só funciona se o código do votante = código interno do apresentador)
-  if (topico.apresentadorCode === user.code) {
-    return res.status(403).json({ ok: false, message: "Você não pode votar nos seus próprios tópicos." });
+  // Regra de não votar nos próprios tópicos (mesmo com códigos diferentes)
+  const apresentador = findUserByCode(topico.apresentadorCode);
+  const isSameCode = topico.apresentadorCode === user.code;
+  const isSameName = apresentador && isSamePersonByName(user, apresentador);
+
+  if (isSameCode || isSameName) {
+    return res.status(403).json({
+      ok: false,
+      message: "Você não pode votar nos seus próprios tópicos."
+    });
   }
 
   const votoExistente = data.votos.find(v => v.userCode === user.code && v.topicoId === topico.id);
@@ -382,6 +1087,8 @@ app.post("/api/votos", (req, res) => {
       nota: notaNum
     });
   }
+
+  saveDataToFile();
 
   res.json({ ok: true, message: "Voto registrado com sucesso." });
 });
@@ -411,7 +1118,10 @@ app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
     const topicosDetalhe = topicosTurma.map(t => {
       const apresentador = findUserByCode(t.apresentadorCode);
       const jaVotou = estrelasUserTurma.some(e => e.topicoId === t.id);
-      const proprioTopico = t.apresentadorCode === user.code;
+
+      const proprioTopico =
+        apresentador && isSamePersonByName(user, apresentador);
+
       const podeVotar = !jaVotou && !proprioTopico && usadas < maximo;
 
       return {
@@ -460,8 +1170,15 @@ app.post("/api/estrelas", (req, res) => {
       return res.status(404).json({ ok: false, message: "Tópico não encontrado nesta turma." });
     }
 
-    if (topico.apresentadorCode === user.code) {
-      return res.status(403).json({ ok: false, message: "Você não pode dar estrela nos seus próprios tópicos." });
+    const apresentador = findUserByCode(topico.apresentadorCode);
+    const isSameCode = topico.apresentadorCode === user.code;
+    const isSameName = apresentador && isSamePersonByName(user, apresentador);
+
+    if (isSameCode || isSameName) {
+      return res.status(403).json({
+        ok: false,
+        message: "Você não pode dar estrela nos seus próprios tópicos."
+      });
     }
 
     const estrelasUserTurma = data.estrelas.filter(e => e.userCode === user.code && e.turmaId === String(turmaId));
@@ -479,6 +1196,8 @@ app.post("/api/estrelas", (req, res) => {
       turmaId: String(turmaId),
       topicoId: topico.id
     });
+
+    saveDataToFile();
 
     res.json({ ok: true, message: "Estrela registrada com sucesso." });
   } catch (err) {
@@ -525,7 +1244,7 @@ app.get("/api/admin/conteudo", (req, res) => {
   });
 });
 
-// Salvar perguntas
+// Salvar perguntas (substitui as atuais de um apresentador)
 app.post("/api/admin/perguntas", (req, res) => {
   const { apresentadorCode, perguntasText } = req.body;
 
@@ -557,6 +1276,8 @@ app.post("/api/admin/perguntas", (req, res) => {
     }
   }
 
+  saveDataToFile();
+
   res.json({ ok: true, message: "Perguntas e tópicos fictícios atualizados com sucesso." });
 });
 
@@ -574,6 +1295,9 @@ app.post("/api/admin/topicos", (req, res) => {
   }
 
   const topico = createTopico(pergunta, texto.trim());
+
+  saveDataToFile();
+
   res.json({ ok: true, message: "Tópico criado com sucesso.", topico });
 });
 
@@ -592,6 +1316,9 @@ app.put("/api/admin/topicos/:id", (req, res) => {
   }
 
   topico.texto = texto.trim();
+
+  saveDataToFile();
+
   res.json({ ok: true, message: "Tópico atualizado com sucesso.", topico });
 });
 
@@ -603,6 +1330,9 @@ app.delete("/api/admin/topicos/:id", (req, res) => {
     return res.status(404).json({ ok: false, message: "Tópico não encontrado." });
   }
   data.topicos.splice(indice, 1);
+
+  saveDataToFile();
+
   res.json({ ok: true, message: "Tópico apagado com sucesso." });
 });
 
@@ -763,6 +1493,20 @@ app.get("/api/admin/export-excel-completo", (req, res) => {
     console.error("Erro em /api/admin/export-excel-completo:", err);
     res.status(500).json({ ok: false, message: "Erro ao exportar Excel." });
   }
+});
+
+// ==========================
+// Rota para RESET de testes (apaga votos + estrelas)
+// ==========================
+
+app.post("/api/admin/reset-votos", (req, res) => {
+  data.votos = [];
+  data.estrelas = [];
+  saveDataToFile();
+  res.json({
+    ok: true,
+    message: "Todos os votos e estrelas foram apagados com sucesso (reset de testes)."
+  });
 });
 
 // ==========================
