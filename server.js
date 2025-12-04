@@ -1,748 +1,78 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
 const xlsx = require("xlsx");
+const fs = require("fs");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const DB_FILE = path.join(__dirname, "db.json");
-
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+const DATA_FILE = path.join(__dirname, "dados.json");
+
 // ==========================
-// "Banco de dados" em memória
+// Estado em memória + controle
 // ==========================
 
-let initialized = false;
-
-const data = {
-  users: [],   // {code, name, role, turmaId, isPresenter}
-  turmas: [
-    { id: "M", name: "Manhã" },
-    { id: "T", name: "Tarde" },
-  ],
-  perguntas: [], // {id, turmaId, apresentadorCode, texto, ordem}
-  topicos: [],   // {id, perguntaId, turmaId, apresentadorCode, texto}
-  votos: [],     // {userCode, topicoId, nota}
-  estrelas: []   // {userCode, turmaId, topicoId}
-};
-
+let data;
 let nextPerguntaId = 1;
 let nextTopicoId = 1;
+let initialized = false;
+
+// Sempre que precisarmos montar tudo do zero
+function resetInMemoryData() {
+  data = {
+    users: [], // {code, name, role, turmaId, isPresenter, blockedPresenterCodes?}
+    turmas: [
+      { id: "M", name: "Manhã" }, // períodos 1+2
+      { id: "T", name: "Tarde" }, // períodos 3+4
+    ],
+    perguntas: [], // {id, turmaId, apresentadorCode, texto, ordem}
+    topicos: [],   // {id, perguntaId, turmaId, apresentadorCode, texto}
+    votos: [],     // {userCode, topicoId, nota}
+    estrelas: []   // {userCode, turmaId, topicoId}
+  };
+  nextPerguntaId = 1;
+  nextTopicoId = 1;
+}
 
 // ==========================
-// Config fixo dos presenters / perguntas / tópicos
+// Persistência em arquivo
 // ==========================
 
-const presentersConfig = [
-  {
-    nome: "Thaynara",
-    periodo: 1,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados (qualidade) de sua área TRIPLICAREM?",
-        topicos: [
-          "Aquisição no CEU",
-          "Novas jornadas para o público do onboarding",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Comitê entre Backoffice Corporativo e Jurídico",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Plataformas de teste para portais e aplicativo",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Ursula",
-    periodo: 1,
-    perguntas: [
-      {
-        texto: "Como TRIPLICAR nossa densidade de talento e performance dos times?",
-        topicos: [
-          "Inserir I.A no Processo seletivo",
-          "Gestão de desempenho",
-          "Ambiente GD+",
-          "Desenvolvimento contínuo",
-          "Comunicação interna",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Tempo de Recrutamento e seleção",
-          "Retenção de talentos",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Employer branding",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Bataiel",
-    periodo: 1,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
-        topicos: [
-          "Programa de Originação Integrado",
-          "Monitoramento de Mercado",
-          "Derivação para Intermediários",
-          "Expansão: Balcão e Derivativos",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Blindagem e Verificação de User",
-          "Sistematização do Loyalty",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "ID Único de Localidade",
-          "Novos Players Estratégicos",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Bordin",
-    periodo: 1,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
-        topicos: [
-          "Hack comportamental / Notificações Inteligentes",
-          "Ambiente Corporate → Casa do cliente",
-          "Cardápio mais completo possível",
-          "FOMO ao usuário",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Primeira Impressão Fatal",
-          "Loyalty",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Presença de marca mais forte",
-          "+ Tradings Compradoras",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Helen",
-    periodo: 1,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
-        topicos: [
-          "Gameficação de incentivos em níveis",
-          "Programa de indicação da Grão Direto",
-          "Programa Coalizão",
-          "Mais pontos, mais tempo, mais valor agregado",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Risco de Passivo Financeiro",
-          "Risco reputacional e fraudes",
-          "Relacionamento com a trading",
-          "Programas demais, engajamento de menos",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Publicidade e relacionamento com o produtor",
-          "GrainInsights → “Conquer do agro”",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Renan",
-    periodo: 2,
-    perguntas: [
-      {
-        texto: "Quais as prioridades de produto e como faremos para TRIPLICAR os resultados destas prioridades?",
-        topicos: [
-          "Explorar 100% do potencial do comercial biônico",
-          "Ser o vigia de mercado do nosso vendedor",
-          "Produtos da GD como alavanca para SF (e vice-versa)",
-          "Transformar o marketing de produto em motor de crescimento",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Explorar 100% do potencial do comercial biônico",
-          "Ser o vigia de mercado do nosso vendedor",
-          "Produtos da GD como alavanca para SF (e vice-versa)",
-          "Transformar o marketing de produto em motor de crescimento",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Inteligência Comercial Unificada",
-          "Explorar outras fontes de liquidez para os grãos",
-          "Ser verdadeiramente Data Driven",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Mari",
-    periodo: 2,
-    perguntas: [
-      {
-        texto: "Quais os times prioritários ou temas para COMPLIANCE e como faremos para estarmos preparados para triplicar resultados?",
-        topicos: [
-          "Compliance by design",
-          "Projeto “Commit no código (de conduta)”",
-        ]
-      },
-      {
-        texto: "O que não pode faltar em 2026?",
-        topicos: [
-          "Comunicação",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Expansão das parcerias",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Thiago",
-    periodo: 2,
-    perguntas: [
-      {
-        texto: "Quais os times prioritários ou temas para SEGURANÇA e como faremos para estarmos preparados para triplicar resultados?",
-        topicos: [
-          "Cenário atual",
-          "Score de Risco GD",
-          "Por que implementar isso?",
-        ]
-      },
-      {
-        texto: "O que não pode faltar em 2026?",
-        topicos: [
-          "Ações para 2026",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Programa de Incentivo à Redução de Custos com Ferramentas",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Humberto",
-    periodo: 2,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área QUINTUPLICAREM?",
-        topicos: [
-          "Criarmos o GD Global Agro Credit",
-          "Buscar melhores sacados em outros setores",
-          "Captação agressiva de cerealistas e sacados",
-          "Inteligência de abordagem, processo e conversas escaláveis para envolvimento de parceiros",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Fundo forte, originação fraca",
-          "Risco de decisões abruptas",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Liquidez como impulso da experiência digital e do crédito",
-          "Narrativa institucional clara e unificada",
-          "Armazéns estratégicos Grão Direto",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Boffe",
-    periodo: 2,
-    perguntas: [
-      {
-        texto: "Quais os times prioritários ou temas para CONTROLADORIA e FINANCEIRO e como faremos para TRIPLICAR os resultados destes times/temas?",
-        topicos: [
-          "Reforma Tributária",
-          "Tesouraria Estratégica",
-          "AgFintech",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Risco de Concentração da Carteira",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Exposição da Marca GD",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Juliene",
-    periodo: 2,
-    perguntas: [
-      {
-        texto: "Branding: Quais os times prioritários para triplicar os resultados via Branding e o que fazer neles?",
-        topicos: [
-          "Plataforma de Inteligência de Marca (PIM)",
-          "Loyalty atuando com a lógica de \"cupons\" para engajamento",
-          "Embaixador Sou Brasil, Sou Agro",
-          "Co-branding no Agro",
-        ]
-      },
-      {
-        texto: "Eventos: Como fazer os resultados de sua área TRIPLICAREM?",
-        topicos: [
-          "De \"Evento Bonito\" para \"Máquina de Negócios\"",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Implementar Calculadora de Custo de produção",
-          "Implementar Viés de Ancoragem de Preços",
-          "Criar um Programa de Sucessão Familiar",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Albert (Léo)",
-    periodo: 2,
-    perguntas: [
-      {
-        texto: "Quais os times prioritários ou temas para MARKETING e como faremos para TRIPLICAR os resultados destes times/temas?",
-        topicos: [
-          "Integração entre canais de mídia via servidor (S2S)",
-          "Novo modelo de atribuição: Marketing Mix Modeling",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Exige engenharia, governança e ambiente de testes",
-          "Experiência fluida",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "“Barter 24H” com cotação em tempo real",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Kaneko",
-    periodo: 3,
-    perguntas: [
-      {
-        texto: "Quais os times prioritários ou temas para PERFORMANCE e como faremos para TRIPLICAR os resultados destes times/temas?",
-        topicos: [
-          "Conhecer o Value Stream da empresa",
-          "Facilitar uma gestão interna",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Não perdermos o time da coisa",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Especializar pessoas",
-          "Zelarmos pela nossa cultura",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Cici",
-    periodo: 3,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
-        topicos: [
-          "Jornada WPP completa e com uma alta retenção",
-          "Mais dados para personalização",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Funil não orgânico (muita dependência de Twilio)",
-          "Teto CEU/CENG quase sendo atingido",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Elevar o patamar de Loyalty",
-          "Aumentar as “Super Transações”",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Joyce",
-    periodo: 3,
-    perguntas: [
-      {
-        texto: "Como TRIPLICAR nossa densidade de talento e performance dos times?",
-        topicos: [
-          "Fortalecer nossos elos",
-          "Decidir com menos achismo e mais dados",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Tolerância prolongada a baixo desempenho",
-          "Cenário recorrente de metas de Tech não batidas",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Reter talentos",
-          "Acompanhar as lideranças",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Lacerda",
-    periodo: 3,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
-        topicos: [
-          "Execução Forte e Rituais Consistentes",
-          "Inteligência Comercial (evolução do Top Picks + AIrton)",
-          "Transformar Riscos em Oportunidades de Crescimento",
-          "Avançarmos...",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "AMAGGI – Risco de “formalização” e dependência de incentivos",
-          "ADM – Crescimento do pré-hedge e by-pass",
-          "CARGILL – Risco de “volume” apenas para atingir a meta de 1,25 Mt (Warrants)",
-          "LDC – Risco de termos o “carimbo” como canal exclusivamente transacional",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Dados",
-          "Backoffice + Engajamento",
-          "Loyalty/Marketing",
-          "Gestão de pessoas",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Murilo",
-    periodo: 3,
-    perguntas: [
-      {
-        texto: "Como fazer a eficiência e impacto da sua área TRIPLICAREM?",
-        topicos: [
-          "Gastaremos R$ 133.701,60 migrando nossa arquitetura de Cloud para ARM",
-          "Automatização do quarterly report",
-          "Novo ecossistema de Dados",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Vazamento de Dados por AI",
-          "Modelo de negócio dos produtos de AI e custos de token",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Biônico como upselling para o Clicou, Fechou",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Thiago Meller",
-    periodo: 3,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
-        topicos: [
-          "Distribuirmos seguros através da plataforma",
-          "Estabelecermos parceria com consultoria estratégica",
-        ]
-      },
-      {
-        texto: "O que não pode faltar em 2026?",
-        topicos: [
-          "Atrairmos o sistema cooperativo para além da venda",
-          "Criarmos uma solução de hedge",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Turbinar Grainsights + copiloto AIrton",
-          "Academia GD ou Parcerias com Instituições de Ensino",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Aline",
-    periodo: 3,
-    perguntas: [
-      {
-        texto: "Quais os times prioritários ou temas para PROJETOS e como faremos para estarmos preparados para triplicar resultados?",
-        topicos: [
-          "Modelo integrado entre CF + Barter + Backoffice",
-          "Preparar o Backoffice para escalar",
-          "Infraestrutura escalável e time conectado",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Projetos vendidos top-down sem envolver os stakeholders operacionais",
-          "Processos pouco padronizados podem gerar dificuldades de escala",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Fortalecer e acelerar Serviços Financeiros e Inteligência Artificial",
-          "Cross-sell estruturado",
-          "Expandir portfólio de commodities",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Markim",
-    periodo: 3,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área MULTIPLICAR POR 10X?",
-        topicos: [
-          "Dados como estimulo do momento de negociar",
-          "AIrton como canal prioritário e unificado das comunicações",
-          "Impulsionar conexões ambiente GD através do AIrton",
-          "Biônico como maior fonte de dados GD",
-          "Biônico proativo e reativo resolvendo dores reais",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Dependência dos modelos de IA (LLMs)",
-          "Má visão externas de soluções de IA",
-          "Jornadas conversacionais são diferente de tudo e ainda não sabemos fazer",
-          "Escolhas não estratégicas e prioritárias",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Maior interação entre IA e jornadas dos demais times",
-          "Unificação e centralização de dados de usuários de toda GD",
-          "Geração de conteúdo sobre contexto de mercado",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Vinícius Emmanuel",
-    periodo: 4,
-    perguntas: [
-      {
-        texto: "Como fazer a eficiência e impacto da sua área TRIPLICAREM?",
-        topicos: [
-          "Engenharia Orientada a Hipóteses",
-          "Excelência na Execução (Pós-Planning)",
-          "Ecossistema Conectado (API First)",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Pessoa de produto para o time financeiro",
-        ]
-      },
-      {
-        texto: "Pergunta 3 – (sem tópicos definidos)",
-        topicos: [
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Mazetto",
-    periodo: 4,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
-        topicos: [
-          "Projetos de Alto Valor",
-          "Projetos de Alto Valor → Gestão de Contratos",
-          "Escalabilidade → ICP: empresas de porte médio",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Projetos de Alto Valor",
-          "Escalabilidade → ICP: empresas de porte médio",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Barter de tudo e de todas as formas possíveis",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Matheus Reis",
-    periodo: 4,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área QUINTUPLICAREM?",
-        topicos: [
-          "Otimizar créditos não performados",
-          "Aumentar capacidade comercial de produtos performados",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Otimizar créditos não performados",
-          "Aumentar capacidade comercial de produtos performados",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Desenvolvermos uma rede de compra e venda de HF (alho, cenoura, cebola e batata)",
-          "Criarmos CF de Cana de Açúcar e Café",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Sebá",
-    periodo: 4,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área QUINTUPLICAREM?",
-        topicos: [
-          "30 novas empresas (20–50k ton ano cada uma)",
-          "Crescimento nas empresas de grande volume",
-          "Novas empresas de grande volume",
-          "Produto básico com custo de implementação R$0,00",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Necessidade de crédito para negociações se realizarem",
-          "Liquidez não real dos grãos",
-          "Produto não escalável para 50 empresas",
-          "Time de Operações não escalável",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Criarmos um CF de Algodão e café",
-          "Voltar a ser obcecados pela experiência dos usuários ativos",
-          "Expansão territorial",
-          "Somos muito bons dentro de casa, mas externamente não falamos nada",
-        ]
-      },
-    ]
-  },
-  {
-    nome: "Gabriel",
-    periodo: 4,
-    perguntas: [
-      {
-        texto: "Como fazer os resultados de sua área TRIPLICAREM?",
-        topicos: [
-          "Grainsights como referência",
-        ]
-      },
-      {
-        texto: "Quais riscos temos que ficar atentos?",
-        topicos: [
-          "Quantidade x Qualidade",
-        ]
-      },
-      {
-        texto: "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
-        topicos: [
-          "Solução ERP T.E.R.R.A",
-        ]
-      },
-    ]
-  },
-];
+function saveDataToDisk() {
+  try {
+    const payload = {
+      data,
+      nextPerguntaId,
+      nextTopicoId
+    };
+    fs.writeFileSync(DATA_FILE, JSON.stringify(payload, null, 2), "utf-8");
+  } catch (err) {
+    console.error("Erro ao salvar dados em disco:", err.message);
+  }
+}
+
+function loadDataFromDisk() {
+  try {
+    if (!fs.existsSync(DATA_FILE)) return false;
+    const raw = fs.readFileSync(DATA_FILE, "utf-8");
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.data) return false;
+    data = parsed.data;
+    nextPerguntaId = parsed.nextPerguntaId || 1;
+    nextTopicoId = parsed.nextTopicoId || 1;
+    console.log("Dados carregados de dados.json.");
+    return true;
+  } catch (err) {
+    console.error("Erro ao carregar dados de disco:", err.message);
+    return false;
+  }
+}
 
 // ==========================
-// Funções auxiliares
+// Funções auxiliares gerais
 // ==========================
 
 function findUserByCode(code) {
@@ -800,118 +130,543 @@ function getPerguntasETopicos(apresentadorCode) {
 }
 
 // ==========================
-// Helpers para salvamento em arquivo
-// ==========================
-
-function loadDataFromFile() {
-  try {
-    if (!fs.existsSync(DB_FILE)) return null;
-    const raw = fs.readFileSync(DB_FILE, "utf8");
-    const obj = JSON.parse(raw);
-    if (obj && obj.data) {
-      return obj;
-    }
-  } catch (err) {
-    console.error("Erro ao carregar db.json:", err.message);
-  }
-  return null;
-}
-
-function saveDataToFile() {
-  try {
-    const exportObj = {
-      data,
-      nextPerguntaId,
-      nextTopicoId
-    };
-    fs.writeFileSync(DB_FILE, JSON.stringify(exportObj, null, 2), "utf8");
-  } catch (err) {
-    console.error("Erro ao salvar db.json:", err.message);
-  }
-}
-
-// ==========================
-// Helpers para comparação de pessoa (bloquear auto-voto)
+// Normalização + tópicos customizados
 // ==========================
 
 function normalizeName(str) {
-  if (!str) return "";
-  return String(str)
+  return String(str || "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .toLowerCase();
 }
 
-function isSamePersonByName(userA, userB) {
-  if (!userA || !userB) return false;
-  return normalizeName(userA.name) === normalizeName(userB.name);
-}
-
-// ==========================
-// Inicializar dados na subida do servidor
-// ==========================
-
-function initializeData() {
-  if (initialized) return;
-  console.log("Inicializando dados...");
-
-  const loaded = loadDataFromFile();
-  if (loaded) {
-    // Carrega do db.json
-    Object.assign(data, loaded.data);
-    nextPerguntaId = loaded.nextPerguntaId || 1;
-    nextTopicoId = loaded.nextTopicoId || 1;
-    initialized = true;
-    console.log("Dados carregados do db.json.");
-    console.log("Usuários totais:", data.users.length);
-    return;
+// Mapa: apresentador normalizado => { numeroPergunta: [tópicos] }
+const customTopicsByPresenter = {
+  thaynara: {
+    1: [
+      "1.1.1 – Aquisição no CEU",
+      "1.1.2 – Novas jornadas para o público do onboarding"
+    ],
+    2: ["1.2.1 – Comitê entre Backoffice Corporativo e Jurídico"],
+    3: ["1.3.1 – Plataformas de teste para portais e aplicativo"]
+  },
+  ursula: {
+    1: [
+      "2.1.1 – Inserir I.A no Processo seletivo",
+      "2.1.2 – Gestão de desempenho",
+      "2.1.3 – Ambiente GD+",
+      "2.1.4 – Desenvolvimento contínuo",
+      "2.1.5 – Comunicação interna"
+    ],
+    2: [
+      "2.2.1 – Tempo de Recrutamento e seleção",
+      "2.2.2 – Retenção de talentos"
+    ],
+    3: ["2.3.1 – Employer branding"]
+  },
+  bataiel: {
+    1: [
+      "3.1.1 – Programa de Originação Integrado",
+      "3.1.2 – Monitoramento de Mercado",
+      "3.1.3 – Derivação para Intermediários",
+      "3.1.4 – Expansão: Balcão e Derivativos"
+    ],
+    2: [
+      "3.2.1 – Blindagem e Verificação de User",
+      "3.2.2 – Sistematização do Loyalty"
+    ],
+    3: [
+      "3.3.1 – ID Único de Localidade",
+      "3.3.2 – Novos Players Estratégicos"
+    ]
+  },
+  bordin: {
+    1: [
+      "4.1.1 – Hack comportamental/Notificações Inteligentes",
+      "4.1.2 – Ambiente Corporate -> Casa do cliente",
+      "4.1.3 – Cardápio mais completo possível",
+      "4.1.4 – FOMO ao usuário"
+    ],
+    2: [
+      "4.2.1 – Primeira Impressão Fatal",
+      "4.2.2 – Loyalty"
+    ],
+    3: [
+      "4.3.1 – Presença de marca mais forte",
+      "4.3.2 – + Tradings Compradoras"
+    ]
+  },
+  helen: {
+    1: [
+      "5.1.1 – Gameficação de incentivos em níveis",
+      "5.1.2 – Programa de indicação da Grão Direto",
+      "5.1.3 – Programa Coalizão",
+      "5.1.4 – Mais pontos, mais tempo, mais valor agregado"
+    ],
+    2: [
+      "5.2.1 – Risco de Passivo Financeiro",
+      "5.2.2 – Risco reputacional e fraudes",
+      "5.2.3 – Relacionamento com a trading",
+      "5.2.4 – Programas demais, engajamento de menos"
+    ],
+    3: [
+      "5.3.1 – Publicidade e relacionamento com o produtor",
+      "5.3.2 – GrainInsights -> “Conquer do agro”"
+    ]
+  },
+  renan: {
+    1: [
+      "6.1.1 – Explorar 100% do potencial do comercial biônico",
+      "6.1.2 – Ser o vigia de mercado do nosso vendedor",
+      "6.1.3 – Produtos da GD como alavanca para SF (e vice-versa)",
+      "6.1.4 – Transformar o marketing de produto em motor de crescimento"
+    ],
+    2: [
+      "6.2.1 – Explorar 100% do potencial do comercial biônico",
+      "6.2.2 – Ser o vigia de mercado do nosso vendedor",
+      "6.2.3 – Produtos da GD como alavanca para SF (e vice-versa)",
+      "6.2.4 – Transformar o marketing de produto em motor de crescimento"
+    ],
+    3: [
+      "6.3.1 – Inteligência Comercial Unificada",
+      "6.3.2 – Explorar outras fontes de liquidez para os grãos",
+      "6.3.3 – Ser verdadeiramente Data Driven"
+    ]
+  },
+  mari: {
+    1: [
+      "7.1.1 – Compliance by design",
+      "7.1.2 – Projeto “Commit no código (de conduta)”"
+    ],
+    2: ["7.2.1 – Comunicação"],
+    3: ["7.3.1 – Expansão das parcerias"]
+  },
+  thiagoemario: {
+    1: [
+      "8.1.1 – Cenário atual",
+      "8.1.2 – Score de Risco GD",
+      "8.1.3 – Por que implementar isso?"
+    ],
+    2: ["8.2.1 – Ações para 2026"],
+    3: ["8.3.1 – Programa de Incentivo à Redução de Custos com Ferramentas"]
+  },
+  humbertoedanyllo: {
+    1: [
+      "9.1.1 – Criarmos o GD Global Agro Credit",
+      "9.1.2 – Buscar melhores sacados em outros setores",
+      "9.1.3 – Captação agressiva de cerealistas e sacados",
+      "9.1.4 – Inteligência de abordagem, processo e conversas escaláveis para envolvimento de parceiros"
+    ],
+    2: [
+      "9.2.1 – Fundo forte, originação fraca",
+      "9.2.2 – Risco de decisões abruptas"
+    ],
+    3: [
+      "9.3.1 – Liquidez como impulso da experiência digital e do crédito",
+      "9.3.2 – Narrativa institucional clara e unificada",
+      "9.3.3 – Armazéns estratégicos Grão Direto"
+    ]
+  },
+  boffeebruninha: {
+    1: [
+      "10.1.1 – Reforma Tributária",
+      "10.1.2 – Tesouraria Estratégica",
+      "10.1.3 – AgFintech"
+    ],
+    2: [
+      "10.2.2 – Risco de Concentração da Carteira"
+    ],
+    3: [
+      "10.3.1 – Exposição da Marca GD"
+    ]
+  },
+  julieneeanaluiza: {
+    1: [
+      "11.1.1 – Plataforma de Inteligência de Marca (PIM)",
+      "11.1.2 – Loyalty atuando com a lógica de \"cupons\" para engajamento",
+      "11.1.3 – Embaixador Sou Brasil, Sou Agro",
+      "11.1.4 – Co-branding no Agro"
+    ],
+    2: [
+      "11.2.1 – De \"Evento Bonito\" para \"Máquina de Negócios\""
+    ],
+    3: [
+      "11.3.1 – Implementar Calculadora de Custo de produção",
+      "11.3.2 – Implementar Viés de Ancoragem de Preços",
+      "11.3.3 – Criar um Programa de Sucessão Familiar"
+    ]
+  },
+  albertleo: {
+    1: [
+      "12.1.1 – Integração entre canais de mídia via servidor (S2S)",
+      "12.1.2 – Novo modelo de atribuição: Marketing Mix Modeling"
+    ],
+    2: [
+      "12.2.1 – Exige engenharia, governança e ambiente de testes.",
+      "12.2.2 – Experiência fluida"
+    ],
+    3: [
+      "12.3.1 – “Barter 24H” com cotação em tempo real"
+    ]
+  },
+  kaneko: {
+    1: [
+      "13.1.1 – Conhecer o Value Stream da empresa",
+      "13.1.2 – Facilitar uma gestão interna"
+    ],
+    2: [
+      "13.2.1 – Não perdermos o time da coisa"
+    ],
+    3: [
+      "13.3.1 – Especializar pessoas",
+      "13.3.2 – Zelarmos pela nossa cultura"
+    ]
+  },
+  cici: {
+    1: [
+      "14.1.1 – Jornada WPP completa e com uma alta retenção",
+      "14.1.2 – Mais dados para personalização"
+    ],
+    2: [
+      "14.2.1 – Funil não orgânico (muita dependência de Twilio)",
+      "14.2.2 – Teto CEU/CENG quase sendo atingido"
+    ],
+    3: [
+      "14.3.1 – Elevar o patamar de Loyalty",
+      "14.3.2 – Aumentar as “Super Transações”"
+    ]
+  },
+  joyce: {
+    1: [
+      "15.1.1 – Fortalecer nossos elos",
+      "15.1.2 – Decidir com menos achismo e mais dados"
+    ],
+    2: [
+      "15.2.1 – Tolerância prolongada a baixo desempenho",
+      "15.2.2 – Cenário recorrente de metas de Tech não batidas"
+    ],
+    3: [
+      "15.3.1 – Reter talentos",
+      "15.3.2 – Acompanhar as lideranças"
+    ]
+  },
+  lacerda: {
+    1: [
+      "16.1.1 – Execução Forte e Rituais Consistentes",
+      "16.1.2 – Inteligência Comercial (evolução do Top Picks + AIrton)",
+      "16.1.3 – Transformar Riscos em Oportunidades de Crescimento",
+      "16.1.4 – Avançarmos..."
+    ],
+    2: [
+      "16.2.1 – AMAGGI – Risco de “formalização” e dependência de incentivos",
+      "16.2.2 – ADM - Crescimento do pré-hedge e by-pass",
+      "16.2.3 – CARGILL - Risco de “volume” apenas para atingir a meta de 1,25 Mt (Warrants)",
+      "16.2.4 – LDC - Risco de termos o “carimbo” como canal exclusivamente transacional"
+    ],
+    3: [
+      "16.3.1 – Dados",
+      "16.3.2 – Backoffice + Engajamento",
+      "16.3.3 – Loyalty/Marketing",
+      "16.3.4 – Gestão de pessoas"
+    ]
+  },
+  murilo: {
+    1: [
+      "17.1.1 – Gastaremos R$ 133.701,60 migrando nossa arquitetura de Cloud para ARM.",
+      "17.1.2 – Automatização do quarterly report.",
+      "17.1.3 – Novo ecossistema de Dados."
+    ],
+    2: [
+      "17.2.1 – Vazamento de Dados por AI.",
+      "17.2.2 – Modelo de negócio dos produtos de AI e custos de token."
+    ],
+    3: [
+      "17.3.1 – Biônico como upselling para o Clicou, Fechou."
+    ]
+  },
+  thiagomeller: {
+    1: [
+      "18.1.1 – Distribuirmos seguros através da plataforma",
+      "18.1.2 – Estabelecermos parceria com consultoria estratégica"
+    ],
+    2: [
+      "18.2.1 – Atrairmos o sistema cooperativo para além da venda",
+      "18.2.2 – Criarmos uma solução de hedge"
+    ],
+    3: [
+      "18.3.1 – Turbinar Grainsights + copiloto AIrton",
+      "18.3.2 – Academia GD ou Parcerias com Inst. de Ensino"
+    ]
+  },
+  aline: {
+    1: [
+      "19.1.1 – Modelo integrado entre CF + Barter + Backoffice",
+      "19.1.2 – Preparar o Backoffice para escalar",
+      "19.1.3 – Infraestrutura escalável e time conectado"
+    ],
+    2: [
+      "19.2.1 – Projetos vendidos top-down sem envolver os stakeholders operacionais",
+      "19.2.2 – Processos pouco padronizados podem gerar dificuldades de escala"
+    ],
+    3: [
+      "19.3.1 – Fortalecer e acelerar Serviços Financeiros e Inteligência Artificial",
+      "19.3.2 – Cross-sell estruturado",
+      "19.3.3 – Expandir portfólio de commodities"
+    ]
+  },
+  markimnabuco: {
+    1: [
+      "20.1.1 – Dados como estimulo do momento de negociar",
+      "20.1.2 – AIrton como canal prioritário e unificado das comunicações com",
+      "20.1.3 – Impulsionar conexões ambiente GD através do AIrton",
+      "20.1.4 – Biônico como maior fonte de dados GD",
+      "20.1.5 – Biônico proativo e reativo resolvendo dores reais"
+    ],
+    2: [
+      "20.2.1 – Dependência dos modelos de IA (LLMs)",
+      "20.2.2 – Má visão externas de soluções de IA",
+      "20.2.3 – Jornadas conversacionais são diferente de tudo e ainda não sabemos fazer",
+      "20.2.4 – Escolhas não estratégicas e prioritárias"
+    ],
+    3: [
+      "20.3.1 – Maior interação entre IA e jornadas dos demais times",
+      "20.3.2 – Unificação e centralização de dados de usuários de toda GD",
+      "20.3.3 – Geração de conteúdo sobre contexto de mercado"
+    ]
+  },
+  viniciusemmanuel: {
+    1: [
+      "21.1.1 – Engenharia Orientada a Hipóteses",
+      "21.1.2 – Excelência na Execução (Pós-Planning)",
+      "21.1.3 – Ecossistema Conectado (API First)"
+    ],
+    3: [
+      "21.3.1 – Pessoa de produto para o time financeiro"
+    ]
+  },
+  mazetto: {
+    1: [
+      "22.1.1 – Projetos de Alto Valor",
+      "22.1.2 – Projetos de Alto Valor -> Gestão de Contratos",
+      "22.1.3 – Escalabilidade -> ICP: empresas de porte médio"
+    ],
+    2: [
+      "22.2.1 – Projetos de Alto Valor",
+      "22.2.2 – Escalabilidade -> ICP: empresas de porte médio"
+    ],
+    3: [
+      "22.3.1 – Barter de tudo e de todas as formas possíveis"
+    ]
+  },
+  matheusreis: {
+    1: [
+      "23.1.1 – Otimizar créditos não performados",
+      "23.1.2 – Aumentar capacidade comercial de produtos performados"
+    ],
+    2: [
+      "23.2.1 – Otimizar créditos não performados",
+      "23.2.2 – Aumentar capacidade comercial de produtos performados"
+    ],
+    3: [
+      "23.3.1 – Desenvolvermos uma rede de compra e venda de HF (alho, cenoura, cebola e batata)",
+      "23.3.2 – Criarmos CF de Cana de Açucar e Café"
+    ]
+  },
+  seba: {
+    1: [
+      "24.1.1 – 30 novas empresas (20-50k ton ano cada uma)",
+      "24.1.2 – Crescimento nas empresas de grande volume",
+      "24.1.3 – Novas empresas de grande volume",
+      "24.1.4 – Produto básico com custo de implementação R$0,00."
+    ],
+    2: [
+      "24.2.1 – Necessidade de crédito para negociações se realizarem.",
+      "24.2.2 – Liquidez não real dos grãos",
+      "24.2.3 – Produto não escalável para 50 empresas",
+      "24.2.4 – Time de Operações não escalável"
+    ],
+    3: [
+      "24.3.1 – Criarmos um CF de Algodão e café",
+      "24.3.2 – Voltar a ser obcecados pela experiência dos usuários ativos",
+      "24.3.3 – Expansão territorial",
+      "24.3.4 – Somos muito bons dentro de casa, mas externamente não falamos nada"
+    ]
+  },
+  gabrielenaves: {
+    1: [
+      "25.1.1 – Grainsights como referência"
+    ],
+    2: [
+      "25.2.1 – Quantidade x Qualidade"
+    ],
+    3: [
+      "25.3.1 – Solução ERP T.E.R.R.A"
+    ]
   }
+};
 
-  // Sem arquivo: monta tudo do zero
-  data.users = [];
-  data.perguntas = [];
-  data.topicos = [];
-  data.votos = [];
-  data.estrelas = [];
+function getCustomTopicsForPresenter(nomeApresentador, ordemPergunta) {
+  const key = normalizeName(nomeApresentador);
+  const mapa = customTopicsByPresenter[key];
+  if (!mapa) return null;
+  return mapa[ordemPergunta] || null;
+}
 
+// ==========================
+// Ler PITCH.xlsx
+// ==========================
+
+function loadPresentersFromExcel() {
+  try {
+    const filePath = path.join(__dirname, "PITCH.xlsx");
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const rows = xlsx.utils.sheet_to_json(sheet, { header: 1 });
+
+    const presenters = [];
+    let currentPeriodo = 1;
+
+    rows.forEach((row) => {
+      const col0 = row[0];
+      const col1 = row[1];
+      const col2 = row[2];
+      const col3 = row[3];
+      const col4 = row[4];
+
+      if (!col0 || String(col0).trim() === "") return;
+
+      const col0Str = String(col0).trim();
+
+      if (col0Str.toUpperCase().startsWith("PERIODO")) {
+        const parts = col0Str.split(/\s+/);
+        const num = parseInt(parts[1], 10);
+        if (!isNaN(num)) currentPeriodo = num;
+        return;
+      }
+
+      if (col0Str.toLowerCase() === "apresentador") return;
+
+      const perguntas = [col2, col3, col4]
+        .map(q => (q ? String(q).trim() : ""))
+        .filter(q => q.length > 0)
+        .slice(0, 3);
+
+      presenters.push({
+        nome: col0Str,
+        tema: col1 ? String(col1).trim() : "",
+        periodo: currentPeriodo || 1,
+        perguntas
+      });
+    });
+
+    console.log(`Carregados ${presenters.length} apresentadores do PITCH.xlsx.`);
+    return presenters;
+  } catch (err) {
+    console.error("Erro ao ler PITCH.xlsx:", err.message);
+    return [];
+  }
+}
+
+// ==========================
+// Amarrar votantes -> apresentadores
+// ==========================
+
+function linkVotersToPresenters() {
+  const presenters = data.users.filter(u => u.isPresenter);
+  const voters = data.users.filter(u => u.role === "participant" && !u.isPresenter);
+
+  // zera qualquer mapeamento anterior
+  voters.forEach(v => {
+    v.blockedPresenterCodes = [];
+  });
+
+  presenters.forEach(p => {
+    const pNorm = normalizeName(p.name);
+    voters.forEach(v => {
+      const vNorm = normalizeName(v.name);
+      if (!vNorm) return;
+      // Se o nome da pessoa estiver contido no nome do apresentador (ou vice-versa), bloqueia
+      if (pNorm.includes(vNorm) || vNorm.includes(pNorm)) {
+        if (!Array.isArray(v.blockedPresenterCodes)) {
+          v.blockedPresenterCodes = [];
+        }
+        if (!v.blockedPresenterCodes.includes(p.code)) {
+          v.blockedPresenterCodes.push(p.code);
+        }
+      }
+    });
+  });
+
+  console.log("Mapeamento votante -> apresentador (bloqueio de auto-voto) atualizado.");
+}
+
+// ==========================
+// Popular dados pela primeira vez
+// ==========================
+
+function populateFromExcelAndStatic() {
   // Admin
   data.users.push({
     code: "100",
     name: "Elias",
     role: "admin",
     turmaId: null,
-    isPresenter: false
+    isPresenter: false,
+    blockedPresenterCodes: []
   });
 
-  // 1) Apresentadores a partir do presentersConfig
+  // Apresentadores a partir da planilha
+  const presentersFromExcel = loadPresentersFromExcel();
   let presenterCodeCounter = 1000;
 
-  presentersConfig.forEach(p => {
+  presentersFromExcel.forEach(p => {
+    const nome = p.nome || "";
+    const tema = p.tema || "";
     const periodo = Number(p.periodo) || 1;
+
     const turmaId = (periodo === 1 || periodo === 2) ? "M" : "T";
+
     const code = String(presenterCodeCounter++);
 
     data.users.push({
       code,
-      name: p.nome,          // IMPORTANTE: nome igual ao votante (pra bater no isSamePersonByName)
+      name: nome,
       role: "participant",
       turmaId,
-      isPresenter: true
+      isPresenter: true,
+      blockedPresenterCodes: [] // não usado para apresentador
     });
 
-    (p.perguntas || []).forEach((perg, idx) => {
+    const perguntas = (p.perguntas && p.perguntas.length
+      ? p.perguntas
+      : [
+          `Pergunta 1 de ${nome}`,
+          `Pergunta 2 de ${nome}`,
+          `Pergunta 3 de ${nome}`
+        ]
+    ).slice(0, 3);
+
+    perguntas.forEach((textoPergunta, idx) => {
       const ordem = idx + 1;
-      const pergunta = createPergunta(turmaId, code, perg.texto, ordem);
-      (perg.topicos || []).forEach(ttexto => {
-        if (ttexto && String(ttexto).trim().length > 0) {
-          createTopico(pergunta, String(ttexto).trim());
+      const pergunta = createPergunta(turmaId, code, textoPergunta, ordem);
+
+      const customTopics = getCustomTopicsForPresenter(nome, ordem);
+      if (customTopics && customTopics.length > 0) {
+        customTopics.forEach(tTexto => createTopico(pergunta, tTexto));
+      } else {
+        // fallback genérico se faltar algo no mapa
+        for (let i = 1; i <= 3; i++) {
+          const baseLabel = `Tópico ${ordem}.${i}`;
+          const detalhe = tema ? ` – ${tema}` : ` – ${nome}`;
+          createTopico(pergunta, baseLabel + detalhe);
         }
-      });
+      }
     });
   });
 
-  // 2) Códigos fixos de quem vota (1–38)
+  // Votantes fixos
   const voters = [
     { code: "1",  name: "Alexandre" },
     { code: "2",  name: "Gabi" },
@@ -959,12 +714,31 @@ function initializeData() {
       name: v.name,
       role: "participant",
       turmaId: null,
-      isPresenter: false
+      isPresenter: false,
+      blockedPresenterCodes: []
     });
   });
 
-  saveDataToFile();
+  linkVotersToPresenters();
+}
 
+// ==========================
+// Inicialização
+// ==========================
+
+function initializeData() {
+  if (initialized) return;
+
+  if (loadDataFromDisk()) {
+    // Garante que o campo blockedPresenterCodes exista e esteja correto
+    linkVotersToPresenters();
+    initialized = true;
+    return;
+  }
+
+  resetInMemoryData();
+  populateFromExcelAndStatic();
+  saveDataToDisk();
   initialized = true;
   console.log("Inicialização concluída. Usuários totais:", data.users.length);
 }
@@ -1002,7 +776,7 @@ app.post("/login", (req, res) => {
 // Rotas PARTICIPANTE
 // ==========================
 
-// Turmas + apresentadores (Manhã/Tarde)
+// Turmas + apresentadores
 app.get("/api/turmas-com-apresentadores", (req, res) => {
   const turmas = data.turmas.map(t => {
     const apresentadores = data.users
@@ -1035,7 +809,7 @@ app.get("/api/apresentador/:code/perguntas", (req, res) => {
   });
 });
 
-// Voto em um tópico (1–5 ou 1–10 para líderes)
+// Voto em tópico
 app.post("/api/votos", (req, res) => {
   const { userCode, topicoId, nota } = req.body;
 
@@ -1055,7 +829,7 @@ app.post("/api/votos", (req, res) => {
 
   const notaNum = Number(nota);
   const leadersCodes = ["1", "2", "3", "4", "5", "6"];
-  const isLeader = leadersCodes.includes(user.code);
+  const isLeader = leadersCodes.includes(String(user.code));
   const maxNota = isLeader ? 10 : 5;
 
   if (notaNum < 1 || notaNum > maxNota) {
@@ -1065,16 +839,11 @@ app.post("/api/votos", (req, res) => {
     });
   }
 
-  // Regra de não votar nos próprios tópicos (mesmo com códigos diferentes)
-  const apresentador = findUserByCode(topico.apresentadorCode);
-  const isSameCode = topico.apresentadorCode === user.code;
-  const isSameName = apresentador && isSamePersonByName(user, apresentador);
+  const blockedList = Array.isArray(user.blockedPresenterCodes) ? user.blockedPresenterCodes : [];
+  const isOwnerByMapping = blockedList.includes(topico.apresentadorCode);
 
-  if (isSameCode || isSameName) {
-    return res.status(403).json({
-      ok: false,
-      message: "Você não pode votar nos seus próprios tópicos."
-    });
+  if (topico.apresentadorCode === user.code || isOwnerByMapping) {
+    return res.status(403).json({ ok: false, message: "Você não pode votar nos seus próprios tópicos." });
   }
 
   const votoExistente = data.votos.find(v => v.userCode === user.code && v.topicoId === topico.id);
@@ -1088,12 +857,11 @@ app.post("/api/votos", (req, res) => {
     });
   }
 
-  saveDataToFile();
-
+  saveDataToDisk();
   res.json({ ok: true, message: "Voto registrado com sucesso." });
 });
 
-// Tópicos da turma para estrelas (Manhã/Tarde já vem de topico.turmaId)
+// Tópicos para estrelas
 app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
   try {
     const { turmaId } = req.params;
@@ -1114,14 +882,13 @@ app.get("/api/turma/:turmaId/topicos-estrelas", (req, res) => {
 
     const usadas = estrelasUserTurma.length;
     const maximo = 5;
+    const blockedList = Array.isArray(user.blockedPresenterCodes) ? user.blockedPresenterCodes : [];
 
     const topicosDetalhe = topicosTurma.map(t => {
       const apresentador = findUserByCode(t.apresentadorCode);
       const jaVotou = estrelasUserTurma.some(e => e.topicoId === t.id);
-
-      const proprioTopico =
-        apresentador && isSamePersonByName(user, apresentador);
-
+      const isOwnerByMapping = blockedList.includes(t.apresentadorCode);
+      const proprioTopico = (t.apresentadorCode === user.code) || isOwnerByMapping;
       const podeVotar = !jaVotou && !proprioTopico && usadas < maximo;
 
       return {
@@ -1170,15 +937,11 @@ app.post("/api/estrelas", (req, res) => {
       return res.status(404).json({ ok: false, message: "Tópico não encontrado nesta turma." });
     }
 
-    const apresentador = findUserByCode(topico.apresentadorCode);
-    const isSameCode = topico.apresentadorCode === user.code;
-    const isSameName = apresentador && isSamePersonByName(user, apresentador);
+    const blockedList = Array.isArray(user.blockedPresenterCodes) ? user.blockedPresenterCodes : [];
+    const isOwnerByMapping = blockedList.includes(topico.apresentadorCode);
 
-    if (isSameCode || isSameName) {
-      return res.status(403).json({
-        ok: false,
-        message: "Você não pode dar estrela nos seus próprios tópicos."
-      });
+    if (topico.apresentadorCode === user.code || isOwnerByMapping) {
+      return res.status(403).json({ ok: false, message: "Você não pode dar estrela nos seus próprios tópicos." });
     }
 
     const estrelasUserTurma = data.estrelas.filter(e => e.userCode === user.code && e.turmaId === String(turmaId));
@@ -1197,8 +960,7 @@ app.post("/api/estrelas", (req, res) => {
       topicoId: topico.id
     });
 
-    saveDataToFile();
-
+    saveDataToDisk();
     res.json({ ok: true, message: "Estrela registrada com sucesso." });
   } catch (err) {
     console.error("Erro em /api/estrelas:", err);
@@ -1210,7 +972,7 @@ app.post("/api/estrelas", (req, res) => {
 // Rotas ADMIN
 // ==========================
 
-// Lista apresentadores (só quem é presenter de verdade)
+// Lista apresentadores
 app.get("/api/admin/apresentadores", (req, res) => {
   const lista = data.users
     .filter(u => u.code !== "100" && u.isPresenter)
@@ -1224,7 +986,7 @@ app.get("/api/admin/apresentadores", (req, res) => {
   res.json({ ok: true, apresentadores: lista, turmas: data.turmas });
 });
 
-// Conteúdo de um apresentador
+// Conteúdo de apresentador
 app.get("/api/admin/conteudo", (req, res) => {
   const { code } = req.query;
   if (!code) {
@@ -1244,7 +1006,7 @@ app.get("/api/admin/conteudo", (req, res) => {
   });
 });
 
-// Salvar perguntas (substitui as atuais de um apresentador)
+// Salvar perguntas (mantive igual: gera tópicos fictícios)
 app.post("/api/admin/perguntas", (req, res) => {
   const { apresentadorCode, perguntasText } = req.body;
 
@@ -1276,8 +1038,7 @@ app.post("/api/admin/perguntas", (req, res) => {
     }
   }
 
-  saveDataToFile();
-
+  saveDataToDisk();
   res.json({ ok: true, message: "Perguntas e tópicos fictícios atualizados com sucesso." });
 });
 
@@ -1295,13 +1056,11 @@ app.post("/api/admin/topicos", (req, res) => {
   }
 
   const topico = createTopico(pergunta, texto.trim());
-
-  saveDataToFile();
-
+  saveDataToDisk();
   res.json({ ok: true, message: "Tópico criado com sucesso.", topico });
 });
 
-// Editar tópico existente
+// Editar tópico
 app.put("/api/admin/topicos/:id", (req, res) => {
   const { id } = req.params;
   const { texto } = req.body;
@@ -1316,9 +1075,7 @@ app.put("/api/admin/topicos/:id", (req, res) => {
   }
 
   topico.texto = texto.trim();
-
-  saveDataToFile();
-
+  saveDataToDisk();
   res.json({ ok: true, message: "Tópico atualizado com sucesso.", topico });
 });
 
@@ -1330,13 +1087,11 @@ app.delete("/api/admin/topicos/:id", (req, res) => {
     return res.status(404).json({ ok: false, message: "Tópico não encontrado." });
   }
   data.topicos.splice(indice, 1);
-
-  saveDataToFile();
-
+  saveDataToDisk();
   res.json({ ok: true, message: "Tópico apagado com sucesso." });
 });
 
-// Relatório por turma (Manhã/Tarde) com votos detalhados
+// Relatório
 app.get("/api/admin/relatorio", (req, res) => {
   const { turmaId } = req.query;
 
@@ -1392,7 +1147,7 @@ app.get("/api/admin/relatorio", (req, res) => {
   });
 });
 
-// Exportar JSON completo
+// Export JSON completo
 app.get("/api/admin/export-json", (req, res) => {
   const exportObj = {
     users: data.users,
@@ -1407,7 +1162,7 @@ app.get("/api/admin/export-json", (req, res) => {
   res.json(exportObj);
 });
 
-// Exportar Excel com todas as turmas
+// Export Excel completo
 app.get("/api/admin/export-excel-completo", (req, res) => {
   try {
     const wb = xlsx.utils.book_new();
@@ -1496,29 +1251,29 @@ app.get("/api/admin/export-excel-completo", (req, res) => {
 });
 
 // ==========================
-// Rota para RESET de testes (apaga votos + estrelas)
+// ROTA DE RESET (zera tudo)
 // ==========================
 
-app.post("/api/admin/reset-votos", (req, res) => {
-  data.votos = [];
-  data.estrelas = [];
-  saveDataToFile();
-  res.json({
-    ok: true,
-    message: "Todos os votos e estrelas foram apagados com sucesso (reset de testes)."
-  });
+app.post("/api/admin/reset", (req, res) => {
+  try {
+    resetInMemoryData();
+    populateFromExcelAndStatic();
+    saveDataToDisk();
+    res.json({ ok: true, message: "Dados resetados com sucesso (perguntas, tópicos, votos e estrelas)." });
+  } catch (err) {
+    console.error("Erro em /api/admin/reset:", err);
+    res.status(500).json({ ok: false, message: "Erro ao resetar dados." });
+  }
 });
 
 // ==========================
 // Rotas de páginas
 // ==========================
 
-// Página de estrelas
 app.get("/estrelas.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "estrelas.html"));
 });
 
-// Página principal
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });

@@ -1,0 +1,2482 @@
+{
+  "data": {
+    "users": [
+      {
+        "code": "100",
+        "name": "Elias",
+        "role": "admin",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1000",
+        "name": "Thaynara",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1001",
+        "name": "Ursula",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1002",
+        "name": "Bataiel",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1003",
+        "name": "Bordin",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1004",
+        "name": "Helen",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1005",
+        "name": "Renan",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1006",
+        "name": "Mari",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1007",
+        "name": "Thiago e Mario",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1008",
+        "name": "Humberto e Danyllo",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1009",
+        "name": "Boffe e Bruninha",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1010",
+        "name": "Juliene e Ana Luiza",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1011",
+        "name": "Albert (Léo)",
+        "role": "participant",
+        "turmaId": "M",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1012",
+        "name": "Kaneko",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1013",
+        "name": "Cici",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1014",
+        "name": "Joyce",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1015",
+        "name": "Lacerda",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1016",
+        "name": "Murilo",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1017",
+        "name": "Thiago Meller",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1018",
+        "name": "Aline",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1019",
+        "name": "Markim/Nabuco",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1020",
+        "name": "Vinícius Emmanuel",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1021",
+        "name": "Mazetto",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1022",
+        "name": "Matheus Reis",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1023",
+        "name": "Sebá",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1024",
+        "name": "Gabriel e Naves",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1025",
+        "name": "Adrielle",
+        "role": "participant",
+        "turmaId": "T",
+        "isPresenter": true,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "1",
+        "name": "Alexandre",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "2",
+        "name": "Gabi",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "3",
+        "name": "Cadelca",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "4",
+        "name": "Léo",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1011"
+        ]
+      },
+      {
+        "code": "5",
+        "name": "Pedro",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "6",
+        "name": "Fred",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": []
+      },
+      {
+        "code": "7",
+        "name": "Adrielle",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1025"
+        ]
+      },
+      {
+        "code": "8",
+        "name": "Thaynara",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1000"
+        ]
+      },
+      {
+        "code": "9",
+        "name": "Ursula",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1001"
+        ]
+      },
+      {
+        "code": "10",
+        "name": "Bataiel",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1002"
+        ]
+      },
+      {
+        "code": "11",
+        "name": "Bordin",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1003"
+        ]
+      },
+      {
+        "code": "12",
+        "name": "Helen",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1004"
+        ]
+      },
+      {
+        "code": "13",
+        "name": "Renan",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1005"
+        ]
+      },
+      {
+        "code": "14",
+        "name": "Mari",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1006",
+          "1007"
+        ]
+      },
+      {
+        "code": "15",
+        "name": "Thiago",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1007",
+          "1017"
+        ]
+      },
+      {
+        "code": "16",
+        "name": "Mario",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1006",
+          "1007"
+        ]
+      },
+      {
+        "code": "17",
+        "name": "Humberto",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1008"
+        ]
+      },
+      {
+        "code": "18",
+        "name": "Danyllo",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1008"
+        ]
+      },
+      {
+        "code": "19",
+        "name": "Boffe",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1009"
+        ]
+      },
+      {
+        "code": "20",
+        "name": "Bruninha",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1009"
+        ]
+      },
+      {
+        "code": "21",
+        "name": "Juliene",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1010"
+        ]
+      },
+      {
+        "code": "22",
+        "name": "Ana Luiza",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1010"
+        ]
+      },
+      {
+        "code": "23",
+        "name": "Albert (Léo)",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1011"
+        ]
+      },
+      {
+        "code": "24",
+        "name": "Kaneko",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1012"
+        ]
+      },
+      {
+        "code": "25",
+        "name": "Cici",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1013"
+        ]
+      },
+      {
+        "code": "26",
+        "name": "Joyce",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1014"
+        ]
+      },
+      {
+        "code": "27",
+        "name": "Lacerda",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1015"
+        ]
+      },
+      {
+        "code": "28",
+        "name": "Murilo",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1016"
+        ]
+      },
+      {
+        "code": "29",
+        "name": "Thiago Meller",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1017"
+        ]
+      },
+      {
+        "code": "30",
+        "name": "Aline",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1018"
+        ]
+      },
+      {
+        "code": "31",
+        "name": "Markim",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1019"
+        ]
+      },
+      {
+        "code": "32",
+        "name": "Nabuco",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1019"
+        ]
+      },
+      {
+        "code": "33",
+        "name": "Vinícius Emmanuel",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1020"
+        ]
+      },
+      {
+        "code": "34",
+        "name": "Mazetto",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1021"
+        ]
+      },
+      {
+        "code": "35",
+        "name": "Matheus Reis",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1022"
+        ]
+      },
+      {
+        "code": "36",
+        "name": "Sebá",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1023"
+        ]
+      },
+      {
+        "code": "37",
+        "name": "Gabriel",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1024"
+        ]
+      },
+      {
+        "code": "38",
+        "name": "Naves",
+        "role": "participant",
+        "turmaId": null,
+        "isPresenter": false,
+        "blockedPresenterCodes": [
+          "1024"
+        ]
+      }
+    ],
+    "turmas": [
+      {
+        "id": "M",
+        "name": "Manhã"
+      },
+      {
+        "id": "T",
+        "name": "Tarde"
+      }
+    ],
+    "perguntas": [
+      {
+        "id": "1",
+        "turmaId": "M",
+        "apresentadorCode": "1000",
+        "texto": "Como fazer os resultados (qualidade) de sua área TRIPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "2",
+        "turmaId": "M",
+        "apresentadorCode": "1000",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "3",
+        "turmaId": "M",
+        "apresentadorCode": "1000",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "4",
+        "turmaId": "M",
+        "apresentadorCode": "1001",
+        "texto": "Como TRIPLICAR nossa densidade de talento e performance dos times?",
+        "ordem": 1
+      },
+      {
+        "id": "5",
+        "turmaId": "M",
+        "apresentadorCode": "1001",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "6",
+        "turmaId": "M",
+        "apresentadorCode": "1001",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "7",
+        "turmaId": "M",
+        "apresentadorCode": "1002",
+        "texto": "Como fazer os resultados de sua área TRIPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "8",
+        "turmaId": "M",
+        "apresentadorCode": "1002",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "9",
+        "turmaId": "M",
+        "apresentadorCode": "1002",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "10",
+        "turmaId": "M",
+        "apresentadorCode": "1003",
+        "texto": "Como fazer os resultados de sua área TRIPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "11",
+        "turmaId": "M",
+        "apresentadorCode": "1003",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "12",
+        "turmaId": "M",
+        "apresentadorCode": "1003",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "13",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "Como fazer os resultados de sua área TRIPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "14",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "15",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "16",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "Quais as prioridades de produto e como faremos para TRIPLICAR os resultados destas prioridades?",
+        "ordem": 1
+      },
+      {
+        "id": "17",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "18",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "19",
+        "turmaId": "M",
+        "apresentadorCode": "1006",
+        "texto": "Quais os times prioritários ou temas para COMPLIANCE e como faremos para estarmos preparados para triplicar resultados?",
+        "ordem": 1
+      },
+      {
+        "id": "20",
+        "turmaId": "M",
+        "apresentadorCode": "1006",
+        "texto": "O que não pode faltar em 2026?",
+        "ordem": 2
+      },
+      {
+        "id": "21",
+        "turmaId": "M",
+        "apresentadorCode": "1006",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "22",
+        "turmaId": "M",
+        "apresentadorCode": "1007",
+        "texto": "Quais os times prioritários ou temas para SEGURANÇA e como faremos para estarmos preparados para triplicar resultados?",
+        "ordem": 1
+      },
+      {
+        "id": "23",
+        "turmaId": "M",
+        "apresentadorCode": "1007",
+        "texto": "O que não pode faltar em 2026?",
+        "ordem": 2
+      },
+      {
+        "id": "24",
+        "turmaId": "M",
+        "apresentadorCode": "1007",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "25",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "Como fazer os resultados de sua área QUINTUPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "26",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "27",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "28",
+        "turmaId": "M",
+        "apresentadorCode": "1009",
+        "texto": "Quais os times prioritários ou temas para CONTROLADORIA e FINANCEIRO e como faremos para TRIPLICAR os resultados destes times/temas?",
+        "ordem": 1
+      },
+      {
+        "id": "29",
+        "turmaId": "M",
+        "apresentadorCode": "1009",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "30",
+        "turmaId": "M",
+        "apresentadorCode": "1009",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "31",
+        "turmaId": "M",
+        "apresentadorCode": "1010",
+        "texto": "Branding: Quais os times prioritários para triplicar os resultados via Branding e o que fazer neles?",
+        "ordem": 1
+      },
+      {
+        "id": "32",
+        "turmaId": "M",
+        "apresentadorCode": "1010",
+        "texto": "Eventos: Como fazer os resultados de sua área TRIPLICAREM?",
+        "ordem": 2
+      },
+      {
+        "id": "33",
+        "turmaId": "M",
+        "apresentadorCode": "1010",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "34",
+        "turmaId": "M",
+        "apresentadorCode": "1011",
+        "texto": "Quais os times prioritários ou temas para MARKETING e como faremos para TRIPLICAR os resultados destes times/temas?",
+        "ordem": 1
+      },
+      {
+        "id": "35",
+        "turmaId": "M",
+        "apresentadorCode": "1011",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "36",
+        "turmaId": "M",
+        "apresentadorCode": "1011",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "37",
+        "turmaId": "T",
+        "apresentadorCode": "1012",
+        "texto": "Quais os times prioritários ou temas para PERFORMANCE e como faremos para TRIPLICAR os resultados destes times/temas?",
+        "ordem": 1
+      },
+      {
+        "id": "38",
+        "turmaId": "T",
+        "apresentadorCode": "1012",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "39",
+        "turmaId": "T",
+        "apresentadorCode": "1012",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "40",
+        "turmaId": "T",
+        "apresentadorCode": "1013",
+        "texto": "Como fazer os resultados de sua área TRIPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "41",
+        "turmaId": "T",
+        "apresentadorCode": "1013",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "42",
+        "turmaId": "T",
+        "apresentadorCode": "1013",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "43",
+        "turmaId": "T",
+        "apresentadorCode": "1014",
+        "texto": "Como TRIPLICAR nossa densidade de talento e performance dos times?",
+        "ordem": 1
+      },
+      {
+        "id": "44",
+        "turmaId": "T",
+        "apresentadorCode": "1014",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "45",
+        "turmaId": "T",
+        "apresentadorCode": "1014",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "46",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "Como fazer os resultados de sua área TRIPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "47",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "48",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "49",
+        "turmaId": "T",
+        "apresentadorCode": "1016",
+        "texto": "Como fazer a eficiência e impacto da sua área TRIPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "50",
+        "turmaId": "T",
+        "apresentadorCode": "1016",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "51",
+        "turmaId": "T",
+        "apresentadorCode": "1016",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "52",
+        "turmaId": "T",
+        "apresentadorCode": "1017",
+        "texto": "Como fazer os resultados de sua área TRIPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "53",
+        "turmaId": "T",
+        "apresentadorCode": "1017",
+        "texto": "O que não pode faltar em 2026?",
+        "ordem": 2
+      },
+      {
+        "id": "54",
+        "turmaId": "T",
+        "apresentadorCode": "1017",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "55",
+        "turmaId": "T",
+        "apresentadorCode": "1018",
+        "texto": "Quais os times prioritários ou temas para PROJETOS e como faremos para estarmos preparados para triplicar resultados?",
+        "ordem": 1
+      },
+      {
+        "id": "56",
+        "turmaId": "T",
+        "apresentadorCode": "1018",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "57",
+        "turmaId": "T",
+        "apresentadorCode": "1018",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "58",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "Como fazer os resultados de sua área MULTIPLICAR POR 10X?",
+        "ordem": 1
+      },
+      {
+        "id": "59",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "60",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "61",
+        "turmaId": "T",
+        "apresentadorCode": "1020",
+        "texto": "Como fazer a eficiência e impacto da sua área TRIPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "62",
+        "turmaId": "T",
+        "apresentadorCode": "1020",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "63",
+        "turmaId": "T",
+        "apresentadorCode": "1020",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "64",
+        "turmaId": "T",
+        "apresentadorCode": "1021",
+        "texto": "Como fazer os resultados de sua área TRIPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "65",
+        "turmaId": "T",
+        "apresentadorCode": "1021",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "66",
+        "turmaId": "T",
+        "apresentadorCode": "1021",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "67",
+        "turmaId": "T",
+        "apresentadorCode": "1022",
+        "texto": "Como fazer os resultados de sua área QUINTUPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "68",
+        "turmaId": "T",
+        "apresentadorCode": "1022",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "69",
+        "turmaId": "T",
+        "apresentadorCode": "1022",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "70",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "Como fazer os resultados de sua área QUINTUPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "71",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "72",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "73",
+        "turmaId": "T",
+        "apresentadorCode": "1024",
+        "texto": "Como fazer os resultados de sua área TRIPLICAREM?",
+        "ordem": 1
+      },
+      {
+        "id": "74",
+        "turmaId": "T",
+        "apresentadorCode": "1024",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "75",
+        "turmaId": "T",
+        "apresentadorCode": "1024",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      },
+      {
+        "id": "76",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "Como fazer os resultados e impactos do trabalho dos HEADS TRIPLICAR?",
+        "ordem": 1
+      },
+      {
+        "id": "77",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "Quais riscos temos que ficar atentos?",
+        "ordem": 2
+      },
+      {
+        "id": "78",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "O que a Grão precisa fazer fora de sua área para TRIPLICARMOS?",
+        "ordem": 3
+      }
+    ],
+    "topicos": [
+      {
+        "id": "1",
+        "perguntaId": "1",
+        "turmaId": "M",
+        "apresentadorCode": "1000",
+        "texto": "1.1.1 – Aquisição no CEU"
+      },
+      {
+        "id": "2",
+        "perguntaId": "1",
+        "turmaId": "M",
+        "apresentadorCode": "1000",
+        "texto": "1.1.2 – Novas jornadas para o público do onboarding"
+      },
+      {
+        "id": "3",
+        "perguntaId": "2",
+        "turmaId": "M",
+        "apresentadorCode": "1000",
+        "texto": "1.2.1 – Comitê entre Backoffice Corporativo e Jurídico"
+      },
+      {
+        "id": "4",
+        "perguntaId": "3",
+        "turmaId": "M",
+        "apresentadorCode": "1000",
+        "texto": "1.3.1 – Plataformas de teste para portais e aplicativo"
+      },
+      {
+        "id": "5",
+        "perguntaId": "4",
+        "turmaId": "M",
+        "apresentadorCode": "1001",
+        "texto": "2.1.1 – Inserir I.A no Processo seletivo"
+      },
+      {
+        "id": "6",
+        "perguntaId": "4",
+        "turmaId": "M",
+        "apresentadorCode": "1001",
+        "texto": "2.1.2 – Gestão de desempenho"
+      },
+      {
+        "id": "7",
+        "perguntaId": "4",
+        "turmaId": "M",
+        "apresentadorCode": "1001",
+        "texto": "2.1.3 – Ambiente GD+"
+      },
+      {
+        "id": "8",
+        "perguntaId": "4",
+        "turmaId": "M",
+        "apresentadorCode": "1001",
+        "texto": "2.1.4 – Desenvolvimento contínuo"
+      },
+      {
+        "id": "9",
+        "perguntaId": "4",
+        "turmaId": "M",
+        "apresentadorCode": "1001",
+        "texto": "2.1.5 – Comunicação interna"
+      },
+      {
+        "id": "10",
+        "perguntaId": "5",
+        "turmaId": "M",
+        "apresentadorCode": "1001",
+        "texto": "2.2.1 – Tempo de Recrutamento e seleção"
+      },
+      {
+        "id": "11",
+        "perguntaId": "5",
+        "turmaId": "M",
+        "apresentadorCode": "1001",
+        "texto": "2.2.2 – Retenção de talentos"
+      },
+      {
+        "id": "12",
+        "perguntaId": "6",
+        "turmaId": "M",
+        "apresentadorCode": "1001",
+        "texto": "2.3.1 – Employer branding"
+      },
+      {
+        "id": "13",
+        "perguntaId": "7",
+        "turmaId": "M",
+        "apresentadorCode": "1002",
+        "texto": "3.1.1 – Programa de Originação Integrado"
+      },
+      {
+        "id": "14",
+        "perguntaId": "7",
+        "turmaId": "M",
+        "apresentadorCode": "1002",
+        "texto": "3.1.2 – Monitoramento de Mercado"
+      },
+      {
+        "id": "15",
+        "perguntaId": "7",
+        "turmaId": "M",
+        "apresentadorCode": "1002",
+        "texto": "3.1.3 – Derivação para Intermediários"
+      },
+      {
+        "id": "16",
+        "perguntaId": "7",
+        "turmaId": "M",
+        "apresentadorCode": "1002",
+        "texto": "3.1.4 – Expansão: Balcão e Derivativos"
+      },
+      {
+        "id": "17",
+        "perguntaId": "8",
+        "turmaId": "M",
+        "apresentadorCode": "1002",
+        "texto": "3.2.1 – Blindagem e Verificação de User"
+      },
+      {
+        "id": "18",
+        "perguntaId": "8",
+        "turmaId": "M",
+        "apresentadorCode": "1002",
+        "texto": "3.2.2 – Sistematização do Loyalty"
+      },
+      {
+        "id": "19",
+        "perguntaId": "9",
+        "turmaId": "M",
+        "apresentadorCode": "1002",
+        "texto": "3.3.1 – ID Único de Localidade"
+      },
+      {
+        "id": "20",
+        "perguntaId": "9",
+        "turmaId": "M",
+        "apresentadorCode": "1002",
+        "texto": "3.3.2 – Novos Players Estratégicos"
+      },
+      {
+        "id": "21",
+        "perguntaId": "10",
+        "turmaId": "M",
+        "apresentadorCode": "1003",
+        "texto": "4.1.1 – Hack comportamental/Notificações Inteligentes"
+      },
+      {
+        "id": "22",
+        "perguntaId": "10",
+        "turmaId": "M",
+        "apresentadorCode": "1003",
+        "texto": "4.1.2 – Ambiente Corporate -> Casa do cliente"
+      },
+      {
+        "id": "23",
+        "perguntaId": "10",
+        "turmaId": "M",
+        "apresentadorCode": "1003",
+        "texto": "4.1.3 – Cardápio mais completo possível"
+      },
+      {
+        "id": "24",
+        "perguntaId": "10",
+        "turmaId": "M",
+        "apresentadorCode": "1003",
+        "texto": "4.1.4 – FOMO ao usuário"
+      },
+      {
+        "id": "25",
+        "perguntaId": "11",
+        "turmaId": "M",
+        "apresentadorCode": "1003",
+        "texto": "4.2.1 – Primeira Impressão Fatal"
+      },
+      {
+        "id": "26",
+        "perguntaId": "11",
+        "turmaId": "M",
+        "apresentadorCode": "1003",
+        "texto": "4.2.2 – Loyalty"
+      },
+      {
+        "id": "27",
+        "perguntaId": "12",
+        "turmaId": "M",
+        "apresentadorCode": "1003",
+        "texto": "4.3.1 – Presença de marca mais forte"
+      },
+      {
+        "id": "28",
+        "perguntaId": "12",
+        "turmaId": "M",
+        "apresentadorCode": "1003",
+        "texto": "4.3.2 – + Tradings Compradoras"
+      },
+      {
+        "id": "29",
+        "perguntaId": "13",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "5.1.1 – Gameficação de incentivos em níveis"
+      },
+      {
+        "id": "30",
+        "perguntaId": "13",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "5.1.2 – Programa de indicação da Grão Direto"
+      },
+      {
+        "id": "31",
+        "perguntaId": "13",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "5.1.3 – Programa Coalizão"
+      },
+      {
+        "id": "32",
+        "perguntaId": "13",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "5.1.4 – Mais pontos, mais tempo, mais valor agregado"
+      },
+      {
+        "id": "33",
+        "perguntaId": "14",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "5.2.1 – Risco de Passivo Financeiro"
+      },
+      {
+        "id": "34",
+        "perguntaId": "14",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "5.2.2 – Risco reputacional e fraudes"
+      },
+      {
+        "id": "35",
+        "perguntaId": "14",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "5.2.3 – Relacionamento com a trading"
+      },
+      {
+        "id": "36",
+        "perguntaId": "14",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "5.2.4 – Programas demais, engajamento de menos"
+      },
+      {
+        "id": "37",
+        "perguntaId": "15",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "5.3.1 – Publicidade e relacionamento com o produtor"
+      },
+      {
+        "id": "38",
+        "perguntaId": "15",
+        "turmaId": "M",
+        "apresentadorCode": "1004",
+        "texto": "5.3.2 – GrainInsights -> “Conquer do agro”"
+      },
+      {
+        "id": "39",
+        "perguntaId": "16",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "6.1.1 – Explorar 100% do potencial do comercial biônico"
+      },
+      {
+        "id": "40",
+        "perguntaId": "16",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "6.1.2 – Ser o vigia de mercado do nosso vendedor"
+      },
+      {
+        "id": "41",
+        "perguntaId": "16",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "6.1.3 – Produtos da GD como alavanca para SF (e vice-versa)"
+      },
+      {
+        "id": "42",
+        "perguntaId": "16",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "6.1.4 – Transformar o marketing de produto em motor de crescimento"
+      },
+      {
+        "id": "43",
+        "perguntaId": "17",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "6.2.1 – Explorar 100% do potencial do comercial biônico"
+      },
+      {
+        "id": "44",
+        "perguntaId": "17",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "6.2.2 – Ser o vigia de mercado do nosso vendedor"
+      },
+      {
+        "id": "45",
+        "perguntaId": "17",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "6.2.3 – Produtos da GD como alavanca para SF (e vice-versa)"
+      },
+      {
+        "id": "46",
+        "perguntaId": "17",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "6.2.4 – Transformar o marketing de produto em motor de crescimento"
+      },
+      {
+        "id": "47",
+        "perguntaId": "18",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "6.3.1 – Inteligência Comercial Unificada"
+      },
+      {
+        "id": "48",
+        "perguntaId": "18",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "6.3.2 – Explorar outras fontes de liquidez para os grãos"
+      },
+      {
+        "id": "49",
+        "perguntaId": "18",
+        "turmaId": "M",
+        "apresentadorCode": "1005",
+        "texto": "6.3.3 – Ser verdadeiramente Data Driven"
+      },
+      {
+        "id": "50",
+        "perguntaId": "19",
+        "turmaId": "M",
+        "apresentadorCode": "1006",
+        "texto": "7.1.1 – Compliance by design"
+      },
+      {
+        "id": "51",
+        "perguntaId": "19",
+        "turmaId": "M",
+        "apresentadorCode": "1006",
+        "texto": "7.1.2 – Projeto “Commit no código (de conduta)”"
+      },
+      {
+        "id": "52",
+        "perguntaId": "20",
+        "turmaId": "M",
+        "apresentadorCode": "1006",
+        "texto": "7.2.1 – Comunicação"
+      },
+      {
+        "id": "53",
+        "perguntaId": "21",
+        "turmaId": "M",
+        "apresentadorCode": "1006",
+        "texto": "7.3.1 – Expansão das parcerias"
+      },
+      {
+        "id": "54",
+        "perguntaId": "22",
+        "turmaId": "M",
+        "apresentadorCode": "1007",
+        "texto": "8.1.1 – Cenário atual"
+      },
+      {
+        "id": "55",
+        "perguntaId": "22",
+        "turmaId": "M",
+        "apresentadorCode": "1007",
+        "texto": "8.1.2 – Score de Risco GD"
+      },
+      {
+        "id": "56",
+        "perguntaId": "22",
+        "turmaId": "M",
+        "apresentadorCode": "1007",
+        "texto": "8.1.3 – Por que implementar isso?"
+      },
+      {
+        "id": "57",
+        "perguntaId": "23",
+        "turmaId": "M",
+        "apresentadorCode": "1007",
+        "texto": "8.2.1 – Ações para 2026"
+      },
+      {
+        "id": "58",
+        "perguntaId": "24",
+        "turmaId": "M",
+        "apresentadorCode": "1007",
+        "texto": "8.3.1 – Programa de Incentivo à Redução de Custos com Ferramentas"
+      },
+      {
+        "id": "59",
+        "perguntaId": "25",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "9.1.1 – Criarmos o GD Global Agro Credit"
+      },
+      {
+        "id": "60",
+        "perguntaId": "25",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "9.1.2 – Buscar melhores sacados em outros setores"
+      },
+      {
+        "id": "61",
+        "perguntaId": "25",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "9.1.3 – Captação agressiva de cerealistas e sacados"
+      },
+      {
+        "id": "62",
+        "perguntaId": "25",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "9.1.4 – Inteligência de abordagem, processo e conversas escaláveis para envolvimento de parceiros"
+      },
+      {
+        "id": "63",
+        "perguntaId": "26",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "9.2.1 – Fundo forte, originação fraca"
+      },
+      {
+        "id": "64",
+        "perguntaId": "26",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "9.2.2 – Risco de decisões abruptas"
+      },
+      {
+        "id": "65",
+        "perguntaId": "27",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "9.3.1 – Liquidez como impulso da experiência digital e do crédito"
+      },
+      {
+        "id": "66",
+        "perguntaId": "27",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "9.3.2 – Narrativa institucional clara e unificada"
+      },
+      {
+        "id": "67",
+        "perguntaId": "27",
+        "turmaId": "M",
+        "apresentadorCode": "1008",
+        "texto": "9.3.3 – Armazéns estratégicos Grão Direto"
+      },
+      {
+        "id": "68",
+        "perguntaId": "28",
+        "turmaId": "M",
+        "apresentadorCode": "1009",
+        "texto": "10.1.1 – Reforma Tributária"
+      },
+      {
+        "id": "69",
+        "perguntaId": "28",
+        "turmaId": "M",
+        "apresentadorCode": "1009",
+        "texto": "10.1.2 – Tesouraria Estratégica"
+      },
+      {
+        "id": "70",
+        "perguntaId": "28",
+        "turmaId": "M",
+        "apresentadorCode": "1009",
+        "texto": "10.1.3 – AgFintech"
+      },
+      {
+        "id": "71",
+        "perguntaId": "29",
+        "turmaId": "M",
+        "apresentadorCode": "1009",
+        "texto": "10.2.2 – Risco de Concentração da Carteira"
+      },
+      {
+        "id": "72",
+        "perguntaId": "30",
+        "turmaId": "M",
+        "apresentadorCode": "1009",
+        "texto": "10.3.1 – Exposição da Marca GD"
+      },
+      {
+        "id": "73",
+        "perguntaId": "31",
+        "turmaId": "M",
+        "apresentadorCode": "1010",
+        "texto": "11.1.1 – Plataforma de Inteligência de Marca (PIM)"
+      },
+      {
+        "id": "74",
+        "perguntaId": "31",
+        "turmaId": "M",
+        "apresentadorCode": "1010",
+        "texto": "11.1.2 – Loyalty atuando com a lógica de \"cupons\" para engajamento"
+      },
+      {
+        "id": "75",
+        "perguntaId": "31",
+        "turmaId": "M",
+        "apresentadorCode": "1010",
+        "texto": "11.1.3 – Embaixador Sou Brasil, Sou Agro"
+      },
+      {
+        "id": "76",
+        "perguntaId": "31",
+        "turmaId": "M",
+        "apresentadorCode": "1010",
+        "texto": "11.1.4 – Co-branding no Agro"
+      },
+      {
+        "id": "77",
+        "perguntaId": "32",
+        "turmaId": "M",
+        "apresentadorCode": "1010",
+        "texto": "11.2.1 – De \"Evento Bonito\" para \"Máquina de Negócios\""
+      },
+      {
+        "id": "78",
+        "perguntaId": "33",
+        "turmaId": "M",
+        "apresentadorCode": "1010",
+        "texto": "11.3.1 – Implementar Calculadora de Custo de produção"
+      },
+      {
+        "id": "79",
+        "perguntaId": "33",
+        "turmaId": "M",
+        "apresentadorCode": "1010",
+        "texto": "11.3.2 – Implementar Viés de Ancoragem de Preços"
+      },
+      {
+        "id": "80",
+        "perguntaId": "33",
+        "turmaId": "M",
+        "apresentadorCode": "1010",
+        "texto": "11.3.3 – Criar um Programa de Sucessão Familiar"
+      },
+      {
+        "id": "81",
+        "perguntaId": "34",
+        "turmaId": "M",
+        "apresentadorCode": "1011",
+        "texto": "12.1.1 – Integração entre canais de mídia via servidor (S2S)"
+      },
+      {
+        "id": "82",
+        "perguntaId": "34",
+        "turmaId": "M",
+        "apresentadorCode": "1011",
+        "texto": "12.1.2 – Novo modelo de atribuição: Marketing Mix Modeling"
+      },
+      {
+        "id": "83",
+        "perguntaId": "35",
+        "turmaId": "M",
+        "apresentadorCode": "1011",
+        "texto": "12.2.1 – Exige engenharia, governança e ambiente de testes."
+      },
+      {
+        "id": "84",
+        "perguntaId": "35",
+        "turmaId": "M",
+        "apresentadorCode": "1011",
+        "texto": "12.2.2 – Experiência fluida"
+      },
+      {
+        "id": "85",
+        "perguntaId": "36",
+        "turmaId": "M",
+        "apresentadorCode": "1011",
+        "texto": "12.3.1 – “Barter 24H” com cotação em tempo real"
+      },
+      {
+        "id": "86",
+        "perguntaId": "37",
+        "turmaId": "T",
+        "apresentadorCode": "1012",
+        "texto": "13.1.1 – Conhecer o Value Stream da empresa"
+      },
+      {
+        "id": "87",
+        "perguntaId": "37",
+        "turmaId": "T",
+        "apresentadorCode": "1012",
+        "texto": "13.1.2 – Facilitar uma gestão interna"
+      },
+      {
+        "id": "88",
+        "perguntaId": "38",
+        "turmaId": "T",
+        "apresentadorCode": "1012",
+        "texto": "13.2.1 – Não perdermos o time da coisa"
+      },
+      {
+        "id": "89",
+        "perguntaId": "39",
+        "turmaId": "T",
+        "apresentadorCode": "1012",
+        "texto": "13.3.1 – Especializar pessoas"
+      },
+      {
+        "id": "90",
+        "perguntaId": "39",
+        "turmaId": "T",
+        "apresentadorCode": "1012",
+        "texto": "13.3.2 – Zelarmos pela nossa cultura"
+      },
+      {
+        "id": "91",
+        "perguntaId": "40",
+        "turmaId": "T",
+        "apresentadorCode": "1013",
+        "texto": "14.1.1 – Jornada WPP completa e com uma alta retenção"
+      },
+      {
+        "id": "92",
+        "perguntaId": "40",
+        "turmaId": "T",
+        "apresentadorCode": "1013",
+        "texto": "14.1.2 – Mais dados para personalização"
+      },
+      {
+        "id": "93",
+        "perguntaId": "41",
+        "turmaId": "T",
+        "apresentadorCode": "1013",
+        "texto": "14.2.1 – Funil não orgânico (muita dependência de Twilio)"
+      },
+      {
+        "id": "94",
+        "perguntaId": "41",
+        "turmaId": "T",
+        "apresentadorCode": "1013",
+        "texto": "14.2.2 – Teto CEU/CENG quase sendo atingido"
+      },
+      {
+        "id": "95",
+        "perguntaId": "42",
+        "turmaId": "T",
+        "apresentadorCode": "1013",
+        "texto": "14.3.1 – Elevar o patamar de Loyalty"
+      },
+      {
+        "id": "96",
+        "perguntaId": "42",
+        "turmaId": "T",
+        "apresentadorCode": "1013",
+        "texto": "14.3.2 – Aumentar as “Super Transações”"
+      },
+      {
+        "id": "97",
+        "perguntaId": "43",
+        "turmaId": "T",
+        "apresentadorCode": "1014",
+        "texto": "15.1.1 – Fortalecer nossos elos"
+      },
+      {
+        "id": "98",
+        "perguntaId": "43",
+        "turmaId": "T",
+        "apresentadorCode": "1014",
+        "texto": "15.1.2 – Decidir com menos achismo e mais dados"
+      },
+      {
+        "id": "99",
+        "perguntaId": "44",
+        "turmaId": "T",
+        "apresentadorCode": "1014",
+        "texto": "15.2.1 – Tolerância prolongada a baixo desempenho"
+      },
+      {
+        "id": "100",
+        "perguntaId": "44",
+        "turmaId": "T",
+        "apresentadorCode": "1014",
+        "texto": "15.2.2 – Cenário recorrente de metas de Tech não batidas"
+      },
+      {
+        "id": "101",
+        "perguntaId": "45",
+        "turmaId": "T",
+        "apresentadorCode": "1014",
+        "texto": "15.3.1 – Reter talentos"
+      },
+      {
+        "id": "102",
+        "perguntaId": "45",
+        "turmaId": "T",
+        "apresentadorCode": "1014",
+        "texto": "15.3.2 – Acompanhar as lideranças"
+      },
+      {
+        "id": "103",
+        "perguntaId": "46",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.1.1 – Execução Forte e Rituais Consistentes"
+      },
+      {
+        "id": "104",
+        "perguntaId": "46",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.1.2 – Inteligência Comercial (evolução do Top Picks + AIrton)"
+      },
+      {
+        "id": "105",
+        "perguntaId": "46",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.1.3 – Transformar Riscos em Oportunidades de Crescimento"
+      },
+      {
+        "id": "106",
+        "perguntaId": "46",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.1.4 – Avançarmos..."
+      },
+      {
+        "id": "107",
+        "perguntaId": "47",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.2.1 – AMAGGI – Risco de “formalização” e dependência de incentivos"
+      },
+      {
+        "id": "108",
+        "perguntaId": "47",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.2.2 – ADM - Crescimento do pré-hedge e by-pass"
+      },
+      {
+        "id": "109",
+        "perguntaId": "47",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.2.3 – CARGILL - Risco de “volume” apenas para atingir a meta de 1,25 Mt (Warrants)"
+      },
+      {
+        "id": "110",
+        "perguntaId": "47",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.2.4 – LDC - Risco de termos o “carimbo” como canal exclusivamente transacional"
+      },
+      {
+        "id": "111",
+        "perguntaId": "48",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.3.1 – Dados"
+      },
+      {
+        "id": "112",
+        "perguntaId": "48",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.3.2 – Backoffice + Engajamento"
+      },
+      {
+        "id": "113",
+        "perguntaId": "48",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.3.3 – Loyalty/Marketing"
+      },
+      {
+        "id": "114",
+        "perguntaId": "48",
+        "turmaId": "T",
+        "apresentadorCode": "1015",
+        "texto": "16.3.4 – Gestão de pessoas"
+      },
+      {
+        "id": "115",
+        "perguntaId": "49",
+        "turmaId": "T",
+        "apresentadorCode": "1016",
+        "texto": "17.1.1 – Gastaremos R$ 133.701,60 migrando nossa arquitetura de Cloud para ARM."
+      },
+      {
+        "id": "116",
+        "perguntaId": "49",
+        "turmaId": "T",
+        "apresentadorCode": "1016",
+        "texto": "17.1.2 – Automatização do quarterly report."
+      },
+      {
+        "id": "117",
+        "perguntaId": "49",
+        "turmaId": "T",
+        "apresentadorCode": "1016",
+        "texto": "17.1.3 – Novo ecossistema de Dados."
+      },
+      {
+        "id": "118",
+        "perguntaId": "50",
+        "turmaId": "T",
+        "apresentadorCode": "1016",
+        "texto": "17.2.1 – Vazamento de Dados por AI."
+      },
+      {
+        "id": "119",
+        "perguntaId": "50",
+        "turmaId": "T",
+        "apresentadorCode": "1016",
+        "texto": "17.2.2 – Modelo de negócio dos produtos de AI e custos de token."
+      },
+      {
+        "id": "120",
+        "perguntaId": "51",
+        "turmaId": "T",
+        "apresentadorCode": "1016",
+        "texto": "17.3.1 – Biônico como upselling para o Clicou, Fechou."
+      },
+      {
+        "id": "121",
+        "perguntaId": "52",
+        "turmaId": "T",
+        "apresentadorCode": "1017",
+        "texto": "18.1.1 – Distribuirmos seguros através da plataforma"
+      },
+      {
+        "id": "122",
+        "perguntaId": "52",
+        "turmaId": "T",
+        "apresentadorCode": "1017",
+        "texto": "18.1.2 – Estabelecermos parceria com consultoria estratégica"
+      },
+      {
+        "id": "123",
+        "perguntaId": "53",
+        "turmaId": "T",
+        "apresentadorCode": "1017",
+        "texto": "18.2.1 – Atrairmos o sistema cooperativo para além da venda"
+      },
+      {
+        "id": "124",
+        "perguntaId": "53",
+        "turmaId": "T",
+        "apresentadorCode": "1017",
+        "texto": "18.2.2 – Criarmos uma solução de hedge"
+      },
+      {
+        "id": "125",
+        "perguntaId": "54",
+        "turmaId": "T",
+        "apresentadorCode": "1017",
+        "texto": "18.3.1 – Turbinar Grainsights + copiloto AIrton"
+      },
+      {
+        "id": "126",
+        "perguntaId": "54",
+        "turmaId": "T",
+        "apresentadorCode": "1017",
+        "texto": "18.3.2 – Academia GD ou Parcerias com Inst. de Ensino"
+      },
+      {
+        "id": "127",
+        "perguntaId": "55",
+        "turmaId": "T",
+        "apresentadorCode": "1018",
+        "texto": "19.1.1 – Modelo integrado entre CF + Barter + Backoffice"
+      },
+      {
+        "id": "128",
+        "perguntaId": "55",
+        "turmaId": "T",
+        "apresentadorCode": "1018",
+        "texto": "19.1.2 – Preparar o Backoffice para escalar"
+      },
+      {
+        "id": "129",
+        "perguntaId": "55",
+        "turmaId": "T",
+        "apresentadorCode": "1018",
+        "texto": "19.1.3 – Infraestrutura escalável e time conectado"
+      },
+      {
+        "id": "130",
+        "perguntaId": "56",
+        "turmaId": "T",
+        "apresentadorCode": "1018",
+        "texto": "19.2.1 – Projetos vendidos top-down sem envolver os stakeholders operacionais"
+      },
+      {
+        "id": "131",
+        "perguntaId": "56",
+        "turmaId": "T",
+        "apresentadorCode": "1018",
+        "texto": "19.2.2 – Processos pouco padronizados podem gerar dificuldades de escala"
+      },
+      {
+        "id": "132",
+        "perguntaId": "57",
+        "turmaId": "T",
+        "apresentadorCode": "1018",
+        "texto": "19.3.1 – Fortalecer e acelerar Serviços Financeiros e Inteligência Artificial"
+      },
+      {
+        "id": "133",
+        "perguntaId": "57",
+        "turmaId": "T",
+        "apresentadorCode": "1018",
+        "texto": "19.3.2 – Cross-sell estruturado"
+      },
+      {
+        "id": "134",
+        "perguntaId": "57",
+        "turmaId": "T",
+        "apresentadorCode": "1018",
+        "texto": "19.3.3 – Expandir portfólio de commodities"
+      },
+      {
+        "id": "135",
+        "perguntaId": "58",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.1.1 – Dados como estimulo do momento de negociar"
+      },
+      {
+        "id": "136",
+        "perguntaId": "58",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.1.2 – AIrton como canal prioritário e unificado das comunicações com"
+      },
+      {
+        "id": "137",
+        "perguntaId": "58",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.1.3 – Impulsionar conexões ambiente GD através do AIrton"
+      },
+      {
+        "id": "138",
+        "perguntaId": "58",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.1.4 – Biônico como maior fonte de dados GD"
+      },
+      {
+        "id": "139",
+        "perguntaId": "58",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.1.5 – Biônico proativo e reativo resolvendo dores reais"
+      },
+      {
+        "id": "140",
+        "perguntaId": "59",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.2.1 – Dependência dos modelos de IA (LLMs)"
+      },
+      {
+        "id": "141",
+        "perguntaId": "59",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.2.2 – Má visão externas de soluções de IA"
+      },
+      {
+        "id": "142",
+        "perguntaId": "59",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.2.3 – Jornadas conversacionais são diferente de tudo e ainda não sabemos fazer"
+      },
+      {
+        "id": "143",
+        "perguntaId": "59",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.2.4 – Escolhas não estratégicas e prioritárias"
+      },
+      {
+        "id": "144",
+        "perguntaId": "60",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.3.1 – Maior interação entre IA e jornadas dos demais times"
+      },
+      {
+        "id": "145",
+        "perguntaId": "60",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.3.2 – Unificação e centralização de dados de usuários de toda GD"
+      },
+      {
+        "id": "146",
+        "perguntaId": "60",
+        "turmaId": "T",
+        "apresentadorCode": "1019",
+        "texto": "20.3.3 – Geração de conteúdo sobre contexto de mercado"
+      },
+      {
+        "id": "147",
+        "perguntaId": "61",
+        "turmaId": "T",
+        "apresentadorCode": "1020",
+        "texto": "21.1.1 – Engenharia Orientada a Hipóteses"
+      },
+      {
+        "id": "148",
+        "perguntaId": "61",
+        "turmaId": "T",
+        "apresentadorCode": "1020",
+        "texto": "21.1.2 – Excelência na Execução (Pós-Planning)"
+      },
+      {
+        "id": "149",
+        "perguntaId": "61",
+        "turmaId": "T",
+        "apresentadorCode": "1020",
+        "texto": "21.1.3 – Ecossistema Conectado (API First)"
+      },
+      {
+        "id": "150",
+        "perguntaId": "62",
+        "turmaId": "T",
+        "apresentadorCode": "1020",
+        "texto": "Tópico 2.1 – Engenharia e CF"
+      },
+      {
+        "id": "151",
+        "perguntaId": "62",
+        "turmaId": "T",
+        "apresentadorCode": "1020",
+        "texto": "Tópico 2.2 – Engenharia e CF"
+      },
+      {
+        "id": "152",
+        "perguntaId": "62",
+        "turmaId": "T",
+        "apresentadorCode": "1020",
+        "texto": "Tópico 2.3 – Engenharia e CF"
+      },
+      {
+        "id": "153",
+        "perguntaId": "63",
+        "turmaId": "T",
+        "apresentadorCode": "1020",
+        "texto": "21.3.1 – Pessoa de produto para o time financeiro"
+      },
+      {
+        "id": "154",
+        "perguntaId": "64",
+        "turmaId": "T",
+        "apresentadorCode": "1021",
+        "texto": "22.1.1 – Projetos de Alto Valor"
+      },
+      {
+        "id": "155",
+        "perguntaId": "64",
+        "turmaId": "T",
+        "apresentadorCode": "1021",
+        "texto": "22.1.2 – Projetos de Alto Valor -> Gestão de Contratos"
+      },
+      {
+        "id": "156",
+        "perguntaId": "64",
+        "turmaId": "T",
+        "apresentadorCode": "1021",
+        "texto": "22.1.3 – Escalabilidade -> ICP: empresas de porte médio"
+      },
+      {
+        "id": "157",
+        "perguntaId": "65",
+        "turmaId": "T",
+        "apresentadorCode": "1021",
+        "texto": "22.2.1 – Projetos de Alto Valor"
+      },
+      {
+        "id": "158",
+        "perguntaId": "65",
+        "turmaId": "T",
+        "apresentadorCode": "1021",
+        "texto": "22.2.2 – Escalabilidade -> ICP: empresas de porte médio"
+      },
+      {
+        "id": "159",
+        "perguntaId": "66",
+        "turmaId": "T",
+        "apresentadorCode": "1021",
+        "texto": "22.3.1 – Barter de tudo e de todas as formas possíveis"
+      },
+      {
+        "id": "160",
+        "perguntaId": "67",
+        "turmaId": "T",
+        "apresentadorCode": "1022",
+        "texto": "23.1.1 – Otimizar créditos não performados"
+      },
+      {
+        "id": "161",
+        "perguntaId": "67",
+        "turmaId": "T",
+        "apresentadorCode": "1022",
+        "texto": "23.1.2 – Aumentar capacidade comercial de produtos performados"
+      },
+      {
+        "id": "162",
+        "perguntaId": "68",
+        "turmaId": "T",
+        "apresentadorCode": "1022",
+        "texto": "23.2.1 – Otimizar créditos não performados"
+      },
+      {
+        "id": "163",
+        "perguntaId": "68",
+        "turmaId": "T",
+        "apresentadorCode": "1022",
+        "texto": "23.2.2 – Aumentar capacidade comercial de produtos performados"
+      },
+      {
+        "id": "164",
+        "perguntaId": "69",
+        "turmaId": "T",
+        "apresentadorCode": "1022",
+        "texto": "23.3.1 – Desenvolvermos uma rede de compra e venda de HF (alho, cenoura, cebola e batata)"
+      },
+      {
+        "id": "165",
+        "perguntaId": "69",
+        "turmaId": "T",
+        "apresentadorCode": "1022",
+        "texto": "23.3.2 – Criarmos CF de Cana de Açucar e Café"
+      },
+      {
+        "id": "166",
+        "perguntaId": "70",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.1.1 – 30 novas empresas (20-50k ton ano cada uma)"
+      },
+      {
+        "id": "167",
+        "perguntaId": "70",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.1.2 – Crescimento nas empresas de grande volume"
+      },
+      {
+        "id": "168",
+        "perguntaId": "70",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.1.3 – Novas empresas de grande volume"
+      },
+      {
+        "id": "169",
+        "perguntaId": "70",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.1.4 – Produto básico com custo de implementação R$0,00."
+      },
+      {
+        "id": "170",
+        "perguntaId": "71",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.2.1 – Necessidade de crédito para negociações se realizarem."
+      },
+      {
+        "id": "171",
+        "perguntaId": "71",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.2.2 – Liquidez não real dos grãos"
+      },
+      {
+        "id": "172",
+        "perguntaId": "71",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.2.3 – Produto não escalável para 50 empresas"
+      },
+      {
+        "id": "173",
+        "perguntaId": "71",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.2.4 – Time de Operações não escalável"
+      },
+      {
+        "id": "174",
+        "perguntaId": "72",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.3.1 – Criarmos um CF de Algodão e café"
+      },
+      {
+        "id": "175",
+        "perguntaId": "72",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.3.2 – Voltar a ser obcecados pela experiência dos usuários ativos"
+      },
+      {
+        "id": "176",
+        "perguntaId": "72",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.3.3 – Expansão territorial"
+      },
+      {
+        "id": "177",
+        "perguntaId": "72",
+        "turmaId": "T",
+        "apresentadorCode": "1023",
+        "texto": "24.3.4 – Somos muito bons dentro de casa, mas externamente não falamos nada"
+      },
+      {
+        "id": "178",
+        "perguntaId": "73",
+        "turmaId": "T",
+        "apresentadorCode": "1024",
+        "texto": "25.1.1 – Grainsights como referência"
+      },
+      {
+        "id": "179",
+        "perguntaId": "74",
+        "turmaId": "T",
+        "apresentadorCode": "1024",
+        "texto": "25.2.1 – Quantidade x Qualidade"
+      },
+      {
+        "id": "180",
+        "perguntaId": "75",
+        "turmaId": "T",
+        "apresentadorCode": "1024",
+        "texto": "25.3.1 – Solução ERP T.E.R.R.A"
+      },
+      {
+        "id": "181",
+        "perguntaId": "76",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "Tópico 1.1 – Heads"
+      },
+      {
+        "id": "182",
+        "perguntaId": "76",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "Tópico 1.2 – Heads"
+      },
+      {
+        "id": "183",
+        "perguntaId": "76",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "Tópico 1.3 – Heads"
+      },
+      {
+        "id": "184",
+        "perguntaId": "77",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "Tópico 2.1 – Heads"
+      },
+      {
+        "id": "185",
+        "perguntaId": "77",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "Tópico 2.2 – Heads"
+      },
+      {
+        "id": "186",
+        "perguntaId": "77",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "Tópico 2.3 – Heads"
+      },
+      {
+        "id": "187",
+        "perguntaId": "78",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "Tópico 3.1 – Heads"
+      },
+      {
+        "id": "188",
+        "perguntaId": "78",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "Tópico 3.2 – Heads"
+      },
+      {
+        "id": "189",
+        "perguntaId": "78",
+        "turmaId": "T",
+        "apresentadorCode": "1025",
+        "texto": "Tópico 3.3 – Heads"
+      }
+    ],
+    "votos": [],
+    "estrelas": []
+  },
+  "nextPerguntaId": 79,
+  "nextTopicoId": 190
+}
