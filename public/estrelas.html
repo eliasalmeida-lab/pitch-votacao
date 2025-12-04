@@ -121,6 +121,11 @@
       justify-content:center;
       gap:6px;
       white-space:nowrap;
+      transition:
+        transform 0.07s ease,
+        box-shadow 0.12s ease,
+        background 0.12s ease,
+        border-color 0.12s ease;
     }
     .btn-primary {
       background:var(--primary);
@@ -135,6 +140,9 @@
       background:#f9fafb;
       color:#111827;
       border:1px solid #e5e7eb;
+    }
+    .btn-secondary:hover {
+      background:#eef2f7;
     }
     .status {
       font-size:13px;
@@ -198,9 +206,20 @@
         </div>
         <div class="badge">Estrelas</div>
       </div>
+
       <div class="top-info" id="top-info"></div>
+      <div class="subtitle" id="selecoes-info">
+        Nenhum tópico selecionado ainda.
+      </div>
+
       <button class="btn btn-secondary" id="btn-voltar">&larr; Voltar para votação</button>
+
       <div class="list" id="lista-topicos"></div>
+
+      <button class="btn btn-primary" id="btn-confirmar" style="margin-top:10px;">
+        Confirmar minhas estrelas
+      </button>
+
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -231,6 +250,30 @@
       window.history.back();
     });
 
+    // Seleções locais (ainda não salvas no servidor)
+    let selecoesPendentes = new Set();
+    let dadosGlobaisEstrelas = null;
+
+    function atualizarSelecoesInfo() {
+      const infoEl = document.getElementById("selecoes-info");
+      if (!dadosGlobaisEstrelas) {
+        infoEl.textContent = "Nenhum tópico selecionado ainda.";
+        return;
+      }
+      const usadas = dadosGlobaisEstrelas.estrelas.usadas;
+      const maximo = dadosGlobaisEstrelas.estrelas.maximo;
+      const selecionadasAgora = selecoesPendentes.size;
+      const restantes = Math.max(maximo - usadas - selecionadasAgora, 0);
+
+      if (selecionadasAgora === 0) {
+        infoEl.textContent =
+          `Você pode selecionar até ${maximo - usadas} estrela(s) nesta turma antes de confirmar.`;
+      } else {
+        infoEl.textContent =
+          `Selecionadas agora: ${selecionadasAgora} · Restantes disponíveis: ${restantes}`;
+      }
+    }
+
     async function carregar() {
       const { userCode, turmaId } = getQuery();
       const statusEl = document.getElementById("status");
@@ -245,15 +288,20 @@
 
       statusEl.textContent = "";
       statusEl.className = "status";
+      listaEl.innerHTML = "<div class='muted'>Carregando tópicos...</div>";
+      selecoesPendentes = new Set();
 
       try {
         const dados = await api(`/api/turma/${turmaId}/topicos-estrelas?userCode=${encodeURIComponent(userCode)}`);
+        dadosGlobaisEstrelas = dados;
 
         subtitleEl.textContent = `Turma: ${dados.turma.name}`;
         topInfoEl.innerHTML = `
-          <span>Estrelas usadas: <strong>${dados.estrelas.usadas}</strong> de ${dados.estrelas.maximo}</span>
-          <span class="muted">(1 estrela por tópico, máximo 5 por turma)</span>
+          <span>Estrelas já confirmadas: <strong>${dados.estrelas.usadas}</strong> de ${dados.estrelas.maximo}</span>
+          <span class="muted">(após confirmar, não será possível alterar)</span>
         `;
+
+        atualizarSelecoesInfo();
 
         listaEl.innerHTML = "";
 
@@ -281,40 +329,43 @@
           if (t.proprioTopico) {
             const span = document.createElement("span");
             span.className = "muted";
-            span.textContent = "Indisponível";
+            span.textContent = "Indisponível (seu tópico)";
             actions.appendChild(span);
           } else if (t.jaVotou) {
             const span = document.createElement("span");
             span.className = "muted";
             span.textContent = "Você já deu estrela";
             actions.appendChild(span);
-          } else if (!t.podeVotar) {
-            const span = document.createElement("span");
-            span.className = "muted";
-            span.textContent = "Limite de estrelas atingido";
-            actions.appendChild(span);
           } else {
             const btn = document.createElement("button");
-            btn.className = "btn btn-primary";
-            btn.textContent = "Dar estrela";
-            btn.addEventListener("click", async () => {
-              try {
-                await api("/api/estrelas", {
-                  method: "POST",
-                  body: JSON.stringify({
-                    userCode,
-                    turmaId,
-                    topicoId: t.id
-                  })
-                });
-                statusEl.textContent = "Estrela registrada com sucesso.";
-                statusEl.className = "status status-success";
-                await carregar();
-              } catch (err) {
-                statusEl.textContent = err.message;
-                statusEl.className = "status status-error";
+            btn.className = "btn btn-secondary";
+            btn.textContent = "Selecionar";
+
+            btn.addEventListener("click", () => {
+              const usadasConfirmadas = dadosGlobaisEstrelas.estrelas.usadas;
+              const maximo = dadosGlobaisEstrelas.estrelas.maximo;
+              const selecionadasAgora = selecoesPendentes.size;
+              const jaSelecionado = selecoesPendentes.has(t.id);
+
+              if (!jaSelecionado) {
+                if (usadasConfirmadas + selecionadasAgora >= maximo) {
+                  alert("Você já atingiu o limite de estrelas disponíveis nesta turma.");
+                  return;
+                }
+                selecoesPendentes.add(t.id);
+                btn.classList.remove("btn-secondary");
+                btn.classList.add("btn-primary");
+                btn.textContent = "Selecionado";
+              } else {
+                selecoesPendentes.delete(t.id);
+                btn.classList.remove("btn-primary");
+                btn.classList.add("btn-secondary");
+                btn.textContent = "Selecionar";
               }
+
+              atualizarSelecoesInfo();
             });
+
             actions.appendChild(btn);
           }
 
@@ -328,6 +379,51 @@
         statusEl.className = "status status-error";
       }
     }
+
+    // Botão de confirmar estrelas
+    document.getElementById("btn-confirmar").addEventListener("click", async () => {
+      const statusEl = document.getElementById("status");
+      statusEl.textContent = "";
+      statusEl.className = "status";
+
+      if (!dadosGlobaisEstrelas) return;
+
+      const ids = Array.from(selecoesPendentes);
+      if (ids.length === 0) {
+        alert("Selecione pelo menos um tópico antes de confirmar.");
+        return;
+      }
+
+      const confirmacao = confirm(
+        `Confirmar ${ids.length} estrela(s) nesta turma? ` +
+        `Depois disso, não será possível alterar essas escolhas.`
+      );
+      if (!confirmacao) return;
+
+      const { userCode, turmaId } = getQuery();
+
+      try {
+        for (const topicoId of ids) {
+          await api("/api/estrelas", {
+            method: "POST",
+            body: JSON.stringify({
+              userCode,
+              turmaId,
+              topicoId
+            })
+          });
+        }
+
+        statusEl.textContent = "Estrelas registradas com sucesso.";
+        statusEl.className = "status status-success";
+
+        // Recarrega dados para refletir estrelas confirmadas
+        await carregar();
+      } catch (err) {
+        statusEl.textContent = err.message;
+        statusEl.className = "status status-error";
+      }
+    });
 
     carregar();
   </script>
