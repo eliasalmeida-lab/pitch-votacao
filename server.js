@@ -667,45 +667,51 @@ function populateFromExcelAndStatic() {
   });
 
   // Votantes fixos
+  // Códigos 1-6 são líderes que votam em ambas as turmas (turmaId: null)
+  // Demais votantes são associados a uma turma específica
   const voters = [
-    { code: "1",  name: "Alexandre" },
-    { code: "2",  name: "Gabi" },
-    { code: "3",  name: "Cadelca" },
-    { code: "4",  name: "Léo" },
-    { code: "5",  name: "Pedro" },
-    { code: "6",  name: "Fred" },
-    { code: "7",  name: "Adrielle" },
-    { code: "8",  name: "Thaynara" },
-    { code: "9",  name: "Ursula" },
-    { code: "10", name: "Bataiel" },
-    { code: "11", name: "Bordin" },
-    { code: "12", name: "Helen" },
-    { code: "13", name: "Renan" },
-    { code: "14", name: "Mari" },
-    { code: "15", name: "Thiago" },
-    { code: "16", name: "Mario" },
-    { code: "17", name: "Humberto" },
-    { code: "18", name: "Danyllo" },
-    { code: "19", name: "Boffe" },
-    { code: "20", name: "Bruninha" },
-    { code: "21", name: "Juliene" },
-    { code: "22", name: "Ana Luiza" },
-    { code: "23", name: "Albert (Léo)" },
-    { code: "24", name: "Kaneko" },
-    { code: "25", name: "Cici" },
-    { code: "26", name: "Joyce" },
-    { code: "27", name: "Lacerda" },
-    { code: "28", name: "Murilo" },
-    { code: "29", name: "Thiago Meller" },
-    { code: "30", name: "Aline" },
-    { code: "31", name: "Markim" },
-    { code: "32", name: "Nabuco" },
-    { code: "33", name: "Vinícius Emmanuel" },
-    { code: "34", name: "Mazetto" },
-    { code: "35", name: "Matheus Reis" },
-    { code: "36", name: "Sebá" },
-    { code: "37", name: "Gabriel" },
-    { code: "38", name: "Naves" },
+    // Líderes - votam nas duas turmas
+    { code: "1",  name: "Alexandre", turmaId: null },
+    { code: "2",  name: "Gabi", turmaId: null },
+    { code: "3",  name: "Cadelca", turmaId: null },
+    { code: "4",  name: "Léo", turmaId: null },
+    { code: "5",  name: "Pedro", turmaId: null },
+    { code: "6",  name: "Fred", turmaId: null },
+    // Turma Manhã
+    { code: "8",  name: "Thaynara", turmaId: "M" },
+    { code: "9",  name: "Ursula", turmaId: "M" },
+    { code: "10", name: "Bataiel", turmaId: "M" },
+    { code: "11", name: "Bordin", turmaId: "M" },
+    { code: "12", name: "Helen", turmaId: "M" },
+    { code: "13", name: "Renan", turmaId: "M" },
+    { code: "14", name: "Mari", turmaId: "M" },
+    { code: "15", name: "Thiago", turmaId: "M" },
+    { code: "16", name: "Mario", turmaId: "M" },
+    { code: "17", name: "Humberto", turmaId: "M" },
+    { code: "18", name: "Danyllo", turmaId: "M" },
+    { code: "19", name: "Boffe", turmaId: "M" },
+    { code: "20", name: "Bruninha", turmaId: "M" },
+    // Turma Tarde
+    { code: "21", name: "Juliene", turmaId: "T" },
+    { code: "22", name: "Ana Luiza", turmaId: "T" },
+    { code: "23", name: "Albert (Léo)", turmaId: "T" },
+    { code: "24", name: "Kaneko", turmaId: "T" },
+    { code: "25", name: "Cici", turmaId: "T" },
+    { code: "26", name: "Joyce", turmaId: "T" },
+    { code: "27", name: "Lacerda", turmaId: "T" },
+    { code: "28", name: "Murilo", turmaId: "T" },
+    { code: "29", name: "Thiago Meller", turmaId: "T" },
+    { code: "30", name: "Aline", turmaId: "T" },
+    { code: "31", name: "Markim", turmaId: "T" },
+    { code: "32", name: "Nabuco", turmaId: "T" },
+    { code: "33", name: "Vinícius Emmanuel", turmaId: "T" },
+    { code: "34", name: "Mazetto", turmaId: "T" },
+    { code: "35", name: "Matheus Reis", turmaId: "T" },
+    { code: "36", name: "Sebá", turmaId: "T" },
+    { code: "37", name: "Gabriel", turmaId: "T" },
+    { code: "38", name: "Naves", turmaId: "T" },
+    // Adrielle removida - código 7 agora é apenas votante sem apresentação
+    { code: "7",  name: "Adrielle", turmaId: "M" },
   ];
 
   voters.forEach(v => {
@@ -713,7 +719,7 @@ function populateFromExcelAndStatic() {
       code: v.code,
       name: v.name,
       role: "participant",
-      turmaId: null,
+      turmaId: v.turmaId,
       isPresenter: false,
       blockedPresenterCodes: []
     });
@@ -806,6 +812,101 @@ app.get("/api/apresentador/:code/perguntas", (req, res) => {
     ok: true,
     apresentador: { code: user.code, name: user.name, turmaId: user.turmaId },
     perguntas: itens
+  });
+});
+
+// Buscar votos do usuário para um apresentador
+app.get("/api/votos/usuario/:userCode/apresentador/:apresentadorCode", (req, res) => {
+  const { userCode, apresentadorCode } = req.params;
+
+  const user = findUserByCode(userCode);
+  if (!user) {
+    return res.status(400).json({ ok: false, message: "Usuário inválido." });
+  }
+
+  const apresentador = findUserByCode(apresentadorCode);
+  if (!apresentador || !apresentador.isPresenter) {
+    return res.status(404).json({ ok: false, message: "Apresentador não encontrado." });
+  }
+
+  // Pegar todos os tópicos deste apresentador
+  const topicosApresentador = data.topicos.filter(t => t.apresentadorCode === String(apresentadorCode));
+  const topicosIds = topicosApresentador.map(t => t.id);
+
+  // Pegar votos do usuário nesses tópicos
+  const votosUsuario = data.votos
+    .filter(v => v.userCode === String(userCode) && topicosIds.includes(v.topicoId))
+    .map(v => ({
+      topicoId: v.topicoId,
+      nota: v.nota
+    }));
+
+  res.json({ ok: true, votos: votosUsuario });
+});
+
+// Buscar progresso do usuário
+app.get("/api/usuario/:userCode/progresso", (req, res) => {
+  const { userCode } = req.params;
+
+  const user = findUserByCode(userCode);
+  if (!user) {
+    return res.status(400).json({ ok: false, message: "Usuário inválido." });
+  }
+
+  // Verificar se é líder (códigos 1-6 votam em ambas as turmas)
+  const leadersCodes = ["1", "2", "3", "4", "5", "6"];
+  const isLeader = leadersCodes.includes(String(userCode));
+  
+  // Filtrar apresentadores pela turma do usuário
+  let apresentadores;
+  if (isLeader || user.turmaId === null) {
+    // Líderes veem todos os apresentadores
+    apresentadores = data.users.filter(u => u.isPresenter);
+  } else {
+    // Usuário normal vê apenas apresentadores da sua turma
+    apresentadores = data.users.filter(u => u.isPresenter && u.turmaId === user.turmaId);
+  }
+  const totalApresentadores = apresentadores.length;
+  const apresentadoresCodes = apresentadores.map(a => a.code);
+
+  // Votos do usuário (filtrados pela turma)
+  const votosUsuario = data.votos.filter(v => {
+    if (v.userCode !== String(userCode)) return false;
+    const topico = data.topicos.find(t => t.id === v.topicoId);
+    if (!topico) return false;
+    // Se for líder, conta todos. Senão, só da turma
+    if (isLeader || user.turmaId === null) return true;
+    return topico.turmaId === user.turmaId;
+  });
+  const votosCount = votosUsuario.length;
+
+  // Apresentadores em que o usuário votou (pelo menos um tópico)
+  const apresentadoresVotadosSet = new Set();
+  votosUsuario.forEach(v => {
+    const topico = data.topicos.find(t => t.id === v.topicoId);
+    if (topico && apresentadoresCodes.includes(topico.apresentadorCode)) {
+      apresentadoresVotadosSet.add(topico.apresentadorCode);
+    }
+  });
+  const apresentadoresVotados = apresentadoresVotadosSet.size;
+
+  // Estrelas - só mostra as turmas relevantes
+  const estrelasManha = data.estrelas.filter(e => e.userCode === String(userCode) && e.turmaId === "M").length;
+  const estrelasTarde = data.estrelas.filter(e => e.userCode === String(userCode) && e.turmaId === "T").length;
+
+  // Informações sobre quais turmas o usuário pode votar
+  const turmasUsuario = isLeader ? ["M", "T"] : (user.turmaId ? [user.turmaId] : []);
+
+  res.json({
+    ok: true,
+    votosCount,
+    apresentadoresVotados,
+    totalApresentadores,
+    estrelasManha,
+    estrelasTarde,
+    isLeader,
+    turmasUsuario,
+    turmaId: user.turmaId
   });
 });
 

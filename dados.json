@@ -1183,14 +1183,14 @@
         "perguntaId": "4",
         "turmaId": "M",
         "apresentadorCode": "1001",
-        "texto": "2.1.1 – Inserir I.A no Processo Seletivo"
+        "texto": "2.1.1 – Inserir I.A no Processo seletivo"
       },
       {
         "id": "6",
         "perguntaId": "4",
         "turmaId": "M",
         "apresentadorCode": "1001",
-        "texto": "2.1.2 – Gestão de Desempenho"
+        "texto": "2.1.2 – Gestão de desempenho"
       },
       {
         "id": "7",
@@ -1204,35 +1204,35 @@
         "perguntaId": "4",
         "turmaId": "M",
         "apresentadorCode": "1001",
-        "texto": "2.1.4 – Desenvolvimento Contínuo"
+        "texto": "2.1.4 – Desenvolvimento contínuo"
       },
       {
         "id": "9",
         "perguntaId": "4",
         "turmaId": "M",
         "apresentadorCode": "1001",
-        "texto": "2.1.5 – Comunicação Interna"
+        "texto": "2.1.5 – Comunicação interna"
       },
       {
         "id": "10",
         "perguntaId": "5",
         "turmaId": "M",
         "apresentadorCode": "1001",
-        "texto": "2.2.1 – Tempo de Recrutamento e Seleção"
+        "texto": "2.2.1 – Tempo de Recrutamento e seleção"
       },
       {
         "id": "11",
         "perguntaId": "5",
         "turmaId": "M",
         "apresentadorCode": "1001",
-        "texto": "2.2.2 – Retenção de Talentos"
+        "texto": "2.2.2 – Retenção de talentos"
       },
       {
         "id": "12",
         "perguntaId": "6",
         "turmaId": "M",
         "apresentadorCode": "1001",
-        "texto": "2.3.1 – Employer Branding"
+        "texto": "2.3.1 – Employer branding"
       },
       {
         "id": "13",
@@ -2474,7 +2474,138 @@
         "texto": "Tópico 3.3 – Heads"
       }
     ],
-    "votos": [],
+    "votos": [
+      {
+        "userCode": "36",
+        "topicoId": "39",
+        "nota": 1
+      },
+      {
+        "userCode": "36",
+        "topicoId": "40",
+        "nota": 2
+      },
+      {
+        "userCode": "36",
+        "topicoId": "41",
+        "nota": 2
+      },
+      {
+        "userCode": "36",
+        "topicoId": "42",
+        "nota": 2
+      },
+      {
+        "userCode": "36",
+        "topicoId": "43",
+        "nota": 3
+      },
+      {
+        "userCode": "36",
+        "topicoId": "44",
+        "nota": 3
+      },
+      {
+        "userCode": "36",
+        "topicoId": "46",
+        "nota": 4
+      },
+      {
+        "userCode": "36",
+        "topicoId": "45",
+        "nota": 5
+      },
+      {
+        "userCode": "36",
+        "topicoId": "47",
+        "nota": 2
+      },
+      {
+        "userCode": "36",
+        "topicoId": "48",
+        "nota": 5
+      },
+      {
+        "userCode": "36",
+        "topicoId": "49",
+        "nota": 2
+      },
+      {
+        "userCode": "36",
+        "topicoId": "50",
+        "nota": 4
+      },
+      {
+        "userCode": "36",
+        "topicoId": "51",
+        "nota": 5
+      },
+      {
+        "userCode": "36",
+        "topicoId": "92",
+        "nota": 3
+      },
+      {
+        "userCode": "36",
+        "topicoId": "93",
+        "nota": 3
+      },
+      {
+        "userCode": "36",
+        "topicoId": "5",
+        "nota": 1
+      },
+      {
+        "userCode": "36",
+        "topicoId": "6",
+        "nota": 1
+      },
+      {
+        "userCode": "15",
+        "topicoId": "1",
+        "nota": 2
+      },
+      {
+        "userCode": "15",
+        "topicoId": "2",
+        "nota": 2
+      },
+      {
+        "userCode": "15",
+        "topicoId": "3",
+        "nota": 5
+      },
+      {
+        "userCode": "15",
+        "topicoId": "4",
+        "nota": 2
+      },
+      {
+        "userCode": "21",
+        "topicoId": "1",
+        "nota": 1
+      },
+      {
+        "userCode": "21",
+        "topicoId": "2",
+        "nota": 4
+      },
+      {
+        "userCode": "21",
+        "topicoId": "3",
+        "nota": 2
+      },
+      {
+        "userCode": "21",
+        "topicoId": "4",
+        "nota": 5
+      },
+      {
+        "userCode": "21",
+        "topicoId": "91",
+        "nota": 3
+      }
+    ],
     "estrelas": []
   },
   "nextPerguntaId": 79,
