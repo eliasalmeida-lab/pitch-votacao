@@ -166,31 +166,183 @@
     /* Ajustes mobile */
     @media (max-width: 768px) {
       .container {
-        padding: 18px 10px 28px;
+        padding: 12px 8px 24px;
       }
       .card {
-        padding: 16px 14px;
+        padding: 14px 12px;
+        border-radius: 14px;
+      }
+      .header {
+        flex-direction: column;
+        gap: 8px;
       }
       .title {
-        font-size:18px;
+        font-size: 17px;
       }
       .subtitle {
-        font-size:12px;
+        font-size: 12px;
+      }
+      .top-info {
+        font-size: 12px;
       }
       .btn {
-        font-size:14px;
-        padding:8px 16px;
+        font-size: 14px;
+        padding: 12px 16px;
+        width: 100%;
+      }
+      #btn-voltar {
+        width: auto;
+        padding: 10px 14px;
       }
       .item {
-        flex-direction:column;
-        align-items:flex-start;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 12px;
       }
       .item-info {
-        font-size:14px;
+        font-size: 13px;
+      }
+      .item-info strong {
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      .item .btn {
+        width: 100%;
       }
       .list {
         max-height: none;
       }
+      .search-input {
+        font-size: 16px; /* evita zoom no iOS */
+        padding: 12px 14px;
+      }
+      .search-stats {
+        font-size: 11px;
+      }
+      /* Toast mobile */
+      .toast {
+        left: 16px;
+        right: 16px;
+        transform: translateY(100px);
+        width: auto;
+        text-align: center;
+        justify-content: center;
+      }
+      .toast.show {
+        transform: translateY(0);
+      }
+      .badge {
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+    }
+
+    /* Ajustes para telas muito pequenas */
+    @media (max-width: 380px) {
+      .container {
+        padding: 8px 6px 20px;
+      }
+      .title {
+        font-size: 16px;
+      }
+      .item-info strong {
+        font-size: 13px;
+      }
+    }
+
+    /* Campo de busca */
+    .search-container {
+      margin: 12px 0;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      font-size: 14px;
+      outline: none;
+      background: #f9fafb;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input:focus {
+      border-color: #16a34a;
+      box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+      background: #fff;
+    }
+    .search-input::placeholder {
+      color: #9ca3af;
+    }
+    .search-stats {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #111827;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      z-index: 9999;
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .toast.success {
+      background: #16a34a;
+    }
+
+    /* Confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* Animação nos itens */
+    .item {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .item.hidden {
+      display: none !important;
+    }
+
+    /* Contador de seleção */
+    .selection-counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: #ecfdf5;
+      border: 1px solid #bbf7d0;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #166534;
+      margin-left: 8px;
     }
   </style>
 </head>
@@ -214,6 +366,12 @@
 
       <button class="btn btn-secondary" id="btn-voltar">&larr; Voltar para votação</button>
 
+      <!-- Campo de busca -->
+      <div class="search-container">
+        <input type="text" class="search-input" id="search-input" placeholder="🔍 Buscar tópico ou apresentador...">
+        <div class="search-stats" id="search-stats"></div>
+      </div>
+
       <div class="list" id="lista-topicos"></div>
 
       <button class="btn btn-primary" id="btn-confirmar" style="margin-top:10px;">
@@ -224,7 +382,124 @@
     </div>
   </div>
 
+  <!-- Toast de notificação -->
+  <div id="toast" class="toast">
+    <span id="toast-icon">✓</span>
+    <span id="toast-message">Mensagem</span>
+  </div>
+
+  <!-- Canvas para confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
   <script>
+    // ==================== TOAST ====================
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      const toastIcon = document.getElementById('toast-icon');
+      
+      toastMessage.textContent = message;
+      toastIcon.textContent = type === 'success' ? '✓' : '✗';
+      
+      toast.className = 'toast ' + type;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // ==================== CONFETTI ====================
+    function launchConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const confetti = [];
+      const colors = ['#16a34a', '#22c55e', '#4ade80', '#86efac', '#fbbf24', '#f59e0b', '#fcd34d'];
+      
+      for (let i = 0; i < 200; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          w: Math.random() * 12 + 5,
+          h: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          speed: Math.random() * 4 + 2,
+          angle: Math.random() * 360,
+          spin: Math.random() * 12 - 6
+        });
+      }
+      
+      let animationId;
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let activeConfetti = 0;
+        
+        confetti.forEach(c => {
+          if (c.y < canvas.height + 50) {
+            activeConfetti++;
+            c.y += c.speed;
+            c.x += Math.sin(c.angle * Math.PI / 180) * 0.8;
+            c.angle += c.spin;
+            
+            ctx.save();
+            ctx.translate(c.x, c.y);
+            ctx.rotate(c.angle * Math.PI / 180);
+            ctx.fillStyle = c.color;
+            ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+            ctx.restore();
+          }
+        });
+        
+        if (activeConfetti > 0) {
+          animationId = requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      
+      animate();
+      
+      setTimeout(() => {
+        cancelAnimationFrame(animationId);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }, 5000);
+    }
+
+    // ==================== BUSCA ====================
+    let todosOsItens = []; // Armazena referência aos itens DOM
+
+    function filtrarTopicos(termo) {
+      const termoLower = termo.toLowerCase().trim();
+      let visiveis = 0;
+      
+      todosOsItens.forEach(({ element, texto, apresentador }) => {
+        const match = texto.toLowerCase().includes(termoLower) || 
+                      apresentador.toLowerCase().includes(termoLower);
+        
+        if (match || termoLower === '') {
+          element.classList.remove('hidden');
+          visiveis++;
+        } else {
+          element.classList.add('hidden');
+        }
+      });
+
+      // Atualizar estatísticas de busca
+      const statsEl = document.getElementById('search-stats');
+      if (termoLower === '') {
+        statsEl.textContent = '';
+      } else {
+        statsEl.textContent = `Mostrando ${visiveis} de ${todosOsItens.length} tópicos`;
+      }
+    }
+
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      filtrarTopicos(e.target.value);
+    });
+
     function getQuery() {
       const params = new URLSearchParams(window.location.search);
       return {
@@ -251,8 +526,39 @@
     });
 
     // Seleções locais (ainda não salvas no servidor)
+    // Usamos sessionStorage para manter seleções entre navegações
     let selecoesPendentes = new Set();
     let dadosGlobaisEstrelas = null;
+
+    function getStorageKey() {
+      const { userCode, turmaId } = getQuery();
+      return `estrelas_pendentes_${userCode}_${turmaId}`;
+    }
+
+    function salvarSelecoesPendentes() {
+      const key = getStorageKey();
+      const ids = Array.from(selecoesPendentes);
+      sessionStorage.setItem(key, JSON.stringify(ids));
+    }
+
+    function carregarSelecoesPendentes() {
+      const key = getStorageKey();
+      const saved = sessionStorage.getItem(key);
+      if (saved) {
+        try {
+          const ids = JSON.parse(saved);
+          selecoesPendentes = new Set(ids);
+        } catch (e) {
+          selecoesPendentes = new Set();
+        }
+      }
+    }
+
+    function limparSelecoesPendentes() {
+      const key = getStorageKey();
+      sessionStorage.removeItem(key);
+      selecoesPendentes = new Set();
+    }
 
     function atualizarSelecoesInfo() {
       const infoEl = document.getElementById("selecoes-info");
@@ -289,11 +595,28 @@
       statusEl.textContent = "";
       statusEl.className = "status";
       listaEl.innerHTML = "<div class='muted'>Carregando tópicos...</div>";
-      selecoesPendentes = new Set();
+      
+      // Carregar seleções pendentes do sessionStorage
+      carregarSelecoesPendentes();
 
       try {
         const dados = await api(`/api/turma/${turmaId}/topicos-estrelas?userCode=${encodeURIComponent(userCode)}`);
         dadosGlobaisEstrelas = dados;
+
+        // Remover das seleções pendentes os tópicos que já foram votados
+        const topicosJaVotados = dados.topicos.filter(t => t.jaVotou).map(t => t.id);
+        topicosJaVotados.forEach(id => selecoesPendentes.delete(id));
+        
+        // Remover também tópicos que não existem mais ou são do próprio usuário
+        const topicosDisponiveis = dados.topicos.filter(t => !t.jaVotou && !t.proprioTopico).map(t => t.id);
+        const selecoesValidas = new Set();
+        selecoesPendentes.forEach(id => {
+          if (topicosDisponiveis.includes(id)) {
+            selecoesValidas.add(id);
+          }
+        });
+        selecoesPendentes = selecoesValidas;
+        salvarSelecoesPendentes();
 
         subtitleEl.textContent = `Turma: ${dados.turma.name}`;
         topInfoEl.innerHTML = `
@@ -304,11 +627,16 @@
         atualizarSelecoesInfo();
 
         listaEl.innerHTML = "";
+        todosOsItens = []; // Limpar array de itens para busca
 
         if (!dados.topicos || dados.topicos.length === 0) {
           listaEl.innerHTML = '<div class="muted">Não há tópicos cadastrados nesta turma.</div>';
           return;
         }
+
+        // Limpar campo de busca
+        document.getElementById('search-input').value = '';
+        document.getElementById('search-stats').textContent = '';
 
         dados.topicos.forEach(t => {
           const item = document.createElement("div");
@@ -334,12 +662,22 @@
           } else if (t.jaVotou) {
             const span = document.createElement("span");
             span.className = "muted";
-            span.textContent = "Você já deu estrela";
+            span.textContent = "✓ Você já deu estrela";
+            span.style.color = "#16a34a";
+            span.style.fontWeight = "600";
             actions.appendChild(span);
           } else {
             const btn = document.createElement("button");
-            btn.className = "btn btn-secondary";
-            btn.textContent = "Selecionar";
+            
+            // Verificar se este tópico estava selecionado (pendente)
+            const estaSelecionado = selecoesPendentes.has(t.id);
+            if (estaSelecionado) {
+              btn.className = "btn btn-primary";
+              btn.textContent = "Selecionado";
+            } else {
+              btn.className = "btn btn-secondary";
+              btn.textContent = "Selecionar";
+            }
 
             btn.addEventListener("click", () => {
               const usadasConfirmadas = dadosGlobaisEstrelas.estrelas.usadas;
@@ -363,6 +701,8 @@
                 btn.textContent = "Selecionar";
               }
 
+              // Salvar no sessionStorage
+              salvarSelecoesPendentes();
               atualizarSelecoesInfo();
             });
 
@@ -372,6 +712,13 @@
           item.appendChild(info);
           item.appendChild(actions);
           listaEl.appendChild(item);
+
+          // Armazenar referência para busca
+          todosOsItens.push({
+            element: item,
+            texto: t.texto,
+            apresentador: t.apresentadorNome
+          });
         });
 
       } catch (err) {
@@ -413,6 +760,13 @@
             })
           });
         }
+
+        // Limpar seleções pendentes do sessionStorage após confirmar
+        limparSelecoesPendentes();
+
+        // Mostrar toast e confetti de celebração
+        showToast(`🎉 ${ids.length} estrela(s) confirmada(s) com sucesso!`, 'success');
+        launchConfetti();
 
         statusEl.textContent = "Estrelas registradas com sucesso.";
         statusEl.className = "status status-success";

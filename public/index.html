@@ -359,6 +359,154 @@
       transform: none;
     }
 
+    /* Toast de notificação */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #111827;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      z-index: 9999;
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .toast.success {
+      background: #16a34a;
+    }
+    .toast.error {
+      background: #dc2626;
+    }
+
+    /* Barra de progresso */
+    .progress-card {
+      background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+      border: 1px solid #bbf7d0;
+    }
+    .progress-container {
+      margin-top: 12px;
+    }
+    .progress-bar-wrapper {
+      background: #e5e7eb;
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+    .progress-stats {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .progress-stat {
+      text-align: center;
+      flex: 1;
+      min-width: 100px;
+    }
+    .progress-stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #16a34a;
+      font-family: "Montserrat", system-ui;
+    }
+    .progress-stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Animação de pulse no voto */
+    @keyframes votePulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .vote-pill.just-voted {
+      animation: votePulse 0.3s ease;
+    }
+
+    /* Animação de check */
+    @keyframes checkmark {
+      0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+      50% { transform: scale(1.2) rotate(-45deg); opacity: 1; }
+      100% { transform: scale(1) rotate(-45deg); opacity: 1; }
+    }
+    .vote-check {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 16px;
+      height: 16px;
+      background: #16a34a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: white;
+      animation: checkmark 0.3s ease forwards;
+    }
+    .vote-pill-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* Transição suave nos cards */
+    .card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 50px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+    }
+
+    /* Badge de contagem */
+    .count-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: #16a34a;
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+
     .section-title {
       font-family: "Montserrat", system-ui;
       font-size: 15px;
@@ -537,66 +685,210 @@
       }
 
       .container {
-        padding: 16px 10px 28px;
+        padding: 12px 8px 24px;
       }
 
       .logo {
-        font-size: 25px;
+        font-size: 22px;
       }
 
       .tagline {
-        font-size: 15px;
-        padding: 5px 12px;
+        font-size: 12px;
+        padding: 5px 10px;
       }
 
       .card {
-        padding: 16px 14px;
-        margin-bottom: 14px;
+        padding: 14px 12px;
+        margin-bottom: 12px;
+        border-radius: 14px;
+      }
+
+      .card:hover {
+        transform: none; /* Desabilita hover em mobile */
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.10), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+      }
+
+      .card-header {
+        flex-direction: column;
+        gap: 8px;
       }
 
       .card-title {
-        font-size: 20px;
+        font-size: 17px;
       }
 
       .card-subtitle {
-        font-size: 15px;
+        font-size: 13px;
       }
 
       .input,
       .select {
-        font-size: 20px; /* evita zoom chato no mobile */
+        font-size: 16px; /* evita zoom no iOS */
+        padding: 12px 14px;
+      }
+
+      .input-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .input-group .input {
+        width: 100%;
       }
 
       .btn {
-        font-size: 19px;
-        padding: 9px 16px;
+        font-size: 15px;
+        padding: 12px 16px;
+        width: 100%;
       }
 
       .btn-small {
-        padding: 6px 10px;
+        font-size: 13px;
+        padding: 10px 14px;
+        width: auto;
       }
 
       .vote-pill {
-        width: 40px;
-        height: 40px;
-        font-size: 19px;
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
+      }
+
+      .votes-row {
+        gap: 6px;
+        justify-content: flex-start;
       }
 
       .question-title {
-        font-size: 19px;
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+
+      .topic-block {
+        padding: 14px 12px;
+        margin-bottom: 12px;
       }
 
       .topic-text {
-        font-size: 19px;
+        font-size: 14px;
+        line-height: 1.4;
       }
 
       .topic-instruction {
-        font-size: 14px;
+        font-size: 12px;
+        margin-bottom: 8px;
       }
 
       .layout {
-        margin-top: 10px;
+        margin-top: 8px;
         max-width: 100%;
+      }
+
+      .pill-list {
+        gap: 8px;
+      }
+
+      .pill-list .btn {
+        width: auto;
+        flex: 1;
+        min-width: 45%;
+      }
+
+      /* Progresso mobile */
+      .progress-stats {
+        gap: 8px;
+      }
+
+      .progress-stat {
+        min-width: 70px;
+        flex: 1;
+      }
+
+      .progress-stat-value {
+        font-size: 20px;
+      }
+
+      .progress-stat-label {
+        font-size: 9px;
+      }
+
+      /* Toast mobile */
+      .toast {
+        left: 16px;
+        right: 16px;
+        transform: translateY(100px);
+        width: auto;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .toast.show {
+        transform: translateY(0);
+      }
+
+      /* Tabs mobile */
+      .tabs {
+        width: 100%;
+      }
+
+      .tab {
+        flex: 1;
+        text-align: center;
+        padding: 10px 8px;
+        font-size: 12px;
+      }
+
+      /* Botões de ação mobile */
+      #btn-next-presenter,
+      #btn-load-stars {
+        width: 100%;
+        margin-top: 8px;
+      }
+
+      .section-title {
+        font-size: 14px;
+      }
+
+      .muted {
+        font-size: 11px;
+      }
+
+      .badge {
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+    }
+
+    /* Ajustes para telas muito pequenas */
+    @media (max-width: 380px) {
+      .container {
+        padding: 8px 6px 20px;
+      }
+
+      .logo {
+        font-size: 20px;
+      }
+
+      .vote-pill {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
+      }
+
+      .progress-stat {
+        min-width: 60px;
+      }
+
+      .progress-stat-value {
+        font-size: 18px;
+      }
+
+      .progress-stat-label {
+        font-size: 8px;
+      }
+
+      .pill-list .btn {
+        min-width: 100%;
       }
     }
   </style>
@@ -649,6 +941,36 @@
         <div>
           <!-- PARTICIPANTE -->
           <div id="participant-area" style="display:none;">
+            <!-- Card de Progresso -->
+            <div class="card progress-card" id="progress-card">
+              <div class="card-header">
+                <div class="card-title">📊 Seu progresso</div>
+              </div>
+              <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                  <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="progress-stats">
+                  <div class="progress-stat">
+                    <div class="progress-stat-value" id="stat-apresentadores">0/0</div>
+                    <div class="progress-stat-label">Apresentadores votados</div>
+                  </div>
+                  <div class="progress-stat">
+                    <div class="progress-stat-value" id="stat-votos">0</div>
+                    <div class="progress-stat-label">Votos registrados</div>
+                  </div>
+                  <div class="progress-stat">
+                    <div class="progress-stat-value" id="stat-estrelas-m">0/5</div>
+                    <div class="progress-stat-label">Estrelas Manhã</div>
+                  </div>
+                  <div class="progress-stat">
+                    <div class="progress-stat-value" id="stat-estrelas-t">0/5</div>
+                    <div class="progress-stat-label">Estrelas Tarde</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="card">
               <div class="card-header">
                 <div class="card-title">Turmas e apresentadores</div>
@@ -819,12 +1141,173 @@
     </div>
   </div>
 
+  <!-- Toast de notificação -->
+  <div id="toast" class="toast">
+    <span id="toast-icon">✓</span>
+    <span id="toast-message">Mensagem</span>
+  </div>
+
+  <!-- Canvas para confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
   <script>
     let currentUser = null;
     let turmasCache = [];
     let apresentadoresCache = [];
     let turmaSelecionada = null;
     let apresentadorSelecionado = null;
+    let hasUnsavedChanges = false; // Para confirmação de saída
+    let progressData = { votosCount: 0, apresentadoresVotados: new Set(), totalApresentadores: 0 };
+
+    // ==================== TOAST ====================
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      const toastIcon = document.getElementById('toast-icon');
+      
+      toastMessage.textContent = message;
+      toastIcon.textContent = type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ';
+      
+      toast.className = 'toast ' + type;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // ==================== CONFETTI ====================
+    function launchConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const confetti = [];
+      const colors = ['#16a34a', '#22c55e', '#4ade80', '#86efac', '#fbbf24', '#f59e0b'];
+      
+      for (let i = 0; i < 150; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          w: Math.random() * 10 + 5,
+          h: Math.random() * 6 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          speed: Math.random() * 3 + 2,
+          angle: Math.random() * 360,
+          spin: Math.random() * 10 - 5
+        });
+      }
+      
+      let animationId;
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let activeConfetti = 0;
+        
+        confetti.forEach(c => {
+          if (c.y < canvas.height + 50) {
+            activeConfetti++;
+            c.y += c.speed;
+            c.x += Math.sin(c.angle * Math.PI / 180) * 0.5;
+            c.angle += c.spin;
+            
+            ctx.save();
+            ctx.translate(c.x, c.y);
+            ctx.rotate(c.angle * Math.PI / 180);
+            ctx.fillStyle = c.color;
+            ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+            ctx.restore();
+          }
+        });
+        
+        if (activeConfetti > 0) {
+          animationId = requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      
+      animate();
+      
+      // Parar após 4 segundos
+      setTimeout(() => {
+        cancelAnimationFrame(animationId);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }, 4000);
+    }
+
+    // ==================== PROGRESSO ====================
+    async function atualizarProgresso() {
+      if (!currentUser || currentUser.role === 'admin') return;
+      
+      try {
+        const progressResponse = await api(`/api/usuario/${currentUser.code}/progresso`);
+        
+        const { votosCount, apresentadoresVotados, totalApresentadores, estrelasManha, estrelasTarde, isLeader, turmasUsuario } = progressResponse;
+        
+        // Atualizar estatísticas
+        setText('stat-votos', votosCount);
+        setText('stat-apresentadores', `${apresentadoresVotados}/${totalApresentadores}`);
+        
+        // Mostrar/esconder estrelas conforme a turma do usuário
+        const statEstrelasM = document.getElementById('stat-estrelas-m').parentElement;
+        const statEstrelasT = document.getElementById('stat-estrelas-t').parentElement;
+        
+        if (isLeader) {
+          // Líderes veem ambas as turmas
+          statEstrelasM.style.display = '';
+          statEstrelasT.style.display = '';
+          setText('stat-estrelas-m', `${estrelasManha}/5`);
+          setText('stat-estrelas-t', `${estrelasTarde}/5`);
+        } else if (turmasUsuario.includes('M')) {
+          // Usuário da manhã
+          statEstrelasM.style.display = '';
+          statEstrelasT.style.display = 'none';
+          setText('stat-estrelas-m', `${estrelasManha}/5`);
+          // Mudar label para "Estrelas" apenas
+          statEstrelasM.querySelector('.progress-stat-label').textContent = 'Estrelas';
+        } else if (turmasUsuario.includes('T')) {
+          // Usuário da tarde
+          statEstrelasM.style.display = 'none';
+          statEstrelasT.style.display = '';
+          setText('stat-estrelas-t', `${estrelasTarde}/5`);
+          // Mudar label para "Estrelas" apenas
+          statEstrelasT.querySelector('.progress-stat-label').textContent = 'Estrelas';
+        } else {
+          // Sem turma definida - esconder ambas
+          statEstrelasM.style.display = 'none';
+          statEstrelasT.style.display = 'none';
+        }
+        
+        // Atualizar barra de progresso (baseada em apresentadores votados)
+        const percentage = totalApresentadores > 0 ? (apresentadoresVotados / totalApresentadores) * 100 : 0;
+        document.getElementById('progress-bar').style.width = `${percentage}%`;
+        
+        // Salvar para uso posterior
+        progressData = { votosCount, apresentadoresVotados, totalApresentadores };
+        
+        // Celebrar quando completar 100%
+        if (apresentadoresVotados === totalApresentadores && totalApresentadores > 0) {
+          // Só celebra uma vez
+          if (!sessionStorage.getItem('celebrated_100')) {
+            sessionStorage.setItem('celebrated_100', 'true');
+            showToast('🎉 Parabéns! Você votou em todos os apresentadores!', 'success');
+            launchConfetti();
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao carregar progresso:', err);
+      }
+    }
+
+    // ==================== CONFIRMAÇÃO DE SAÍDA ====================
+    window.addEventListener('beforeunload', (e) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = 'Você tem alterações não salvas. Deseja realmente sair?';
+        return e.returnValue;
+      }
+    });
 
     function setText(id, text) {
       const el = document.getElementById(id);
@@ -906,6 +1389,7 @@
           show("main-layout");
 
           carregarTurmas();
+          atualizarProgresso(); // Carregar progresso inicial
         }
 
         hide("card-login");
@@ -1014,7 +1498,18 @@
       titleEl.textContent = "Carregando perguntas...";
 
       try {
-        const dados = await api(`/api/apresentador/${apresentadorCode}/perguntas`);
+        // Buscar perguntas E votos existentes do usuário em paralelo
+        const [dados, votosData] = await Promise.all([
+          api(`/api/apresentador/${apresentadorCode}/perguntas`),
+          currentUser ? api(`/api/votos/usuario/${currentUser.code}/apresentador/${apresentadorCode}`) : { votos: [] }
+        ]);
+
+        // Criar mapa de votos existentes: topicoId -> nota
+        const votosExistentes = {};
+        (votosData.votos || []).forEach(v => {
+          votosExistentes[v.topicoId] = v.nota;
+        });
+
         titleEl.textContent = `${dados.apresentador.name}`;
 
         if (!dados.perguntas || dados.perguntas.length === 0) {
@@ -1058,12 +1553,21 @@
             const votesRow = document.createElement("div");
             votesRow.className = "votes-row";
 
+            // Verificar se já existe voto para este tópico
+            const votoExistente = votosExistentes[top.id];
+
             for (let note = 1; note <= maxNota; note++) {
               const voteBtn = document.createElement("button");
               voteBtn.className = "vote-pill";
               voteBtn.textContent = note;
               voteBtn.dataset.topicoId = top.id;
               voteBtn.dataset.note = note;
+
+              // Se já votou neste tópico, marcar o botão correspondente
+              if (votoExistente !== undefined && Number(votoExistente) === note) {
+                voteBtn.classList.add("selected");
+              }
+
               voteBtn.addEventListener("click", () => votarTopico(top.id, note, votesRow));
               votesRow.appendChild(voteBtn);
             }
@@ -1103,13 +1607,23 @@
           b.classList.remove("disabled");
           if (Number(b.dataset.note) === Number(nota)) {
             b.classList.add("selected");
+            // Animação de pulse
+            b.classList.add("just-voted");
+            setTimeout(() => b.classList.remove("just-voted"), 300);
           } else {
             b.classList.remove("selected");
           }
         });
+
+        // Mostrar toast de sucesso
+        showToast(`Nota ${nota} registrada!`, 'success');
+        
+        // Atualizar progresso
+        atualizarProgresso();
+        
       } catch (err) {
         buttons.forEach(b => b.classList.remove("disabled"));
-        alert("Erro ao registrar voto: " + err.message);
+        showToast("Erro ao registrar voto: " + err.message, 'error');
       }
     }
 
